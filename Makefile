@@ -1,37 +1,58 @@
 DIRECTORIES = $(filter-out ./ ./.%, $(shell find ./ -maxdepth 10 -type d))
 
+LOCOAL_DIRS = -I DIRECTORIES
+
 SRC_C = $(wildcard *.c) $(wildcard **/*.c)
 SRC_ASS = $(wildcard *.s) $(wildcard **/*.s)
+
+OBJECTS_C = $(addprefix $(OBJECT_DIR)c/, $(notdir $(SRC_C:.c=.o)))
+OBJECTS_ASS = $(addprefix $(OBJECT_DIR)ass/, $(notdir $(SRC_ASS:.s=.o)))
+OBJECTS = $(OBJECTS_C) $(OBJECTS_ASS)
 
 LINKERS = $(wildcard *.ld) $(wildcard **/*.ld)
 
 LOCAL_INCLUDE_DIRS =$(addprefix -I, $(DIRECTORIES))
 
 KERNEL_IMAGE = kernel.img
+KERNEL_ELF = kernel.elf
 
+OBJECT_DIR = objects/
+BUILD_DIR = build/
+LOG_DIR = logs/
 
-all: build assemble
+SRC_DIR = source/
 
-build: $(KERNEL_SOURCE)
-	arm-none-eabi-gcc -O0 -march=armv8-a $(KERNEL_SOURCE) -nostartfiles -c -o $(KERNEL_OBJECT)
-	arm-none-eabi-as -march=armv8-a $(BOOT) -o boot.o
+all: $(OBJECTS) $(BUILD_DIR)$(KERNEL_ELF) $(KERNEL_IMAGE)
 
-assemble: link
-	arm-none-eabi-objcopy $(KERNEL_ELF) -O binary $(KERNEL_IMAGE)
-
-link:
-	arm-none-eabi-ld boot.o $(KERNEL_OBJECT) -o $(KERNEL_ELF) -T kernel.ld
-
-disassemble: $(KERNEL_SOURCE)
-	arm-none-eabi-gcc -O2 -march=armv8-a -nostartfiles -S $(KERNEL_SOURCE)
-
-
-$(BUILD):
+%/:
 	mkdir $@
 
-assembly: PiTest.s
-	arm-none-eabi-as -march=armv8-a PiTest.s -o kernel.o
+$(OBJECTS_C): $(OBJECT_DIR) $(OBJECT_DIR)c/
+	arm-none-eabi-gcc -O0 -march=armv8-a $(wildcard */$(@F:.o=.c)) -nostartfiles -c -o $@
 
-assemblyAll: assembly
-	arm-none-eabi-ld kernel.o boot.o -o kernel.elf -T kernel.ld
-	arm-none-eabi-objcopy kernel.elf -O binary kernel.img
+$(OBJECTS_ASS): $(OBJECT_DIR) $(OBJECT_DIR)ass/
+	arm-none-eabi-as -march=armv8-a $(wildcard */$(@F:.o=.s)) -c -o $@
+
+$(BUILD_DIR)$(KERNEL_ELF): $(BUILD_DIR)
+	arm-none-eabi-ld $(OBJECTS) -o $(BUILD_DIR)$(KERNEL_ELF) -T $(LINKERS)
+
+$(KERNEL_IMAGE): $(BUILD_DIR)$(KERNEL_ELF)
+	arm-none-eabi-objcopy $(BUILD_DIR)$(KERNEL_ELF) -O binary $(KERNEL_IMAGE)
+
+disassemble: $(LOG_DIR)
+	arm-none-eabi-objdump -D $(BUILD_DIR)$(KERNEL_ELF) > $(LOG_DIR)kenrel.list
+
+.PHONY: clean
+clean:
+	rm -rf $(OBJECT_DIR)
+	rm -rf $(BUILD_DIR)
+	rm -rf $(LOG_DIR)
+	if [ -f $(KERNEL_IMAGE) ]; then rm $(KERNEL_IMAGE); fi;
+
+print-%: ; @echo $* = $($*)
+
+
+define \n
+
+
+endef
