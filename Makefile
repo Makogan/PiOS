@@ -1,58 +1,71 @@
-DIRECTORIES = $(filter-out ./ ./.%, $(shell find ./ -maxdepth 10 -type d))
+# The following makefile was made by Camilo Talero
 
-LOCOAL_DIRS = -I DIRECTORIES
+# Find all directories under the current one
 
-SRC_C = $(wildcard *.c) $(wildcard **/*.c)
-SRC_ASS = $(wildcard *.s) $(wildcard **/*.s)
+PERMA_DIRS := ./Documentation $(source)
 
-OBJECTS_C = $(addprefix $(OBJECT_DIR)c/, $(notdir $(SRC_C:.c=.o)))
-OBJECTS_ASS = $(addprefix $(OBJECT_DIR)ass/, $(notdir $(SRC_ASS:.s=.o)))
-OBJECTS = $(OBJECTS_C) $(OBJECTS_ASS)
+SUBDIRECTORIES ?= $(filter-out ./Documentation ./Documentation/%, $(filter-out ./ ./.%, $(shell find ./ -maxdepth 10 -type d)))
 
-LINKERS = $(wildcard *.ld) $(wildcard **/*.ld)
+VPATH ?= $(DIRECTORIES)
 
-LOCAL_INCLUDE_DIRS =$(addprefix -I, $(DIRECTORIES))
+# Declare key directories
+SOURCE_DIR ?= source
+OBJECT_DIR ?= objects
+BUILD_DIR ?= build
+LOG_DIR ?= logs
 
-KERNEL_IMAGE = kernel.img
-KERNEL_ELF = kernel.elf
+# Define the output directories (i.e directories that may be deleted by clean)
+OUTPUT_DIRS ?= $(sort $(subst $(SOURCE_DIR),$(OBJECT_DIR), $(SUBDIRECTORIES)) ./$(BUILD_DIR) ./$(LOG_DIR))
 
-OBJECT_DIR = objects/
-BUILD_DIR = build/
-LOG_DIR = logs/
+# Find all source files
+SRC_C := $(shell find -name \*.c)
+SRC_ASS := $(shell find -name \*.s)
+LINKERS := $(shell find -name \*.ld)
 
-SRC_DIR = source/
+# Create output object files that obey the same directory structure as the 
+# source files
+OBJECTS_C := $(subst $(SOURCE_DIR),$(OBJECT_DIR),$(SRC_C:.c=.o))
+OBJECTS_ASS := $(subst $(SOURCE_DIR),$(OBJECT_DIR),$(SRC_ASS:.s=.o))
+OBJECTS := $(OBJECTS_C) $(OBJECTS_ASS)
 
-all: $(OBJECTS) $(BUILD_DIR)$(KERNEL_ELF) $(KERNEL_IMAGE)
+# Define the main binary file and the final kernel image
+KERNEL_IMAGE ?= kernel.img
+KERNEL_ELF ?= $(BUILD_DIR)/kernel.elf
 
-%/:
-	mkdir $@
+# Compile and link the entire project
+.PHONY: all disassemble clean
+all: $(KERNEL_IMAGE) disassemble
 
-$(OBJECTS_C): $(OBJECT_DIR) $(OBJECT_DIR)c/
-	arm-none-eabi-gcc -O0 -march=armv8-a $(wildcard */$(@F:.o=.c)) -nostartfiles -c -o $@
+# Create any missing output directories
+$(OUTPUT_DIRS):
+	$(foreach _dir,$@,mkdir -p $(_dir);)
 
-$(OBJECTS_ASS): $(OBJECT_DIR) $(OBJECT_DIR)ass/
-	arm-none-eabi-as -march=armv8-a $(wildcard */$(@F:.o=.s)) -c -o $@
+# Create all .c object files
+$(OBJECTS_C): $(OBJECT_DIR)%.o: $(SOURCE_DIR)%.c | $(OUTPUT_DIRS)
+	arm-none-eabi-gcc -O0 -march=armv8-a $< -nostartfiles -c -o $@
 
-$(BUILD_DIR)$(KERNEL_ELF): $(BUILD_DIR)
-	arm-none-eabi-ld $(OBJECTS) -o $(BUILD_DIR)$(KERNEL_ELF) -T $(LINKERS)
+# Create all .s object files
+$(OBJECTS_ASS): $(OBJECT_DIR)%.o: $(SOURCE_DIR)%.s | $(OUTPUT_DIRS)
+	arm-none-eabi-as -march=armv8-a $< -c -o $@
 
-$(KERNEL_IMAGE): $(BUILD_DIR)$(KERNEL_ELF)
-	arm-none-eabi-objcopy $(BUILD_DIR)$(KERNEL_ELF) -O binary $(KERNEL_IMAGE)
+# Link all .o object files into the final .elf binary
+$(KERNEL_ELF): $(OBJECTS)
+	arm-none-eabi-ld $(OBJECTS) -o $(KERNEL_ELF) -T $(LINKERS)
 
-disassemble: $(LOG_DIR)
-	arm-none-eabi-objdump -D $(BUILD_DIR)$(KERNEL_ELF) > $(LOG_DIR)kenrel.list
+# Extract the final kernel image
+$(KERNEL_IMAGE): $(KERNEL_ELF)
+	arm-none-eabi-objcopy $(KERNEL_ELF) -O binary $(KERNEL_IMAGE)
 
-.PHONY: clean
+# Dissassemble the kernel elf for debugging
+disassemble: $(KERNEL_ELF) | $(LOG_DIR)
+	arm-none-eabi-objdump -D $(KERNEL_ELF) > $(LOG_DIR)/kernel.list
+
+# remove all non source directories and files
 clean:
 	rm -rf $(OBJECT_DIR)
 	rm -rf $(BUILD_DIR)
 	rm -rf $(LOG_DIR)
 	if [ -f $(KERNEL_IMAGE) ]; then rm $(KERNEL_IMAGE); fi;
 
+# Print variable values
 print-%: ; @echo $* = $($*)
-
-
-define \n
-
-
-endef

@@ -40,9 +40,7 @@ int kernel_main(void)
   while(1)
   {
     do
-    {
       status = *(volatile uint32_t *)(mailbox);
-    }
     while((status & 0x80000000));
 
     *(volatile uint32_t *)(MAIL_BASE + REGISTERS_BASE + 0x20) = ((uint32_t)(&m) & 0xfffffff0) | (uint32_t)(8);
