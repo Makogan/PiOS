@@ -6,7 +6,11 @@ PERMA_DIRS := ./Documentation $(source)
 
 SUBDIRECTORIES ?= $(filter-out ./Documentation ./Documentation/%, $(filter-out ./ ./.%, $(shell find ./ -maxdepth 10 -type d)))
 
-VPATH ?= $(DIRECTORIES)
+I_DIRS ?= $(addprefix -I , $(SUBDIRECTORIES))
+
+L_DIRS ?= $(addprefix -L , $(subst $(SOURCE_DIR),$(OBJECT_DIR), $(SUBDIRECTORIES)))
+
+VPATH ?= $(SUBDIRECTORIES)
 
 # Declare key directories
 SOURCE_DIR ?= source
@@ -19,14 +23,16 @@ OUTPUT_DIRS ?= $(sort $(subst $(SOURCE_DIR),$(OBJECT_DIR), $(SUBDIRECTORIES)) ./
 
 # Find all source files
 SRC_C := $(shell find -name \*.c)
+SRC_CPP := $(shell find -name \*.cpp)
 SRC_ASS := $(shell find -name \*.s)
 LINKERS := $(shell find -name \*.ld)
 
-# Create output object files that obey the same directory structure as the 
+# Create output object files that obey the same directory structure as the
 # source files
 OBJECTS_C := $(subst $(SOURCE_DIR),$(OBJECT_DIR),$(SRC_C:.c=.o))
 OBJECTS_ASS := $(subst $(SOURCE_DIR),$(OBJECT_DIR),$(SRC_ASS:.s=.o))
-OBJECTS := $(OBJECTS_C) $(OBJECTS_ASS)
+OBJECTS_CPP := $(subst $(SOURCE_DIR),$(OBJECT_DIR),$(SRC_CPP:.cpp=.o))
+OBJECTS := $(OBJECTS_C) $(OBJECTS_ASS) $(OBJECTS_CPP)
 
 # Define the main binary file and the final kernel image
 KERNEL_IMAGE ?= kernel.img
@@ -34,7 +40,7 @@ KERNEL_ELF ?= $(BUILD_DIR)/kernel.elf
 
 # Compile and link the entire project
 .PHONY: all disassemble clean
-all: $(KERNEL_IMAGE) disassemble
+all: $(KERNEL_IMAGE) $(LOG_DIR)/kernel.list
 
 # Create any missing output directories
 $(OUTPUT_DIRS):
@@ -43,6 +49,9 @@ $(OUTPUT_DIRS):
 # Create all .c object files
 $(OBJECTS_C): $(OBJECT_DIR)%.o: $(SOURCE_DIR)%.c | $(OUTPUT_DIRS)
 	arm-none-eabi-gcc -O0 -march=armv8-a $< -nostartfiles -c -o $@
+
+$(OBJECTS_CPP): $(OBJECT_DIR)%.o: $(SOURCE_DIR)%.cpp | $(OUTPUT_DIRS)
+	arm-none-eabi-g++ -O0 -march=armv8-a $< -nostartfiles -c -o $@
 
 # Create all .s object files
 $(OBJECTS_ASS): $(OBJECT_DIR)%.o: $(SOURCE_DIR)%.s | $(OUTPUT_DIRS)
@@ -58,6 +67,8 @@ $(KERNEL_IMAGE): $(KERNEL_ELF)
 
 # Dissassemble the kernel elf for debugging
 disassemble: $(KERNEL_ELF) | $(LOG_DIR)
+
+$(LOG_DIR)/kernel.list: $(KERNEL_ELF) | $(LOG_DIR)
 	arm-none-eabi-objdump -D $(KERNEL_ELF) > $(LOG_DIR)/kernel.list
 
 # remove all non source directories and files
