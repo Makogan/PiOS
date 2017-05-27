@@ -100,7 +100,7 @@ clean:
 
 git:
 	git add -A
-	git commit -m "$(USER) made a minor commit on $(DATE)"
+	git commit -m "$(USER) made minor changes on $(DATE) (this is an automatic message)"
 	git push
 
 # Print variable values
