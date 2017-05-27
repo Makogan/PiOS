@@ -1,10 +1,15 @@
 # The following makefile was made by Camilo Talero
 
+DATE ?= `date +'%y.%m.%d %H:%M:%S'`
+USER ?= $(shell -u -n)
+
+# Compilers
 CC = gcc
 CCPP = g++
 CAS = as
 CROSS_COMPILER = arm-none-eabi
 
+# Compilation flags
 ARCH = march=armv8-a
 OPT_LEVEL = O0
 
@@ -48,8 +53,10 @@ OBJECTS := $(OBJECTS_C) $(OBJECTS_ASS) $(OBJECTS_CPP)
 KERNEL_IMAGE ?= kernel.img
 KERNEL_ELF ?= $(BUILD_DIR)/kernel.elf
 
+
+.PHONY: all disassemble clean git
+
 # Compile and link the entire project
-.PHONY: all disassemble clean
 all: $(KERNEL_IMAGE) $(LOG_DIR)/kernel.list
 
 # Create any missing output directories
@@ -90,6 +97,10 @@ clean:
 	rm -rf $(BUILD_DIR)
 	rm -rf $(LOG_DIR)
 	if [ -f $(KERNEL_IMAGE) ]; then rm $(KERNEL_IMAGE); fi;
+
+git:
+	git add -A
+	git commit -m "$(USER) made a minor commit on $(DATE)"
 
 # Print variable values
 print-%: ; @echo $* = $($*)
