@@ -1,6 +1,6 @@
 # The following makefile was made by Camilo Talero
 
-DATE := `date +'%y.%m.%d %H:%M:%S'`
+DATE := $(shell date +'%y.%m.%d %H:%M:%S')
 USER ?= $(shell -u -n)
 
 # Compilers
