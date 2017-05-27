@@ -26,7 +26,7 @@
 */
 //========================================================================================
 
-inline void wait(uint32_t time);
+void wait(uint32_t time);
 
 //########################################################################################
 
@@ -61,7 +61,7 @@ void kernel_main(void)
 * Parameters: 
 *   uint32_t time: the amount of time to wait. 
 */
-inline void wait(uint32_t time)
+void wait(uint32_t time)
 {
   while (time > 0) {
     time--;

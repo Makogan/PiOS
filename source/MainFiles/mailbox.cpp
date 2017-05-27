@@ -5,7 +5,7 @@
 *
 * File type: C++
 * 
-* This file contains all funtions needed to communicate with the Raspberry Pi™ ARM 
+* This file contains all functions needed to communicate with the Raspberry Pi™ ARM 
 * video core.
 */
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

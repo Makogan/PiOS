@@ -98,10 +98,14 @@ clean:
 	rm -rf $(LOG_DIR)
 	if [ -f $(KERNEL_IMAGE) ]; then rm $(KERNEL_IMAGE); fi;
 
+# auto commit to git, remove once project is over
 git:
 	git add -A
 	git commit -m "$(USER) made minor changes on $(DATE) (this is an automatic message)"
 	git push
+
+%.dump: %.o; 
+	arm-none-eabi-objdump -D $^
 
 # Print variable values
 print-%: ; @echo $* = $($*)

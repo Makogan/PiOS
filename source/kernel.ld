@@ -1,4 +1,9 @@
-SECTIONS {
+SECTIONS 
+{
+  .vector_table 0x0 :
+  {
+    *(.vector_table)
+  } 
 
   .init 0x8000 : 
   {

@@ -1,159 +1,6 @@
 \documentclass[12pt]{book}
-\usepackage[utf8]{inputenc}
-\usepackage{courier}
-\usepackage{xcolor}
-\usepackage{textcomp}
 
-\usepackage{pagecolor}
-
-\usepackage{layout}
-%\usepackage{showframe}
-
-\usepackage{tikz}
-\usepackage[margin = 2cm]{geometry}
-\usepackage[document]{ragged2e}
-
-\usepackage{tocloft}
-
-\renewcommand\cftchapaftersnum{.}
-\renewcommand\cftsecaftersnum{.}
-
-\renewcommand\thechapter{\Roman{chapter}}
-\renewcommand\thesection{\arabic{section}}
-\renewcommand\thesubsection{(\alph{subsection})}
-
-\usepackage{lmodern}
-
-\usepackage{scrextend}
-\changefontsizes[14pt]{14pt}
-		
-\font\myfont=cmr12 at 40pt
-
-\usepackage{hyperref}
-\hypersetup{
-	colorlinks=true,
-	linkcolor=blue,
-	filecolor=magenta,      
-	urlcolor=magenta,
-}
-
-\usepackage{fancyhdr}
-\fancypagestyle{plain}{%
-	\fancyhf{} % clear all header and footer fields
-	\fancyfoot[C]{\sffamily\fontsize{15pt}{15pt}\selectfont\thepage} % except the center
-	\renewcommand{\headrulewidth}{0pt}
-	\renewcommand{\footrulewidth}{0pt}}
-\pagestyle{plain}
-
-
-	
-\usepackage{listings}
-\usepackage{color}
-
-\definecolor{lightblue}{rgb}{0.7, 0.9, 1}
-\definecolor{lightgreen}{rgb}{0.5, 1, 0.5}
-\definecolor{darkred}{rgb}{0.5,0,0}
-\definecolor{lightpurple}{rgb}{0.8,0.8,1}
-\definecolor{skyblue}{rgb}{0.102, 0.75, 1}
-\definecolor{lightgray}{rgb}{0.9,0.9,0.9}
-
-\definecolor{dkgreen}{rgb}{0,0.6,0}
-\definecolor{gray}{rgb}{0.5,0.5,0.5}
-\definecolor{mauve}{rgb}{0.58,0,0.82}
-\lstset{frame=tb,
-	language=C,
-	aboveskip=3mm,
-	belowskip=3mm,
-	showstringspaces=false,
-	columns=flexible,
-	basicstyle={\small\ttfamily},
-	numbers=none,
-	numberstyle=\tiny\color{gray},
-	keywordstyle=\color{blue},
-	commentstyle=\color{dkgreen},
-	stringstyle=\color{mauve},
-	breaklines=true,
-	breakatwhitespace=true,
-	backgroundcolor=\color{lightgray},
-	tabsize=3,
-	morekeywords={uint32_t},
-	keywordsprefix=#
-}
-
-\lstdefinestyle{C}
-{
-	language=C,
-	morekeywords={uint32_t},
-}
-
-\lstdefinestyle{bash}{
-	language=GCC,
-	basicstyle=\small\ttfamily,
-	numbers=none,
-	numberstyle=\tiny,
-	numbersep=3pt,
-	frame=tb,
-	columns=fullflexible,
-	backgroundcolor=\color{lightblue},
-	aboveskip=6mm,
-	belowskip=6mm,
-}
-
-\lstdefinelanguage{GCC}{
-	keywords=
-	{
-		arm-
-	},
-	emphstyle={\color{blue}\bfseries},
-	sensitive=false, % keywords are not case-sensitive
-	morecomment=[l]{//}, % l is for line comment
-	morecomment=[s]{/*}{*/}, % s is for start and end delimiter
-	morestring=[b]",
-}
-
-\lstdefinelanguage{Linker}{
-	emph=
-	{
-		SECTIONS,
-	},
-	emphstyle={\color{blue}\bfseries},
-	sensitive=false, % keywords are not case-sensitive
-	morecomment=[l]{//}, % l is for line comment
-	morecomment=[s]{/*}{*/}, % s is for start and end delimiter
-	morestring=[b]",
-	keywordsprefix=.
-}
-
-\lstdefinelanguage{ASM}{
-	emph=
-	{
-		b, ble, blt, bne, 
-		ldr, str, 
-		r0,	r1, r2, r3, r4, r5, r6, r7, rr8, r9, r10, r11, r12
-		sp,
-		section, global
-	},
-	emphstyle={\color{blue}\bfseries},
-	sensitive=false, % keywords are not case-sensitive
-	morecomment=[l]{//}, % l is for line comment
-	morecomment=[s]{/*}{*/}, % s is for start and end delimiter
-	morestring=[b]",
-} % 
-
-\lstdefinestyle{ASM}{
-	language=ASM,
-	basicstyle=\small\ttfamily,
-	numbers=none,
-	numberstyle=\tiny,
-	numbersep=3pt,
-	frame=tb,
-	columns=fullflexible,
-	backgroundcolor=\color{lightgreen},
-	aboveskip=6mm,
-	belowskip=6mm,
-	keywordstyle=\ttb\color{orange},
-}
-
+\usepackage{customPreamble}
 
 
 \centering
@@ -187,7 +34,7 @@
 \chapter{Introduction and Setup}
 
 \section{Introduction}
-This text is intended as both a log for the PiOS project and as a reference guide for anyone trying a similar project in the future. All text here is pertienent to the Raspberry Pi model 3 B, as this is the model we are using, past and different models may have different architectures, and as such, certain sections fo this guide may be useless for thsoe working on those machines. This is not a documentation manual, for the PiOS documentation, please refer to the PiOS documentation manual.
+This text is intended as both a log for the PiOS project and as a reference guide for anyone trying a similar project in the future. All text here is pertinent to the Raspberry Pi model 3 B, as this is the model we are using, past and different models may have different architectures, and as such, certain sections fo this guide may be useless for those working on those machines. This is not a documentation manual, for the PiOS documentation, please refer to the PiOS documentation manual.
 
 \section{Hardware and Physical tools}
 To start creating a kernel for the Raspberry Pi, the following is needed:
@@ -213,6 +60,8 @@ The following software is needed to create the kernel:
 
 \begin{itemize}
 	\item Cross compiler to generate the binaries. Options include the \href{https://launchpad.net/gcc-arm-embedded}{GNU ARM Embedded Toolchain} (used in this document)
+	\\
+	\textcolor{red}{WARNING}: old gcc versions can generate problems with function attributes, it's recommended to use the latest gcc version.
 	\item Raspberry Pi firmware binaries. In order for the boot process to be executed correctly it is needed to have the \href{https://github.com/raspberrypi/firmware/blob/master/boot/bootcode.bin}{bootcode.bin} and \href{https://github.com/raspberrypi/firmware/blob/master/boot/start.elf}{start.elf} binaries inside of the micro SD card.
 	\item A text editor or IDE (no help will be provided as to how to setup an IDE)
 \end{itemize}
@@ -242,7 +91,7 @@ To compile ARM assembly files:
 	arm-none-eabi-as -<arch> <src> -c -o <o_file>
 \end{lstlisting}
 
-The flags here are the same as above, except that $<$src$>$ shoulkd be an ARM assembly file instead of a C file.
+The flags here are the same as above, except that $<$src$>$ should be an ARM assembly file instead of a C file.
 \\~\\
 Example:
 \begin{lstlisting}[style = bash, xleftmargin=0\textwidth]
@@ -273,12 +122,12 @@ Example:
 	arm-none-eabi-objcopy build/kernel.elf -O binary kernel.img
 \end{lstlisting}
 
-To \hypertarget{disassemble}{dissassemble} the final .img binary for debugging:
+To \hypertarget{disassemble}{disassemble} the final .img binary for debugging:
 \begin{lstlisting}[style = bash, xleftmargin=0\textwidth]
 	arm-none-eabi-objdump -D <elf>
 \end{lstlisting}
 
-Although not necessary for compilation, it is recommended to execute and store the ouput of this command in a file, as it is very helpful for debugging and veryfing the correctness of the final binary.
+Although not necessary for compilation, it is recommended to execute and store the output of this command in a file, as it is very helpful for debugging and verifying the correctness of the final binary.
 \\~\\
 Example:
 \begin{lstlisting}[style = bash, xleftmargin=0\textwidth]
@@ -377,7 +226,7 @@ To test whether everything is working fine, we just want to turn on the Pi's ACT
 \end{lstlisting}
 
 
-As big as this seems for a ``hello world!" example, it is the smallest C code we could come up with that nlink the LED. And we are not even done yet. This code is using memory, and if one where to \hyperlink{dissassemble}{disassemble} the binaries, one could see that the sp register (stack pointer). Is used, as such we need to initialize it properly.
+As big as this seems for a ``hello world!" example, it is the smallest C code we could come up with that light the LED. And we are not even done yet. This code is using memory, and if one where to \hyperlink{dissassemble}{disassemble} the binaries, one could see that the sp register (stack pointer). Is used, as such we need to initialize it properly.
 
 The following assembly initializes the stack pointer and branches to our main loop:
 \lstset{language=ASM}
@@ -390,9 +239,8 @@ The following assembly initializes the stack pointer and branches to our main lo
 		b kernel_main
 \end{lstlisting}
 
-However we still aren't done. The Raspberry Pi always begins execution at address 0x8000, so whatever instruction is at that address will be the first to run. We need to ensure this instruction is also the first instruction in the above code. For this we use the following linker file:
+However we still are not done. The Raspberry Pi always begins execution at address 0x8000, so whatever instruction is at that address will be the first to run. We need to ensure this instruction is also the first instruction in the above code. For this we use the following linker file:
 
-\newpage
 \lstset{language=Linker}
 \begin{lstlisting}[style = C]
 	SECTIONS 
@@ -426,7 +274,7 @@ However we still aren't done. The Raspberry Pi always begins execution at addres
 	
 \end{lstlisting}
 
-If the reader doesn't fully understand what the C code is doing, it will be further explain in future sections. However the functioning of linker scripts, or assembly alnguage will not be explained.
+If the reader doesn't fully understand what the C code is doing, it will be further explained in the following sections. However the functioning of linker scripts, or assembly language will not be explained.
 	
 \section{Mailbox}
 \label{sec:mailbox}
