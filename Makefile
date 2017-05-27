@@ -101,6 +101,7 @@ clean:
 git:
 	git add -A
 	git commit -m "$(USER) made a minor commit on $(DATE)"
+	git push
 
 # Print variable values
 print-%: ; @echo $* = $($*)
