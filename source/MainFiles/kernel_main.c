@@ -15,8 +15,6 @@ int kernel_main(void)
     set_LED(OFF);
 
     wait(0xF0000);
-
-    read_from_mailbox(8);
   }
 
 }

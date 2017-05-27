@@ -14,119 +14,119 @@ Disassembly of section .text:
     8008:	e92d4800 	push	{fp, lr}
     800c:	e28db004 	add	fp, sp, #4
     8010:	e3a00001 	mov	r0, #1
-    8014:	eb000044 	bl	812c <set_LED>
+    8014:	eb000042 	bl	8124 <set_LED>
     8018:	e3a0080f 	mov	r0, #983040	; 0xf0000
-    801c:	eb000006 	bl	803c <wait>
+    801c:	eb000004 	bl	8034 <wait>
     8020:	e3a00000 	mov	r0, #0
-    8024:	eb000040 	bl	812c <set_LED>
+    8024:	eb00003e 	bl	8124 <set_LED>
     8028:	e3a0080f 	mov	r0, #983040	; 0xf0000
-    802c:	eb000002 	bl	803c <wait>
-    8030:	e3a00008 	mov	r0, #8
-    8034:	eb000022 	bl	80c4 <read_from_mailbox>
-    8038:	eafffff4 	b	8010 <kernel_main+0x8>
+    802c:	eb000000 	bl	8034 <wait>
+    8030:	eafffff6 	b	8010 <kernel_main+0x8>
 
-0000803c <wait>:
-    803c:	e52db004 	push	{fp}		; (str fp, [sp, #-4]!)
-    8040:	e28db000 	add	fp, sp, #0
-    8044:	e24dd00c 	sub	sp, sp, #12
-    8048:	e50b0008 	str	r0, [fp, #-8]
-    804c:	ea000002 	b	805c <wait+0x20>
-    8050:	e51b3008 	ldr	r3, [fp, #-8]
-    8054:	e2433001 	sub	r3, r3, #1
-    8058:	e50b3008 	str	r3, [fp, #-8]
-    805c:	e51b3008 	ldr	r3, [fp, #-8]
-    8060:	e3530000 	cmp	r3, #0
-    8064:	1afffff9 	bne	8050 <wait+0x14>
-    8068:	e24bd000 	sub	sp, fp, #0
-    806c:	e49db004 	pop	{fp}		; (ldr fp, [sp], #4)
-    8070:	e12fff1e 	bx	lr
+00008034 <wait>:
+    8034:	e52db004 	push	{fp}		; (str fp, [sp, #-4]!)
+    8038:	e28db000 	add	fp, sp, #0
+    803c:	e24dd00c 	sub	sp, sp, #12
+    8040:	e50b0008 	str	r0, [fp, #-8]
+    8044:	ea000002 	b	8054 <wait+0x20>
+    8048:	e51b3008 	ldr	r3, [fp, #-8]
+    804c:	e2433001 	sub	r3, r3, #1
+    8050:	e50b3008 	str	r3, [fp, #-8]
+    8054:	e51b3008 	ldr	r3, [fp, #-8]
+    8058:	e3530000 	cmp	r3, #0
+    805c:	1afffff9 	bne	8048 <wait+0x14>
+    8060:	e24bd000 	sub	sp, fp, #0
+    8064:	e49db004 	pop	{fp}		; (ldr fp, [sp], #4)
+    8068:	e12fff1e 	bx	lr
 
-00008074 <write_to_mailbox>:
-    8074:	e52db004 	push	{fp}		; (str fp, [sp, #-4]!)
-    8078:	e28db000 	add	fp, sp, #0
-    807c:	e24dd014 	sub	sp, sp, #20
-    8080:	e50b0010 	str	r0, [fp, #-16]
-    8084:	e30b3898 	movw	r3, #47256	; 0xb898
-    8088:	e3433f00 	movt	r3, #16128	; 0x3f00
-    808c:	e5933000 	ldr	r3, [r3]
-    8090:	e50b3008 	str	r3, [fp, #-8]
-    8094:	e51b3008 	ldr	r3, [fp, #-8]
-    8098:	e3530000 	cmp	r3, #0
-    809c:	bafffff8 	blt	8084 <write_to_mailbox+0x10>
-    80a0:	e30b38a0 	movw	r3, #47264	; 0xb8a0
-    80a4:	e3433f00 	movt	r3, #16128	; 0x3f00
-    80a8:	e51b2010 	ldr	r2, [fp, #-16]
-    80ac:	e3c2200f 	bic	r2, r2, #15
-    80b0:	e3822008 	orr	r2, r2, #8
-    80b4:	e5832000 	str	r2, [r3]
-    80b8:	e24bd000 	sub	sp, fp, #0
-    80bc:	e49db004 	pop	{fp}		; (ldr fp, [sp], #4)
-    80c0:	e12fff1e 	bx	lr
+0000806c <write_to_mailbox>:
+    806c:	e52db004 	push	{fp}		; (str fp, [sp, #-4]!)
+    8070:	e28db000 	add	fp, sp, #0
+    8074:	e24dd014 	sub	sp, sp, #20
+    8078:	e50b0010 	str	r0, [fp, #-16]
+    807c:	e30b3898 	movw	r3, #47256	; 0xb898
+    8080:	e3433f00 	movt	r3, #16128	; 0x3f00
+    8084:	e5933000 	ldr	r3, [r3]
+    8088:	e50b3008 	str	r3, [fp, #-8]
+    808c:	e51b3008 	ldr	r3, [fp, #-8]
+    8090:	e3530000 	cmp	r3, #0
+    8094:	bafffff8 	blt	807c <write_to_mailbox+0x10>
+    8098:	e30b38a0 	movw	r3, #47264	; 0xb8a0
+    809c:	e3433f00 	movt	r3, #16128	; 0x3f00
+    80a0:	e51b2010 	ldr	r2, [fp, #-16]
+    80a4:	e3c2200f 	bic	r2, r2, #15
+    80a8:	e3822008 	orr	r2, r2, #8
+    80ac:	e5832000 	str	r2, [r3]
+    80b0:	e24bd000 	sub	sp, fp, #0
+    80b4:	e49db004 	pop	{fp}		; (ldr fp, [sp], #4)
+    80b8:	e12fff1e 	bx	lr
 
-000080c4 <read_from_mailbox>:
-    80c4:	e52db004 	push	{fp}		; (str fp, [sp, #-4]!)
-    80c8:	e28db000 	add	fp, sp, #0
-    80cc:	e24dd014 	sub	sp, sp, #20
-    80d0:	e50b0010 	str	r0, [fp, #-16]
-    80d4:	e30b3898 	movw	r3, #47256	; 0xb898
-    80d8:	e3433f00 	movt	r3, #16128	; 0x3f00
-    80dc:	e5933000 	ldr	r3, [r3]
-    80e0:	e50b3008 	str	r3, [fp, #-8]
-    80e4:	e51b3008 	ldr	r3, [fp, #-8]
-    80e8:	e2033101 	and	r3, r3, #1073741824	; 0x40000000
-    80ec:	e3530000 	cmp	r3, #0
-    80f0:	1afffff7 	bne	80d4 <read_from_mailbox+0x10>
-    80f4:	e30b3880 	movw	r3, #47232	; 0xb880
-    80f8:	e3433f00 	movt	r3, #16128	; 0x3f00
-    80fc:	e5933000 	ldr	r3, [r3]
-    8100:	e203300f 	and	r3, r3, #15
-    8104:	e50b300c 	str	r3, [fp, #-12]
-    8108:	e51b200c 	ldr	r2, [fp, #-12]
-    810c:	e51b3010 	ldr	r3, [fp, #-16]
-    8110:	e1520003 	cmp	r2, r3
-    8114:	1afffff6 	bne	80f4 <read_from_mailbox+0x30>
-    8118:	e51b300c 	ldr	r3, [fp, #-12]
-    811c:	e1a00003 	mov	r0, r3
-    8120:	e24bd000 	sub	sp, fp, #0
-    8124:	e49db004 	pop	{fp}		; (ldr fp, [sp], #4)
-    8128:	e12fff1e 	bx	lr
+000080bc <read_from_mailbox>:
+    80bc:	e52db004 	push	{fp}		; (str fp, [sp, #-4]!)
+    80c0:	e28db000 	add	fp, sp, #0
+    80c4:	e24dd014 	sub	sp, sp, #20
+    80c8:	e50b0010 	str	r0, [fp, #-16]
+    80cc:	e30b3898 	movw	r3, #47256	; 0xb898
+    80d0:	e3433f00 	movt	r3, #16128	; 0x3f00
+    80d4:	e5933000 	ldr	r3, [r3]
+    80d8:	e50b3008 	str	r3, [fp, #-8]
+    80dc:	e51b3008 	ldr	r3, [fp, #-8]
+    80e0:	e2033101 	and	r3, r3, #1073741824	; 0x40000000
+    80e4:	e3530000 	cmp	r3, #0
+    80e8:	1afffff7 	bne	80cc <read_from_mailbox+0x10>
+    80ec:	e30b3880 	movw	r3, #47232	; 0xb880
+    80f0:	e3433f00 	movt	r3, #16128	; 0x3f00
+    80f4:	e5933000 	ldr	r3, [r3]
+    80f8:	e203300f 	and	r3, r3, #15
+    80fc:	e50b300c 	str	r3, [fp, #-12]
+    8100:	e51b200c 	ldr	r2, [fp, #-12]
+    8104:	e51b3010 	ldr	r3, [fp, #-16]
+    8108:	e1520003 	cmp	r2, r3
+    810c:	1afffff6 	bne	80ec <read_from_mailbox+0x30>
+    8110:	e51b300c 	ldr	r3, [fp, #-12]
+    8114:	e1a00003 	mov	r0, r3
+    8118:	e24bd000 	sub	sp, fp, #0
+    811c:	e49db004 	pop	{fp}		; (ldr fp, [sp], #4)
+    8120:	e12fff1e 	bx	lr
 
-0000812c <set_LED>:
-    812c:	e92d4800 	push	{fp, lr}
-    8130:	e28db004 	add	fp, sp, #4
-    8134:	e24dd008 	sub	sp, sp, #8
-    8138:	e50b0008 	str	r0, [fp, #-8]
-    813c:	e51b2008 	ldr	r2, [fp, #-8]
-    8140:	e30831c0 	movw	r3, #33216	; 0x81c0
-    8144:	e3403000 	movt	r3, #0
-    8148:	e5832018 	str	r2, [r3, #24]
-    814c:	e30831c0 	movw	r3, #33216	; 0x81c0
-    8150:	e3403000 	movt	r3, #0
-    8154:	e3a02000 	mov	r2, #0
-    8158:	e5832004 	str	r2, [r3, #4]
-    815c:	e30831c0 	movw	r3, #33216	; 0x81c0
-    8160:	e3403000 	movt	r3, #0
-    8164:	e3a02000 	mov	r2, #0
-    8168:	e5832010 	str	r2, [r3, #16]
-    816c:	e30831c0 	movw	r3, #33216	; 0x81c0
-    8170:	e3403000 	movt	r3, #0
-    8174:	e3a02082 	mov	r2, #130	; 0x82
-    8178:	e5832014 	str	r2, [r3, #20]
-    817c:	e30831c0 	movw	r3, #33216	; 0x81c0
-    8180:	e3403000 	movt	r3, #0
-    8184:	e3a02000 	mov	r2, #0
-    8188:	e583201c 	str	r2, [r3, #28]
-    818c:	e30831c0 	movw	r3, #33216	; 0x81c0
-    8190:	e3403000 	movt	r3, #0
-    8194:	e1a00003 	mov	r0, r3
-    8198:	ebffffb5 	bl	8074 <write_to_mailbox>
+00008124 <set_LED>:
+    8124:	e92d4800 	push	{fp, lr}
+    8128:	e28db004 	add	fp, sp, #4
+    812c:	e24dd008 	sub	sp, sp, #8
+    8130:	e50b0008 	str	r0, [fp, #-8]
+    8134:	e51b2008 	ldr	r2, [fp, #-8]
+    8138:	e30831c0 	movw	r3, #33216	; 0x81c0
+    813c:	e3403000 	movt	r3, #0
+    8140:	e5832018 	str	r2, [r3, #24]
+    8144:	e30831c0 	movw	r3, #33216	; 0x81c0
+    8148:	e3403000 	movt	r3, #0
+    814c:	e3a02000 	mov	r2, #0
+    8150:	e5832004 	str	r2, [r3, #4]
+    8154:	e30831c0 	movw	r3, #33216	; 0x81c0
+    8158:	e3403000 	movt	r3, #0
+    815c:	e3a02000 	mov	r2, #0
+    8160:	e5832010 	str	r2, [r3, #16]
+    8164:	e30831c0 	movw	r3, #33216	; 0x81c0
+    8168:	e3403000 	movt	r3, #0
+    816c:	e3a02082 	mov	r2, #130	; 0x82
+    8170:	e5832014 	str	r2, [r3, #20]
+    8174:	e30831c0 	movw	r3, #33216	; 0x81c0
+    8178:	e3403000 	movt	r3, #0
+    817c:	e3a02000 	mov	r2, #0
+    8180:	e583201c 	str	r2, [r3, #28]
+    8184:	e30831c0 	movw	r3, #33216	; 0x81c0
+    8188:	e3403000 	movt	r3, #0
+    818c:	e1a00003 	mov	r0, r3
+    8190:	ebffffb5 	bl	806c <write_to_mailbox>
+    8194:	e3a00008 	mov	r0, #8
+    8198:	ebffffc7 	bl	80bc <read_from_mailbox>
     819c:	e24bd004 	sub	sp, fp, #4
     81a0:	e8bd8800 	pop	{fp, pc}
 
 Disassembly of section .ARM.exidx:
 
 000081a4 <.ARM.exidx>:
-    81a4:	7ffffed0 	svcvc	0x00fffed0
+    81a4:	7ffffec8 	svcvc	0x00fffec8
     81a8:	00000001 	andeq	r0, r0, r1
 
 Disassembly of section .data:
@@ -145,33 +145,19 @@ Disassembly of section .comment:
 
 000081e0 <.comment>:
     81e0:	3a434347 	bcc	10d8f04 <led_message+0x10d0d44>
-    81e4:	4e472820 	cdpmi	8, 4, cr2, cr7, cr0, {1}
-    81e8:	6f542055 	svcvs	0x00542055
-    81ec:	20736c6f 	rsbscs	r6, r3, pc, ror #24
-    81f0:	20726f66 	rsbscs	r6, r2, r6, ror #30
-    81f4:	204d5241 	subcs	r5, sp, r1, asr #4
-    81f8:	65626d45 	strbvs	r6, [r2, #-3397]!	; 0xd45
-    81fc:	64656464 	strbtvs	r6, [r5], #-1124	; 0x464
-    8200:	6f725020 	svcvs	0x00725020
-    8204:	73736563 	cmnvc	r3, #415236096	; 0x18c00000
-    8208:	2973726f 	ldmdbcs	r3!, {r0, r1, r2, r3, r5, r6, r9, ip, sp, lr}^
-    820c:	382e3420 	stmdacc	lr!, {r5, sl, ip, sp}
-    8210:	3220342e 	eorcc	r3, r0, #771751936	; 0x2e000000
-    8214:	30343130 	eorscc	r3, r4, r0, lsr r1
-    8218:	20363235 	eorscs	r3, r6, r5, lsr r2
-    821c:	6c657228 	sfmvs	f7, 2, [r5], #-160	; 0xffffff60
-    8220:	65736165 	ldrbvs	r6, [r3, #-357]!	; 0x165
-    8224:	415b2029 	cmpmi	fp, r9, lsr #32
-    8228:	652f4d52 	strvs	r4, [pc, #-3410]!	; 74de <_start-0xb22>
-    822c:	6465626d 	strbtvs	r6, [r5], #-621	; 0x26d
-    8230:	2d646564 	cfstr64cs	mvdx6, [r4, #-400]!	; 0xfffffe70
-    8234:	2d385f34 	ldccs	15, cr5, [r8, #-208]!	; 0xffffff30
-    8238:	6e617262 	cdpvs	2, 6, cr7, cr1, cr2, {3}
-    823c:	72206863 	eorvc	r6, r0, #6488064	; 0x630000
-    8240:	73697665 	cmnvc	r9, #105906176	; 0x6500000
-    8244:	206e6f69 	rsbcs	r6, lr, r9, ror #30
-    8248:	33313132 	teqcc	r1, #-2147483636	; 0x8000000c
-    824c:	005d3835 	subseq	r3, sp, r5, lsr r8
+    81e4:	35312820 	ldrcc	r2, [r1, #-2080]!	; 0xfffff7e0
+    81e8:	392e343a 	stmdbcc	lr!, {r1, r3, r4, r5, sl, ip, sp}
+    81ec:	732b332e 			; <UNDEFINED> instruction: 0x732b332e
+    81f0:	33326e76 	teqcc	r2, #1888	; 0x760
+    81f4:	37373131 			; <UNDEFINED> instruction: 0x37373131
+    81f8:	2029312d 	eorcs	r3, r9, sp, lsr #2
+    81fc:	2e392e34 	mrccs	14, 1, r2, cr9, cr4, {1}
+    8200:	30322033 	eorscc	r2, r2, r3, lsr r0
+    8204:	35303531 	ldrcc	r3, [r0, #-1329]!	; 0xfffffacf
+    8208:	28203932 	stmdacs	r0!, {r1, r4, r5, r8, fp, ip, sp}
+    820c:	72657270 	rsbvc	r7, r5, #112, 4
+    8210:	61656c65 	cmnvs	r5, r5, ror #24
+    8214:	00296573 	eoreq	r6, r9, r3, ror r5
 
 Disassembly of section .ARM.attributes:
 
@@ -180,13 +166,13 @@ Disassembly of section .ARM.attributes:
     81e4:	61656100 	cmnvs	r5, r0, lsl #2
     81e8:	01006962 	tsteq	r0, r2, ror #18
     81ec:	00000026 	andeq	r0, r0, r6, lsr #32
-    81f0:	412d3805 	teqmi	sp, r5, lsl #16
+    81f0:	412d3805 			; <UNDEFINED> instruction: 0x412d3805
     81f4:	070e0600 	streq	r0, [lr, -r0, lsl #12]
     81f8:	09010841 	stmdbeq	r1, {r0, r6, fp}
-    81fc:	14041202 	strne	r1, [r4], #-514	; 0x202
+    81fc:	14041202 	strne	r1, [r4], #-514	; 0xfffffdfe
     8200:	17011501 	strne	r1, [r1, -r1, lsl #10]
     8204:	1a011803 	bne	4e218 <led_message+0x46058>
     8208:	22061e01 	andcs	r1, r6, #1, 28
-    820c:	44012a01 	strmi	r2, [r1], #-2561	; 0xa01
-    8210:	Address 0x00008210 is out of bounds.
+    820c:	44012a01 	strmi	r2, [r1], #-2561	; 0xfffff5ff
+    8210:	Address 0x0000000000008210 is out of bounds.
 

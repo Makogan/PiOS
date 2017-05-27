@@ -49,4 +49,6 @@ void set_LED(int value)
   led_message.end = 0;
 
   write_to_mailbox(((uint32_t) &led_message));
+  
+  read_from_mailbox(8);
 }

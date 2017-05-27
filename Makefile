@@ -1,5 +1,15 @@
 # The following makefile was made by Camilo Talero
 
+CC = gcc
+CCPP = g++
+CAS = as
+CROSS_COMPILER = arm-none-eabi
+
+ARCH = march=armv8-a
+OPT_LEVEL = O0
+
+CFLAGS = -nostartfiles -c -o
+
 # Find all directories under the current one
 
 PERMA_DIRS := ./Documentation $(source)
@@ -48,28 +58,31 @@ $(OUTPUT_DIRS):
 
 # Create all .c object files
 $(OBJECTS_C): $(OBJECT_DIR)%.o: $(SOURCE_DIR)%.c | $(OUTPUT_DIRS)
-	arm-none-eabi-gcc -O0 -march=armv8-a $< -nostartfiles -c -o $@
+	$(CROSS_COMPILER)-$(CC) -$(OPT_LEVEL) -$(ARCH) $< $(CFLAGS) $@
 
 $(OBJECTS_CPP): $(OBJECT_DIR)%.o: $(SOURCE_DIR)%.cpp | $(OUTPUT_DIRS)
-	arm-none-eabi-g++ -O0 -march=armv8-a $< -nostartfiles -c -o $@
+	$(CROSS_COMPILER)-$(CCPP) -$(OPT_LEVEL) -$(ARCH) $< $(CFLAGS) $@
 
 # Create all .s object files
 $(OBJECTS_ASS): $(OBJECT_DIR)%.o: $(SOURCE_DIR)%.s | $(OUTPUT_DIRS)
-	arm-none-eabi-as -march=armv8-a $< -c -o $@
+	$(CROSS_COMPILER)-$(CAS) -$(ARCH) $< -c -o $@
 
 # Link all .o object files into the final .elf binary
 $(KERNEL_ELF): $(OBJECTS)
-	arm-none-eabi-ld $(OBJECTS) -o $(KERNEL_ELF) -T $(LINKERS)
+	$(CROSS_COMPILER)-ld $(OBJECTS) -o $(KERNEL_ELF) -T $(LINKERS)
 
 # Extract the final kernel image
 $(KERNEL_IMAGE): $(KERNEL_ELF)
-	arm-none-eabi-objcopy $(KERNEL_ELF) -O binary $(KERNEL_IMAGE)
+	$(CROSS_COMPILER)-objcopy $(KERNEL_ELF) -O binary $(KERNEL_IMAGE)
 
 # Dissassemble the kernel elf for debugging
 disassemble: $(KERNEL_ELF) | $(LOG_DIR)
 
 $(LOG_DIR)/kernel.list: $(KERNEL_ELF) | $(LOG_DIR)
-	arm-none-eabi-objdump -D $(KERNEL_ELF) > $(LOG_DIR)/kernel.list
+	$(CROSS_COMPILER)-objdump -D $(KERNEL_ELF) > $(LOG_DIR)/kernel.list
+
+diss:
+	$(CROSS_COMPILER)-objdump -D $(INSPECT)
 
 # remove all non source directories and files
 clean:
