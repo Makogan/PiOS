@@ -11,7 +11,7 @@ CROSS_COMPILER = arm-none-eabi
 
 # Compilation flags
 ARCH = march=armv8-a
-OPT_LEVEL = O2
+OPT_LEVEL = O0
 
 CFLAGS = -nostartfiles -c -o
 
@@ -104,7 +104,7 @@ git:
 	git commit -m "$(USER) made minor changes on $(DATE) (this is an automatic message)"
 	git push
 
-%.dump: %.o; 
+%.dump: %.o;
 	arm-none-eabi-objdump -D $^
 
 # Print variable values

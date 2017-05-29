@@ -1,11 +1,11 @@
 //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 /*
-* Authors: Camilo Talero Nasir Osman 
+* Authors: Camilo Talero Nasir Osman
 *
 *
 * File type: C++
-* 
-* This file contains all functions needed to communicate with the Raspberry Pi™ ARM 
+*
+* This file contains all functions needed to communicate with the Raspberry Pi™ ARM
 * video core.
 */
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -29,7 +29,7 @@
 volatile Mail_Message_LED led_message =
 {
   .messageSize = sizeof(struct Mail_Message_LED),
-  .requestCode =0,
+  .request_response_code =0,
   .tagID = 0x00038041,
   .bufferSize = 8,
   .requestSize =0,
@@ -48,7 +48,7 @@ volatile Mail_Message_LED led_message =
 
 /*
 * Function to write a message to the mailbox
-* 
+*
 * Parameters:
 *   uint32_t message: the address to the message struct containing the message information
 *   uint32_t channel: the channel numer to which the message is sent
@@ -66,9 +66,9 @@ void write_to_mailbox(uint32_t message, Channel channel)
 
 /*
 * Function to read a message from the mailbox
-* 
+*
 * Parameters:
-*   uint32_t channel: the channel numer from which the message is read
+*   Channel channel: the channel number from which the message is read
 *
 * Returns:
 *   the content of the mailboxes response register for the given channel
@@ -81,7 +81,7 @@ uint32_t read_from_mailbox(Channel channel)
     // Get value of address of mailbox status register into status
     status = *(volatile uint32_t *)(MAIL_BASE + IO_BASE + 0x18);
   // If the empty bit is set repeat until mailbox not empty
-  while((status & 0x40000000)); 
+  while((status & 0x40000000));
 
   uint32_t response;
 
@@ -96,7 +96,7 @@ uint32_t read_from_mailbox(Channel channel)
 
 /*
 * Function to turn the ACT LED on or off
-* 
+*
 * Parameters:
 *   int value: one of ON or OFF
 */
@@ -104,7 +104,7 @@ void set_LED(int value)
 {
   // Set the default message values
   led_message.on_off_switch = (uint32_t) value;
-  led_message.requestCode = 0;
+  led_message.request_response_code = 0;
   led_message.requestSize = 0;
   led_message.pinNum = 130;
   led_message.end = 0;

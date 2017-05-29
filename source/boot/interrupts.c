@@ -21,7 +21,7 @@ void undefined_instruction_vector() __attribute__((interrupt("UNDEF")));
 void software_interrupt_vector() __attribute__((interrupt("SWI")));
 void prefetch_abort_vector() __attribute__((interrupt("ABORT")));
 void interrupt_vector() __attribute__((interrupt("IRQ")));
-void fast_interrupt_vector() __attribute__((optimize("O0"))) __attribute__((interrupt("FIQ")));
+void fast_interrupt_vector(); //__attribute__((optimize("O0"))) __attribute__((interrupt("FIQ")));
 
 
 void _reset_()
@@ -31,10 +31,7 @@ void _reset_()
 
 void undefined_instruction_vector()
 {
-	while(1)
-	{
 
-	}
 }
 
 void software_interrupt_vector()
