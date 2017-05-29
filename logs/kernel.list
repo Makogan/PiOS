@@ -1,0 +1,198 @@
+
+build/kernel.elf:     file format elf32-littlearm
+
+
+Disassembly of section .vector_table:
+
+00000000 <.vector_table>:
+   0:	ea002019 	b	806c <_reset_>
+   4:	ea002019 	b	8070 <undefined_instruction_vector>
+   8:	ea002019 	b	8074 <software_interrupt_vector>
+   c:	ea002019 	b	8078 <prefetch_abort_vector>
+  10:	ea002015 	b	806c <_reset_>
+  14:	ea002014 	b	806c <_reset_>
+  18:	ea002017 	b	807c <interrupt_vector>
+  1c:	ea002017 	b	8080 <fast_interrupt_vector>
+
+Disassembly of section .init:
+
+00008000 <_start>:
+    8000:	e3a0dd7d 	mov	sp, #8000	; 0x1f40
+    8004:	eaffffff 	b	8008 <kernel_main>
+
+Disassembly of section .text:
+
+00008008 <kernel_main>:
+    8008:	e92d4010 	push	{r4, lr}
+    800c:	e3a0080f 	mov	r0, #983040	; 0xf0000
+    8010:	eb000006 	bl	8030 <wait>
+    8014:	e3a00001 	mov	r0, #1
+    8018:	eb00002f 	bl	80dc <set_LED>
+    801c:	e3a0080f 	mov	r0, #983040	; 0xf0000
+    8020:	eb000002 	bl	8030 <wait>
+    8024:	e3a00000 	mov	r0, #0
+    8028:	eb00002b 	bl	80dc <set_LED>
+    802c:	eafffff6 	b	800c <kernel_main+0x4>
+
+00008030 <wait>:
+    8030:	e52db004 	push	{fp}		; (str fp, [sp, #-4]!)
+    8034:	e28db000 	add	fp, sp, #0
+    8038:	e24dd00c 	sub	sp, sp, #12
+    803c:	e50b0008 	str	r0, [fp, #-8]
+    8040:	ea000002 	b	8050 <wait+0x20>
+    8044:	e51b3008 	ldr	r3, [fp, #-8]
+    8048:	e2433001 	sub	r3, r3, #1
+    804c:	e50b3008 	str	r3, [fp, #-8]
+    8050:	e51b3008 	ldr	r3, [fp, #-8]
+    8054:	e3530000 	cmp	r3, #0
+    8058:	1afffff9 	bne	8044 <wait+0x14>
+    805c:	e320f000 	nop	{0}
+    8060:	e28bd000 	add	sp, fp, #0
+    8064:	e49db004 	pop	{fp}		; (ldr fp, [sp], #4)
+    8068:	e12fff1e 	bx	lr
+
+0000806c <_reset_>:
+    806c:	e12fff1e 	bx	lr
+
+00008070 <undefined_instruction_vector>:
+    8070:	eafffffe 	b	8070 <undefined_instruction_vector>
+
+00008074 <software_interrupt_vector>:
+    8074:	e1b0f00e 	movs	pc, lr
+
+00008078 <prefetch_abort_vector>:
+    8078:	e25ef004 	subs	pc, lr, #4
+
+0000807c <interrupt_vector>:
+    807c:	e25ef004 	subs	pc, lr, #4
+
+00008080 <fast_interrupt_vector>:
+    8080:	e24db004 	sub	fp, sp, #4
+    8084:	e320f000 	nop	{0}
+    8088:	e28bd004 	add	sp, fp, #4
+    808c:	e25ef004 	subs	pc, lr, #4
+
+00008090 <_Z16write_to_mailboxm7Channel>:
+    8090:	e3a02a0b 	mov	r2, #45056	; 0xb000
+    8094:	e3432f00 	movt	r2, #16128	; 0x3f00
+    8098:	e5923898 	ldr	r3, [r2, #2200]	; 0x898
+    809c:	e3530000 	cmp	r3, #0
+    80a0:	bafffffc 	blt	8098 <_Z16write_to_mailboxm7Channel+0x8>
+    80a4:	e1811200 	orr	r1, r1, r0, lsl #4
+    80a8:	e58218a0 	str	r1, [r2, #2208]	; 0x8a0
+    80ac:	e12fff1e 	bx	lr
+
+000080b0 <read_from_mailbox>:
+    80b0:	e3a02a0b 	mov	r2, #45056	; 0xb000
+    80b4:	e3432f00 	movt	r2, #16128	; 0x3f00
+    80b8:	e1a01000 	mov	r1, r0
+    80bc:	e5923898 	ldr	r3, [r2, #2200]	; 0x898
+    80c0:	e3130101 	tst	r3, #1073741824	; 0x40000000
+    80c4:	1afffffc 	bne	80bc <read_from_mailbox+0xc>
+    80c8:	e5920880 	ldr	r0, [r2, #2176]	; 0x880
+    80cc:	e200300f 	and	r3, r0, #15
+    80d0:	e1530001 	cmp	r3, r1
+    80d4:	1afffffd 	bne	80d0 <read_from_mailbox+0x20>
+    80d8:	e12fff1e 	bx	lr
+
+000080dc <set_LED>:
+    80dc:	e3082150 	movw	r2, #33104	; 0x8150
+    80e0:	e3402000 	movt	r2, #0
+    80e4:	e3a03000 	mov	r3, #0
+    80e8:	e3a0c082 	mov	ip, #130	; 0x82
+    80ec:	e3a01a0b 	mov	r1, #45056	; 0xb000
+    80f0:	e3431f00 	movt	r1, #16128	; 0x3f00
+    80f4:	e5820018 	str	r0, [r2, #24]
+    80f8:	e5823004 	str	r3, [r2, #4]
+    80fc:	e5823010 	str	r3, [r2, #16]
+    8100:	e582c014 	str	ip, [r2, #20]
+    8104:	e582301c 	str	r3, [r2, #28]
+    8108:	e5913898 	ldr	r3, [r1, #2200]	; 0x898
+    810c:	e3530000 	cmp	r3, #0
+    8110:	bafffffc 	blt	8108 <set_LED+0x2c>
+    8114:	e1a03202 	lsl	r3, r2, #4
+    8118:	e3a02a0b 	mov	r2, #45056	; 0xb000
+    811c:	e3432f00 	movt	r2, #16128	; 0x3f00
+    8120:	e3833008 	orr	r3, r3, #8
+    8124:	e58138a0 	str	r3, [r1, #2208]	; 0x8a0
+    8128:	e5923898 	ldr	r3, [r2, #2200]	; 0x898
+    812c:	e3130101 	tst	r3, #1073741824	; 0x40000000
+    8130:	1afffffc 	bne	8128 <set_LED+0x4c>
+    8134:	e5923880 	ldr	r3, [r2, #2176]	; 0x880
+    8138:	e203300f 	and	r3, r3, #15
+    813c:	e3530008 	cmp	r3, #8
+    8140:	1afffffd 	bne	813c <set_LED+0x60>
+    8144:	e12fff1e 	bx	lr
+
+Disassembly of section .ARM.exidx:
+
+00008148 <.ARM.exidx>:
+    8148:	7fffff48 	svcvc	0x00ffff48
+    814c:	00000001 	andeq	r0, r0, r1
+
+Disassembly of section .data:
+
+00008150 <led_message>:
+    8150:	00000020 	andeq	r0, r0, r0, lsr #32
+    8154:	00000000 	andeq	r0, r0, r0
+    8158:	00038041 	andeq	r8, r3, r1, asr #32
+    815c:	00000008 	andeq	r0, r0, r8
+    8160:	00000000 	andeq	r0, r0, r0
+    8164:	00000082 	andeq	r0, r0, r2, lsl #1
+    8168:	00000001 	andeq	r0, r0, r1
+    816c:	00000000 	andeq	r0, r0, r0
+
+Disassembly of section .comment:
+
+00008170 <.comment>:
+    8170:	3a434347 	bcc	10d8e94 <led_message+0x10d0d44>
+    8174:	4e472820 	cdpmi	8, 4, cr2, cr7, cr0, {1}
+    8178:	6f542055 	svcvs	0x00542055
+    817c:	20736c6f 	rsbscs	r6, r3, pc, ror #24
+    8180:	20726f66 	rsbscs	r6, r2, r6, ror #30
+    8184:	204d5241 	subcs	r5, sp, r1, asr #4
+    8188:	65626d45 	strbvs	r6, [r2, #-3397]!	; 0xfffff2bb
+    818c:	64656464 	strbtvs	r6, [r5], #-1124	; 0xfffffb9c
+    8190:	6f725020 	svcvs	0x00725020
+    8194:	73736563 	cmnvc	r3, #415236096	; 0x18c00000
+    8198:	2073726f 	rsbscs	r7, r3, pc, ror #4
+    819c:	30322d36 	eorscc	r2, r2, r6, lsr sp
+    81a0:	712d3731 			; <UNDEFINED> instruction: 0x712d3731
+    81a4:	70752d32 	rsbsvc	r2, r5, r2, lsr sp
+    81a8:	65746164 	ldrbvs	r6, [r4, #-356]!	; 0xfffffe9c
+    81ac:	2e362029 	cdpcs	0, 3, cr2, cr6, cr9, {1}
+    81b0:	20312e33 	eorscs	r2, r1, r3, lsr lr
+    81b4:	37313032 			; <UNDEFINED> instruction: 0x37313032
+    81b8:	35313230 	ldrcc	r3, [r1, #-560]!	; 0xfffffdd0
+    81bc:	65722820 	ldrbvs	r2, [r2, #-2080]!	; 0xfffff7e0
+    81c0:	7361656c 	cmnvc	r1, #108, 10	; 0x1b000000
+    81c4:	5b202965 	blpl	812760 <led_message+0x80a610>
+    81c8:	2f4d5241 	svccs	0x004d5241
+    81cc:	65626d65 	strbvs	r6, [r2, #-3429]!	; 0xfffff29b
+    81d0:	64656464 	strbtvs	r6, [r5], #-1124	; 0xfffffb9c
+    81d4:	622d362d 	eorvs	r3, sp, #47185920	; 0x2d00000
+    81d8:	636e6172 	cmnvs	lr, #-2147483620	; 0x8000001c
+    81dc:	65722068 	ldrbvs	r2, [r2, #-104]!	; 0xffffff98
+    81e0:	69736976 	ldmdbvs	r3!, {r1, r2, r4, r5, r6, r8, fp, sp, lr}^
+    81e4:	32206e6f 	eorcc	r6, r0, #1776	; 0x6f0
+    81e8:	31353534 	teqcc	r5, r4, lsr r5
+    81ec:	Address 0x00000000000081ec is out of bounds.
+
+
+Disassembly of section .ARM.attributes:
+
+00008170 <.ARM.attributes>:
+    8170:	00003041 	andeq	r3, r0, r1, asr #32
+    8174:	61656100 	cmnvs	r5, r0, lsl #2
+    8178:	01006962 	tsteq	r0, r2, ror #18
+    817c:	00000026 	andeq	r0, r0, r6, lsr #32
+    8180:	412d3805 			; <UNDEFINED> instruction: 0x412d3805
+    8184:	070e0600 	streq	r0, [lr, -r0, lsl #12]
+    8188:	09010841 	stmdbeq	r1, {r0, r6, fp}
+    818c:	14041202 	strne	r1, [r4], #-514	; 0xfffffdfe
+    8190:	17011501 	strne	r1, [r1, -r1, lsl #10]
+    8194:	1a011803 	bne	4e1a8 <led_message+0x46058>
+    8198:	22021e01 	andcs	r1, r2, #1, 28
+    819c:	44012a01 	strmi	r2, [r1], #-2561	; 0xfffff5ff
+    81a0:	Address 0x00000000000081a0 is out of bounds.
+

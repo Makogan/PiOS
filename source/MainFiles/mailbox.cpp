@@ -16,7 +16,7 @@
 */
 //========================================================================================
 
-#include "mailbox.h"
+#include <mailbox.h>
 
 //########################################################################################
 
@@ -26,9 +26,9 @@
 */
 //========================================================================================
 
-volatile struct Message led_message =
+volatile Mail_Message_LED led_message =
 {
-  .messageSize = sizeof(struct Message),
+  .messageSize = sizeof(struct Mail_Message_LED),
   .requestCode =0,
   .tagID = 0x00038041,
   .bufferSize = 8,
@@ -53,7 +53,7 @@ volatile struct Message led_message =
 *   uint32_t message: the address to the message struct containing the message information
 *   uint32_t channel: the channel numer to which the message is sent
 */
-void write_to_mailbox(uint32_t message, uint32_t channel)
+void write_to_mailbox(uint32_t message, Channel channel)
 {
   uint32_t status;
 
@@ -61,7 +61,7 @@ void write_to_mailbox(uint32_t message, uint32_t channel)
     status = *(volatile uint32_t *)(MAIL_BASE + IO_BASE + 0x18);
   while((status & 0x80000000));
 
-  *(volatile uint32_t *)(MAIL_BASE + IO_BASE + 0x20) = ((uint32_t)(message) & 0xfffffff0) | (uint32_t)(8);
+  *(volatile uint32_t *)(MAIL_BASE + IO_BASE + 0x20) = ((uint32_t)(message) << 4) | (uint32_t)(channel);
 }
 
 /*
@@ -71,9 +71,9 @@ void write_to_mailbox(uint32_t message, uint32_t channel)
 *   uint32_t channel: the channel numer from which the message is read
 *
 * Returns:
-*   uint32_t: the content of the mailboxes response register for the given channel
+*   the content of the mailboxes response register for the given channel
 */
-uint32_t read_from_mailbox(uint32_t channel)
+uint32_t read_from_mailbox(Channel channel)
 {
   uint32_t status;
 
@@ -109,8 +109,8 @@ void set_LED(int value)
   led_message.pinNum = 130;
   led_message.end = 0;
 
-  write_to_mailbox(((uint32_t) &led_message), 8);
+  write_to_mailbox(((uint32_t) &led_message), PTAG_ARM_TO_VC);
 
-  read_from_mailbox(8);
+  read_from_mailbox(PTAG_ARM_TO_VC);
 }
 //########################################################################################

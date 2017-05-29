@@ -15,7 +15,7 @@ SECTIONS
     *(.text)
   }
 
-  .data ALIGN(0x20) : 
+  .data ALIGN(0x10) : 
   {
     *(.data)
   }

@@ -11,7 +11,7 @@ CROSS_COMPILER = arm-none-eabi
 
 # Compilation flags
 ARCH = march=armv8-a
-OPT_LEVEL = O0
+OPT_LEVEL = O2
 
 CFLAGS = -nostartfiles -c -o
 
@@ -21,7 +21,7 @@ PERMA_DIRS := ./Documentation $(source)
 
 SUBDIRECTORIES ?= $(filter-out ./Documentation ./Documentation/%, $(filter-out ./ ./.%, $(shell find ./ -maxdepth 10 -type d)))
 
-I_DIRS ?= $(addprefix -I , $(SUBDIRECTORIES))
+I_DIRS ?= $(addprefix -I , $(filter ./source ./source/%, $(SUBDIRECTORIES)))
 
 L_DIRS ?= $(addprefix -L , $(subst $(SOURCE_DIR),$(OBJECT_DIR), $(SUBDIRECTORIES)))
 
@@ -65,10 +65,10 @@ $(OUTPUT_DIRS):
 
 # Create all .c object files
 $(OBJECTS_C): $(OBJECT_DIR)%.o: $(SOURCE_DIR)%.c | $(OUTPUT_DIRS)
-	$(CROSS_COMPILER)-$(CC) -$(OPT_LEVEL) -$(ARCH) $< $(CFLAGS) $@
+	$(CROSS_COMPILER)-$(CC) -$(OPT_LEVEL) -$(ARCH) $< $(CFLAGS) $@ $(I_DIRS)
 
 $(OBJECTS_CPP): $(OBJECT_DIR)%.o: $(SOURCE_DIR)%.cpp | $(OUTPUT_DIRS)
-	$(CROSS_COMPILER)-$(CCPP) -$(OPT_LEVEL) -$(ARCH) $< $(CFLAGS) $@
+	$(CROSS_COMPILER)-$(CCPP) -$(OPT_LEVEL) -$(ARCH) $< $(CFLAGS) $@ $(I_DIRS)
 
 # Create all .s object files
 $(OBJECTS_ASS): $(OBJECT_DIR)%.o: $(SOURCE_DIR)%.s | $(OUTPUT_DIRS)

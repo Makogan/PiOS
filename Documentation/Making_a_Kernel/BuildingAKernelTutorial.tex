@@ -127,7 +127,7 @@ To \hypertarget{disassemble}{disassemble} the final .img binary for debugging:
 	arm-none-eabi-objdump -D <elf>
 \end{lstlisting}
 
-Although not necessary for compilation, it is recommended to execute and store the output of this command in a file, as it is very helpful for debugging and verifying the correctness of the final binary.
+Although not necessary for compilation, it is recommended to execute and store the output of this command in a file, as it is very helpful for debugging and verifying the correctness of the final binary (.img).
 \\~\\
 Example:
 \begin{lstlisting}[style = bash, xleftmargin=0\textwidth]
@@ -140,7 +140,7 @@ For more information refer to the \href{https://gcc.gnu.org/onlinedocs/}{officia
 \label{sec:frist program}
 
 After all prerequisites are met, it is necessary to verify that things work properly. This section simply provides a minimal example to test that all requirements were installed correctly. A more in depth explanation is provided on the \hyperref[sec:mailbox]{Mailbox} section.
-
+\\~\\
 To test whether everything is working fine, we just want to turn on the Pi's ACT LED on, however on the Pi 3, the led is not connected to the GPIO lines, so we have to communicate with the video core through the mailbox to turn it on. To be extra-sure everything is fine, we want it to blink. The following C code is used to send the appropriate message to the mailbox to turn the LED on.
 
 \lstset{language=C}
@@ -181,47 +181,45 @@ To test whether everything is working fine, we just want to turn on the Pi's ACT
 	/** Main function - we'll never return from here */
 	int kernel_main(void)
 	{
-	uint32_t mailbox = MAIL_BASE + REGISTERS_BASE + 0x18;
-	volatile uint32_t status;
-	
-	while(1)
-	{
-		do
-			status = *(volatile uint32_t *)(mailbox);
-		while((status & 0x80000000));
+		uint32_t mailbox = MAIL_BASE + REGISTERS_BASE + 0x18;
+		volatile uint32_t status;
 		
-		*(volatile uint32_t *)(MAIL_BASE + REGISTERS_BASE + 0x20) = 
-			((uint32_t)(&m) & 0xfffffff0) | (uint32_t)(8);
-		
-		int i=0;
-		
-		while(i<0xF0000)
-			i++;
-		
-		if(m.on_off_switch == 0)
-			m.on_off_switch = 1;
-		
-		else
-			m.on_off_switch = 0;
-		
-		m.requestCode = 0;
-		m.requestSize = 0;
-		m.pinNum = 130;
-		m.end = 0;
-		
-		do
-			status = *(volatile uint32_t *)(mailbox);
-		while((status & 0x40000000));
-		
-		uint32_t temp;
-		
-		do
-			temp = *(uint32_t *)(MAIL_BASE + REGISTERS_BASE);
-			temp = temp & 0xF;
-		while(temp != 8);
-		
+		while(1)
+		{
+			do
+				status = *(volatile uint32_t *)(mailbox);
+			while((status & 0x80000000));
+			
+			*(volatile uint32_t *)(MAIL_BASE + REGISTERS_BASE + 0x20) = 
+				((uint32_t)(&m) & 0xfffffff0) | (uint32_t)(8);
+			
+			int i=0;
+			
+			while(i<0xF0000)
+				i++;
+			
+			if(m.on_off_switch == 0)
+				m.on_off_switch = 1;
+			
+			else
+				m.on_off_switch = 0;
+			
+			m.requestCode = 0;
+			m.requestSize = 0;
+			m.pinNum = 130;
+			m.end = 0;
+			
+			do
+				status = *(volatile uint32_t *)(mailbox);
+			while((status & 0x40000000));
+			
+			uint32_t temp;
+			
+			do
+				temp = *(uint32_t *)(MAIL_BASE + REGISTERS_BASE);
+				temp = temp & 0xF;
+			while(temp != 8);
 		}
-	
 	}
 \end{lstlisting}
 
@@ -245,7 +243,6 @@ However we still are not done. The Raspberry Pi always begins execution at addre
 \begin{lstlisting}[style = C]
 	SECTIONS 
 	{
-	
 		.init 0x8000 : 
 		{
 		*(.init)
@@ -260,20 +257,12 @@ However we still are not done. The Raspberry Pi always begins execution at addre
 		{
 		*(.data)
 		}
-		
-		.comment :
-		{
-		*(.comment)
-		}
-		
-		.ARM.attributes :
-		{
-		*(.ARM.attributes)
-		}
 	}
 	
 \end{lstlisting}
 
+\textcolor{red}{WARNING:} Depending on the compiler, sections of the code could be optimized out, be wary of compiler optimization options.
+\\~\\
 If the reader doesn't fully understand what the C code is doing, it will be further explained in the following sections. However the functioning of linker scripts, or assembly language will not be explained.
 	
 \section{Mailbox}
