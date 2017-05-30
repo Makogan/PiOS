@@ -1,12 +1,12 @@
 //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 /*
-* Authors: Camilo Talero Nasir Osman 
+* Authors: Camilo Talero Nasir Osman
 *
 *
 * File type: ARM Assembly
-* 
-* This file contains assembly code needed to initialize the hardware of the 
-*Raspberry PI™ before excution of the main kernel loop
+*
+* This file contains assembly code needed to initialize the hardware of the
+*Raspberry PI™ before execution of the main kernel loop
 */
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

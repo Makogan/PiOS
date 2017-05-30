@@ -57,7 +57,7 @@ KERNEL_ELF ?= $(BUILD_DIR)/kernel.elf
 .PHONY: all disassemble clean git
 
 # Compile and link the entire project
-all: $(KERNEL_IMAGE) $(LOG_DIR)/kernel.list
+all: $(KERNEL_IMAGE) $(LOG_DIR)/kernel.list copy
 
 # Create any missing output directories
 $(OUTPUT_DIRS):
@@ -103,6 +103,11 @@ git:
 	git add -A
 	git commit -m "$(USER) made minor changes on $(DATE) (this is an automatic message)"
 	git push
+
+copy:
+	if [ -f /run/media/camilo.talero/GPMICROSD/kernel.img ]; then rm /run/media/camilo.talero/GPMICROSD/kernel.img; fi;
+	cp $(KERNEL_IMAGE) /run/media/camilo.talero/GPMICROSD/
+#eject /run/media/camilo.talero/GPMICROSD/
 
 %.dump: %.o;
 	arm-none-eabi-objdump -D $^

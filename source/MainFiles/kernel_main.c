@@ -1,10 +1,10 @@
 //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 /*
-* Authors: Camilo Talero Nasir Osman 
+* Authors: Camilo Talero Nasir Osman
 *
 *
 * File type: C
-* 
+*
 * This files contains the main loop for the PiOS kernel and some small
 * helper functions
 */
@@ -38,20 +38,27 @@ void wait(uint32_t time);
 //========================================================================================
 
 /*
-* The main control loop for the kernel. We will never exit this function. 
+* The main control loop for the kernel. We will never exit this function.
 */
 void kernel_main(void)
 {
 
   while(1)
   {
-    wait(0xF0000);
+    int tst = 0;
+
+    wait(0xA0000);
 
     set_LED(ON);
 
-    wait(0xF0000);
+    wait(0xA0000);
 
     set_LED(OFF);
+
+    //if(tst > 10)
+    init_display();
+
+    tst++;
   }
 
 }
@@ -60,8 +67,8 @@ void kernel_main(void)
 /*
 * A function to wait.
 *
-* Parameters: 
-*   uint32_t time: the amount of time to wait. 
+* Parameters:
+*   uint32_t time: the amount of time to wait.
 */
 void wait(uint32_t time)
 {

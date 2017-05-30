@@ -23,6 +23,16 @@
 #define MAIL_EMPTY 0x40000000 // 32 bit value, 31st is 1, used to check state of 31st
                               // bit (empty bit in the mailbox status register)
 
+#define END 0
+#define ALLOCATE_BUFFER 0x00040001
+#define BLANK_SCREEN 0x00040002
+#define GET_PHYS_DISP 0x00040003
+#define TEST_PHYS_DISP 0x00044003
+#define SET_PHYS_DISP 0x00048003
+#define SET_VIRT_FB 0x00048004
+#define SET_COLOR_DEPTH 0x00048005
+
+
 typedef enum
 {
   POWER_MANAGEMENT = 0,
@@ -56,22 +66,17 @@ struct Mail_Message_LED
 /*
 * This is the structure definition for a frame buffer message
 */
-struct Mail_Message_FrameBuffer
+struct Mail_Message_FB
 {
   uint32_t messageSize;
   uint32_t request_response_code;
 
-  uint32_t disp_width;
-  uint32_t disp_height;
-  uint32_t buff_width;
-  uint32_t buff_height;
+  uint32_t tagID;
+  uint32_t bufferSize;
+  uint32_t requestSize;
 
-  uint32_t pitch; // request 0 response = num of bytes between each row of the fb ?????????
-  uint32_t bits_per_pixel;
-  uint32_t x_pos; // x offset of virtual fb
-  uint32_t y_pos; // y offset of requested fb
-  uint32_t buff_address; // request set to 0 response 0 if fails or address of buffer allocated by vc;
-  uint32_t buff_size; // request set to 0, response size of buffer alocated by vc
+  int response_request1;
+  int response_request2;
 
   uint32_t end;
 };
@@ -85,6 +90,8 @@ void write_to_mailbox(uint32_t message, uint32_t channel);
 uint32_t read_from_mailbox(Channel channel);
 
 void set_LED(int value);
+void init_display();
+int test();
 
 #ifdef __cplusplus
   }

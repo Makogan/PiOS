@@ -2,7 +2,7 @@
 
 #define RPI_INTERRUPT_CONTROLLER_BASE   (IO_BASE + 0xB200)
 
-typedef struct rpi_irq_controller_t
+struct rpi_irq_controller_t
 {
     volatile uint32_t IRQ_basic_pending;
     volatile uint32_t IRQ_pending_1;
@@ -16,12 +16,21 @@ typedef struct rpi_irq_controller_t
     volatile uint32_t Disable_Basic_IRQs;
 };
 
+#ifdef __cplusplus
+  extern "C"
+  {
+#endif
+
 void _reset_() __attribute__((interrupt("RESET")));
 void undefined_instruction_vector() __attribute__((interrupt("UNDEF")));
 void software_interrupt_vector() __attribute__((interrupt("SWI")));
 void prefetch_abort_vector() __attribute__((interrupt("ABORT")));
 void interrupt_vector() __attribute__((interrupt("IRQ")));
 void fast_interrupt_vector(); //__attribute__((optimize("O0"))) __attribute__((interrupt("FIQ")));
+
+#ifdef __cplusplus
+  }
+#endif
 
 
 void _reset_()
