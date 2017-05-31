@@ -55,8 +55,8 @@ void kernel_main(void)
 
     set_LED(OFF);
 
-    //if(tst > 10)
-    init_display();
+    if(tst > 10)
+      test();
 
     tst++;
   }

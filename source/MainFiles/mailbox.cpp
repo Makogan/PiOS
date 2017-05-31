@@ -30,7 +30,7 @@ volatile Mail_Message_LED led_message =
 {
   .messageSize = sizeof(struct Mail_Message_LED),
   .request_response_code =0,
-  .tagID = 0x00038041,
+  .tagID = SET_GPIO_STATE,
   .bufferSize = 8,
   .requestSize = 0,
   .pinNum = 130,
@@ -59,7 +59,7 @@ void write_to_mailbox(uint32_t message, Channel channel)
 
   do
     status = *(volatile uint32_t *)(MAIL_BASE + IO_BASE + 0x18);
-  while((status & 0x80000000));
+  while((status & MAIL_FULL));
 
   *(volatile uint32_t *)(MAIL_BASE + IO_BASE + 0x20) = ((uint32_t)(message) /*<< 4)*/ | (uint32_t)(channel));
 }
@@ -81,7 +81,7 @@ uint32_t read_from_mailbox(Channel channel)
     // Get value of address of mailbox status register into status
     status = *(volatile uint32_t *)(MAIL_BASE + IO_BASE + 0x18);
   // If the empty bit is set repeat until mailbox not empty
-  while((status & 0x40000000));
+  while((status & MAIL_EMPTY));
 
   uint32_t response;
 
@@ -120,7 +120,7 @@ void init_display()
 
   message.messageSize = sizeof(Mail_Message_FB);
   message.request_response_code = 0;
-  message.tagID = SET_PHYS_DISP;
+  message.tagID = SET_PHYSICAL_WIDTH_HEIGHT;
   message.bufferSize = 8;
   message.requestSize = 8;
   message.response_request1 = 1024;
@@ -130,7 +130,7 @@ void init_display()
   write_to_mailbox((uint32_t) &message, PTAG_ARM_TO_VC);
 
   message.request_response_code = 0;
-  message.tagID = SET_VIRT_FB;
+  message.tagID = SET_VIRTUAL_WIDTH_HEIGHT;
   message.bufferSize = 8;
   message.requestSize = 8;
   message.response_request1 = 1024;
@@ -140,7 +140,7 @@ void init_display()
   write_to_mailbox((uint32_t) &message, PTAG_ARM_TO_VC);
 
   message.request_response_code = 0;
-  message.tagID = SET_COLOR_DEPTH;
+  message.tagID = SET_DEPTH;
   message.bufferSize = 4;
   message.requestSize = 4;
   message.response_request1 = 16;
@@ -150,7 +150,7 @@ void init_display()
   write_to_mailbox((uint32_t) &message, PTAG_ARM_TO_VC);
 
   message.request_response_code = 0;
-  message.tagID = ALLOCATE_BUFFER;
+  message.tagID = ALLOCATE;
   message.bufferSize = 8;
   message.requestSize = 8;
   message.response_request1 = 0;
@@ -158,6 +158,11 @@ void init_display()
   message.end = END;
 
   write_to_mailbox((uint32_t) &message, PTAG_ARM_TO_VC);
+
+  for(uint i; i<message.response_request2; i++)
+  {
+    *(volatile uint32_t)(message.response_request1 + i*2) = 0;
+  }
 }
 
 int test()
