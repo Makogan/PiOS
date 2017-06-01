@@ -165,7 +165,7 @@ volatile temp t __attribute__ ((aligned (16)))=
   .tag3 = SET_DEPTH,
   .buff_size3 = 4,
   .val_length3 = 4,
-  .depth = 32,
+  .depth = 16,
 
   .tag4 = ALLOCATE,
   .buff_size4 = 8,
@@ -184,13 +184,11 @@ void wait(uint32_t time)
 
 void init_display()
 {
-  wait(0xA00000);
-
   write_to_mailbox((uint32_t) &t, PTAG_ARM_TO_VC);
 
   for(int i=0; i<t.fb_size; i++)
   {
-    *(volatile uint32_t *)(t.fb_ptr + i*4) = 0xFFFFFF00;
+    *(volatile uint32_t *)(t.fb_ptr + i*2) = 0xFFFF;
   }
 
   /*volatile Mail_Message_FB message __attribute__ ((aligned (16)));
