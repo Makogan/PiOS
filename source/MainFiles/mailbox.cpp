@@ -190,7 +190,7 @@ void init_display()
 
   for(int i=0; i<t.fb_size; i++)
   {
-    *(volatile uint32_t *)(t.fb_ptr + i*4) = ~0;
+    *(volatile uint32_t *)(t.fb_ptr + i*4) = 0xFFFFFF00;
   }
 
   /*volatile Mail_Message_FB message __attribute__ ((aligned (16)));
