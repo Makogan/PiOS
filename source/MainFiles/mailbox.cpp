@@ -114,9 +114,86 @@ void set_LED(int value)
   read_from_mailbox(PTAG_ARM_TO_VC);
 }
 
+struct temp
+{
+  int size;
+  int request;
+
+  int tag1;
+  int buff_size1;
+  int val_length1;
+  int widthP;
+  int heightP;
+
+  int tag2;
+  int buff_size2;
+  int val_length2;
+  int widthV;
+  int heightV;
+
+  int tag3;
+  int buff_size3;
+  int val_length3;
+  int depth;
+
+  int tag4;
+  int buff_size4;
+  int val_length4;
+  int fb_ptr;
+  int fb_size;   
+
+  int end;
+};
+
+volatile temp t __attribute__ ((aligned (16)))=
+{
+  .size = sizeof(temp),
+  .request = 0,
+
+  .tag1 = SET_PHYSICAL_WIDTH_HEIGHT,
+  .buff_size1 = 8,
+  .val_length1 = 8,
+  .widthP = 1024,
+  .heightP = 768,
+
+  .tag2 = SET_VIRTUAL_WIDTH_HEIGHT,
+  .buff_size2 = 8,
+  .val_length2 = 8,
+  .widthV = 1024,
+  .heightV = 768,
+
+  .tag3 = SET_DEPTH,
+  .buff_size3 = 4,
+  .val_length3 = 4,
+  .depth = 32,
+
+  .tag4 = ALLOCATE,
+  .buff_size4 = 8,
+  .val_length4 = 8,
+  .fb_ptr = 0,
+  .fb_size = 0,
+
+  .end = END,
+};
+
+void wait(uint32_t time)
+{
+  while (time > 0)
+    time--;
+}
+
 void init_display()
 {
-  Mail_Message_FB message;
+  wait(0xA00000);
+
+  write_to_mailbox((uint32_t) &t, PTAG_ARM_TO_VC);
+
+  for(int i=0; i<t.fb_size; i++)
+  {
+    *(volatile uint32_t *)(t.fb_ptr + i*4) = ~0;
+  }
+
+  /*volatile Mail_Message_FB message __attribute__ ((aligned (16)));
 
   message.messageSize = sizeof(Mail_Message_FB);
   message.request_response_code = 0;
@@ -159,15 +236,17 @@ void init_display()
 
   write_to_mailbox((uint32_t) &message, PTAG_ARM_TO_VC);
 
-  for(uint i; i<message.response_request2; i++)
+  for(int i=0; i<message.response_request2; i++)
   {
-    *(volatile uint32_t)(message.response_request1 + i*2) = 0;
-  }
+    *(volatile uint32_t*)(message.response_request1 + i*2) = 0;
+  }*/
 }
+
+
 
 int test()
 {
-  Mail_Message_FB message;
+  volatile Mail_Message_FB message;
 
   message.messageSize = sizeof(Mail_Message_FB);
   message.request_response_code = 0;

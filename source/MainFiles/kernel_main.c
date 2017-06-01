@@ -45,7 +45,7 @@ void kernel_main(void)
 
   while(1)
   {
-    int tst = 0;
+    volatile int tst = 0;
 
     wait(0xA0000);
 
@@ -55,10 +55,7 @@ void kernel_main(void)
 
     set_LED(OFF);
 
-    if(tst > 10)
-      test();
-
-    tst++;
+    init_display();
   }
 
 }

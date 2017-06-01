@@ -25,7 +25,7 @@
 
 //Taken from: https://github.com/raspberrypi/linux/blob/rpi-4.9.y/include/soc/bcm2835/raspberrypi-firmware.h
 typedef enum {
-  END =                           0,
+  END =                                    0,
   GET_FIRMWARE_REVISION =                  0x00000001,
 
   SET_CURSOR_INFO =                        0x00008010,
@@ -112,10 +112,10 @@ typedef enum {
   SET_VSYNC =                  0x0004800e,
   SET_BACKLIGHT =              0x0004800f,
 
-  VCHIQ_INIT =                             0x00048010,
+  VCHIQ_INIT =                 0x00048010,
 
-  GET_COMMAND_LINE =                       0x00050001,
-  GET_DMA_CHANNELS =                       0x00060001,
+  GET_COMMAND_LINE =           0x00050001,
+  GET_DMA_CHANNELS =           0x00060001,
 }Property_tag;
 
 
@@ -154,17 +154,17 @@ struct Mail_Message_LED
 */
 struct Mail_Message_FB
 {
-  uint32_t messageSize;
-  uint32_t request_response_code;
+  int messageSize;
+  int request_response_code;
 
-  uint32_t tagID;
-  uint32_t bufferSize;
-  uint32_t requestSize;
+  int tagID;
+  int bufferSize;
+  int requestSize;
 
   int response_request1;
   int response_request2;
 
-  uint32_t end;
+  int end;
 };
 
 #ifdef __cplusplus

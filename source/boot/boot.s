@@ -15,4 +15,6 @@
 
 _start:
 	ldr sp, =8000 // initialize stack pointer
+	//bl		EnableJTAG // Enable JTAG
+	//bl		InitUART //This is important to be  able to use UART
 	b kernel_main

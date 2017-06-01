@@ -53,11 +53,10 @@ OBJECTS := $(OBJECTS_C) $(OBJECTS_ASS) $(OBJECTS_CPP)
 KERNEL_IMAGE ?= kernel.img
 KERNEL_ELF ?= $(BUILD_DIR)/kernel.elf
 
-
 .PHONY: all disassemble clean git
 
 # Compile and link the entire project
-all: $(KERNEL_IMAGE) $(LOG_DIR)/kernel.list copy
+all: $(KERNEL_IMAGE) $(LOG_DIR)/kernel.list #copy
 
 # Create any missing output directories
 $(OUTPUT_DIRS):
@@ -76,7 +75,7 @@ $(OBJECTS_ASS): $(OBJECT_DIR)%.o: $(SOURCE_DIR)%.s | $(OUTPUT_DIRS)
 
 # Link all .o object files into the final .elf binary
 $(KERNEL_ELF): $(OBJECTS)
-	$(CROSS_COMPILER)-ld $(OBJECTS) -o $(KERNEL_ELF) -T $(LINKERS)
+	$(CROSS_COMPILER)-ld $(OBJECTS) source/gpio.o source/uart.o -o $(KERNEL_ELF) -T $(LINKERS)
 
 # Extract the final kernel image
 $(KERNEL_IMAGE): $(KERNEL_ELF)
@@ -105,8 +104,8 @@ git:
 	git push
 
 copy:
-	if [ -f /run/media/camilo.talero/GPMICROSD/kernel.img ]; then rm /run/media/camilo.talero/GPMICROSD/kernel.img; fi;
-	cp $(KERNEL_IMAGE) /run/media/camilo.talero/GPMICROSD/
+	if [ -f /media/camilo/GPMICROSD/kernel.img ]; then rm /media/camilo/GPMICROSD/kernel.img; fi;
+	cp $(KERNEL_IMAGE) /media/camilo/GPMICROSD/
 #eject /run/media/camilo.talero/GPMICROSD/
 
 %.dump: %.o;
