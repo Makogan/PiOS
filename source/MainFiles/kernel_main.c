@@ -42,20 +42,27 @@ void wait(uint32_t time);
 */
 void kernel_main(void)
 {
+  volatile int tst = 0;
+
+  /*wait(0xF0000);
+
+  set_LED(ON);
+
+  wait(0xF0000);
+
+  set_LED(OFF);*/
+
+  init_display();
 
   while(1)
   {
-    volatile int tst = 0;
-
-    wait(0xA0000);
+   /* wait(0xF0000);
 
     set_LED(ON);
 
-    wait(0xA0000);
+    wait(0xF0000);
 
-    set_LED(OFF);
-
-    init_display();
+    set_LED(OFF);*/
   }
 
 }

@@ -1,5 +1,8 @@
 # The following makefile was made by Camilo Talero
 
+MICRO_SD ?= /media/camilo/GPMICROSD
+#$(shell find /media/camilo -name "GPMICROSD")
+
 DATE := $(shell date +'%y.%m.%d %H:%M:%S')
 USER ?= $(shell -u -n)
 
@@ -103,10 +106,15 @@ git:
 	git commit -m "$(USER) made minor changes on $(DATE) (this is an automatic message)"
 	git push
 
+transfer: copy eject
+
 copy:
-	if [ -f /media/camilo/GPMICROSD/kernel.img ]; then rm /media/camilo/GPMICROSD/kernel.img; fi;
-	cp $(KERNEL_IMAGE) /media/camilo/GPMICROSD/
-#eject /run/media/camilo.talero/GPMICROSD/
+	if [ -f $(MICRO_SD)kernel.img ]; then rm $(MICRO_SD)kernel.img; fi;
+	cp $(KERNEL_IMAGE) $(MICRO_SD)
+
+eject:
+	umount $(MICRO_SD)
+#$(MICRO_SD)
 
 %.dump: %.o;
 	arm-none-eabi-objdump -D $^

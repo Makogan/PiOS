@@ -139,8 +139,8 @@ struct temp
   int tag4;
   int buff_size4;
   int val_length4;
-  int fb_ptr;
   int fb_size;   
+  int fb_ptr;
 
   int end;
 };
@@ -169,9 +169,9 @@ volatile temp t __attribute__ ((aligned (16)))=
 
   .tag4 = ALLOCATE,
   .buff_size4 = 8,
-  .val_length4 = 8,
+  .val_length4 = 4,
+  .fb_size = 16,
   .fb_ptr = 0,
-  .fb_size = 0,
 
   .end = END,
 };
@@ -182,65 +182,33 @@ void wait(uint32_t time)
     time--;
 }
 
-void init_display()
+void blink()
 {
-  write_to_mailbox((uint32_t) &t, PTAG_ARM_TO_VC);
+  wait(0xF0000);
 
-  for(int i=0; i<t.fb_size; i++)
-  {
-    *(volatile uint32_t *)(t.fb_ptr + i*2) = 0xFFFF;
-  }
+  set_LED(ON);
 
-  /*volatile Mail_Message_FB message __attribute__ ((aligned (16)));
+  wait(0xF0000);
 
-  message.messageSize = sizeof(Mail_Message_FB);
-  message.request_response_code = 0;
-  message.tagID = SET_PHYSICAL_WIDTH_HEIGHT;
-  message.bufferSize = 8;
-  message.requestSize = 8;
-  message.response_request1 = 1024;
-  message.response_request2 = 768;
-  message.end = END;
-
-  write_to_mailbox((uint32_t) &message, PTAG_ARM_TO_VC);
-
-  message.request_response_code = 0;
-  message.tagID = SET_VIRTUAL_WIDTH_HEIGHT;
-  message.bufferSize = 8;
-  message.requestSize = 8;
-  message.response_request1 = 1024;
-  message.response_request2 = 768;
-  message.end = END;
-
-  write_to_mailbox((uint32_t) &message, PTAG_ARM_TO_VC);
-
-  message.request_response_code = 0;
-  message.tagID = SET_DEPTH;
-  message.bufferSize = 4;
-  message.requestSize = 4;
-  message.response_request1 = 16;
-  message.response_request2 = 0;
-  message.end = END;
-
-  write_to_mailbox((uint32_t) &message, PTAG_ARM_TO_VC);
-
-  message.request_response_code = 0;
-  message.tagID = ALLOCATE;
-  message.bufferSize = 8;
-  message.requestSize = 8;
-  message.response_request1 = 0;
-  message.response_request2 = 0;
-  message.end = END;
-
-  write_to_mailbox((uint32_t) &message, PTAG_ARM_TO_VC);
-
-  for(int i=0; i<message.response_request2; i++)
-  {
-    *(volatile uint32_t*)(message.response_request1 + i*2) = 0;
-  }*/
+  set_LED(OFF);
 }
 
+void init_display()
+{
+  wait(0x100000);
 
+  write_to_mailbox((uint32_t) &t , (Channel)(PTAG_ARM_TO_VC));
+
+  while(t.request != 0x80000000)
+  {
+    blink();
+  }
+
+  for(int i=0; i<10; i++)
+  {
+    *(volatile uint32_t *)((t.fb_ptr & ~0xC0000000) + i*2) = 0xFFFF;
+  }
+}
 
 int test()
 {
