@@ -61,7 +61,7 @@ void write_to_mailbox(uint32_t message, Channel channel)
     status = *(volatile uint32_t *)(MAIL_BASE + IO_BASE + 0x18);
   while((status & MAIL_FULL));
 
-  *(volatile uint32_t *)(MAIL_BASE + IO_BASE + 0x20) = ((uint32_t)(message) /*<< 4)*/ | (uint32_t)(channel));
+  *(volatile uint32_t *)(MAIL_BASE + IO_BASE + 0x20) = (((uint32_t)(message) & ~0xF) | (uint32_t)(channel));
 }
 
 /*
@@ -116,33 +116,33 @@ void set_LED(int value)
 
 struct temp
 {
-  int size;
-  int request;
+  volatile uint32_t size;
+  volatile uint32_t request;
 
-  int tag1;
-  int buff_size1;
-  int val_length1;
-  int widthP;
-  int heightP;
+  volatile uint32_t tag1;
+  volatile uint32_t buff_size1;
+  volatile uint32_t val_length1;
+  volatile uint32_t widthP;
+  volatile uint32_t heightP;
 
-  int tag2;
-  int buff_size2;
-  int val_length2;
-  int widthV;
-  int heightV;
+  volatile uint32_t tag2;
+  volatile uint32_t buff_size2;
+  volatile uint32_t val_length2;
+  volatile uint32_t widthV;
+  volatile uint32_t heightV;
 
-  int tag3;
-  int buff_size3;
-  int val_length3;
-  int depth;
+  volatile uint32_t tag3;
+  volatile uint32_t buff_size3;
+  volatile uint32_t val_length3;
+  volatile uint32_t depth;
 
-  int tag4;
-  int buff_size4;
-  int val_length4;
-  int fb_size;   
-  int fb_ptr;
-
-  int end;
+  volatile uint32_t tag4;
+  volatile uint32_t buff_size4;
+  volatile uint32_t val_length4;
+  volatile uint32_t fb_size;   
+  volatile uint32_t fb_ptr;
+ 
+  volatile uint32_t end;
 };
 
 volatile temp t __attribute__ ((aligned (16)))=
@@ -198,6 +198,7 @@ void init_display()
   wait(0x100000);
 
   write_to_mailbox((uint32_t) &t , (Channel)(PTAG_ARM_TO_VC));
+  read_from_mailbox(PTAG_ARM_TO_VC);
 
   while(t.request != 0x80000000)
   {

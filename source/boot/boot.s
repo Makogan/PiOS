@@ -14,6 +14,6 @@
 .global _start
 
 _start:
-        ldr sp, =8000 // initialize stack pointer
-        bl		EnableJTAG // Enable JTAG
-        b kernel_main
+        ldr     sp, =8000 // initialize stack pointer
+        //bl      enable_jtag // Enable JTAG
+        b       kernel_main

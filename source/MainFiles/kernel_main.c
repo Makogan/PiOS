@@ -19,6 +19,7 @@
 #include <stdint.h>
 #include <mailbox.h>
 
+
 //########################################################################################
 
 //========================================================================================
@@ -43,6 +44,12 @@ void wait(uint32_t time);
 void kernel_main(void)
 {
   volatile int tst = 0;
+
+  /*makeuart_init();
+	dbg_puts("Waiting for JTAG\r\n");
+	enable_jtag();
+
+  bcm283x_mu_serial_putc('.');*/
 
   /*wait(0xF0000);
 
