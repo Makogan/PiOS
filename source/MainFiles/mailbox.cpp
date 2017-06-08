@@ -139,8 +139,8 @@ struct temp
   volatile uint32_t tag4;
   volatile uint32_t buff_size4;
   volatile uint32_t val_length4;
-  volatile uint32_t fb_size;   
   volatile uint32_t fb_ptr;
+  volatile uint32_t fb_size;   
  
   volatile uint32_t end;
 };
@@ -165,13 +165,13 @@ volatile temp t __attribute__ ((aligned (16)))=
   .tag3 = SET_DEPTH,
   .buff_size3 = 4,
   .val_length3 = 4,
-  .depth = 16,
+  .depth = 32,
 
   .tag4 = ALLOCATE,
   .buff_size4 = 8,
   .val_length4 = 4,
-  .fb_size = 16,
   .fb_ptr = 0,
+  .fb_size = 0,
 
   .end = END,
 };
@@ -195,19 +195,17 @@ void blink()
 
 void init_display()
 {
-  wait(0x100000);
-
   write_to_mailbox((uint32_t) &t , (Channel)(PTAG_ARM_TO_VC));
   read_from_mailbox(PTAG_ARM_TO_VC);
 
-  while(t.request != 0x80000000)
+  while(t.request == 0x80000001)
   {
     blink();
   }
 
-  for(int i=0; i<10; i++)
+  for(int i=0; i<t.fb_size; i++)
   {
-    *(volatile uint32_t *)((t.fb_ptr & ~0xC0000000) + i*2) = 0xFFFF;
+    *(volatile uint32_t *)((t.fb_ptr) + i*4) = 0xFFFFFFFF;
   }
 }
 
