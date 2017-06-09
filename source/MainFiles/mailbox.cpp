@@ -203,9 +203,9 @@ void init_display()
    // blink();
   }
 
-  for(uint32_t i=0; i < 10000; i++)//=t.depth/8)
+  for(uint32_t i=0; i < t.fb_size; i+=t.depth/8)
   {
-    *(volatile uint32_t *)((t.fb_ptr & ~0xC0000000) + i*4) = 0xFF00FFFF;
+    *(volatile uint32_t *)((t.fb_ptr & ~0xC0000000) + i) = 0xFF00FFFF;
   }
 }
 
