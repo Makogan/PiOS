@@ -1,6 +1,6 @@
 //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 /*
-* Authors: Camilo Talero Nasir Osman
+* Authors: Camilo Talero
 *
 *
 * File type: C
@@ -43,7 +43,7 @@ void wait(uint32_t time);
 */
 void kernel_main(void)
 {
-  volatile int tst = 0;
+  //volatile int tst = 0;
 
   /*makeuart_init();
 	dbg_puts("Waiting for JTAG\r\n");

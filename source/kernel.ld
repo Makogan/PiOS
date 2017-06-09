@@ -5,17 +5,17 @@ SECTIONS
     *(.vector_table)
   } 
 
-  .init 0x8000 : 
+ .init 0x8000 : 
   {
-    *(.init)
+    KEEP(*(.init))
   }
 
   .text : 
   {
-    *(.text)
+    *(.text .text.* .gnu.linkonce.t.*)
   }
 
-  .data ALIGN(0x10) : 
+  .data ALIGN(0x4) : 
   {
     *(.data)
   }
@@ -29,4 +29,15 @@ SECTIONS
   {
     *(.ARM.attributes)
   }
+
+  .bss :
+    {
+        . = ALIGN(4);
+        __bss_start__ = .;
+        *(.bss .bss.* .gnu.linkonce.b.*)
+        *(.rela.bss .rela.bss.* .rela.gnu.linkonce.b.*)
+        *(COMMON)
+        . = ALIGN(4);
+        __bss_end__ = .;
+   }
 }

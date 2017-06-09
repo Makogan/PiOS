@@ -9,14 +9,14 @@ USER ?= $(shell -u -n)
 # Compilers
 CC = gcc
 CCPP = g++
-CAS = as
+CAS = gcc
 CROSS_COMPILER = arm-none-eabi
 
 # Compilation flags
-ARCH = march=armv8-a
+ARCH = -mcpu=cortex-a53 -mfloat-abi=hard -mfpu=vfpv4
 OPT_LEVEL = O0
 
-CFLAGS = -nostartfiles -c -o
+CFLAGS = -Wall -nostartfiles -c -o
 
 # Find all directories under the current one
 
@@ -42,13 +42,13 @@ OUTPUT_DIRS ?= $(sort $(subst $(SOURCE_DIR),$(OBJECT_DIR), $(SUBDIRECTORIES)) ./
 # Find all source files
 SRC_C := $(shell find -name \*.c)
 SRC_CPP := $(shell find -name \*.cpp)
-SRC_ASS := $(shell find -name \*.s)
+SRC_ASS := $(shell find -name \*.S)
 LINKERS := $(shell find -name \*.ld)
 
 # Create output object files that obey the same directory structure as the
 # source files
 OBJECTS_C := $(subst $(SOURCE_DIR),$(OBJECT_DIR),$(SRC_C:.c=.o))
-OBJECTS_ASS := $(subst $(SOURCE_DIR),$(OBJECT_DIR),$(SRC_ASS:.s=.o))
+OBJECTS_ASS := $(subst $(SOURCE_DIR),$(OBJECT_DIR),$(SRC_ASS:.S=.o))
 OBJECTS_CPP := $(subst $(SOURCE_DIR),$(OBJECT_DIR),$(SRC_CPP:.cpp=.o))
 OBJECTS := $(OBJECTS_C) $(OBJECTS_ASS) $(OBJECTS_CPP)
 
@@ -67,14 +67,14 @@ $(OUTPUT_DIRS):
 
 # Create all .c object files
 $(OBJECTS_C): $(OBJECT_DIR)%.o: $(SOURCE_DIR)%.c | $(OUTPUT_DIRS)
-	$(CROSS_COMPILER)-$(CC) -$(OPT_LEVEL) -$(ARCH) $< $(CFLAGS) $@ $(I_DIRS)
+	$(CROSS_COMPILER)-$(CC) -$(OPT_LEVEL) $(ARCH) $< $(CFLAGS) $@ $(I_DIRS)
 
 $(OBJECTS_CPP): $(OBJECT_DIR)%.o: $(SOURCE_DIR)%.cpp | $(OUTPUT_DIRS)
-	$(CROSS_COMPILER)-$(CCPP) -$(OPT_LEVEL) -$(ARCH) $< $(CFLAGS) $@ $(I_DIRS)
+	$(CROSS_COMPILER)-$(CCPP) -$(OPT_LEVEL) $(ARCH) $< $(CFLAGS) $@ $(I_DIRS)
 
 # Create all .s object files
-$(OBJECTS_ASS): $(OBJECT_DIR)%.o: $(SOURCE_DIR)%.s | $(OUTPUT_DIRS)
-	$(CROSS_COMPILER)-$(CAS) -$(ARCH) $< -c -o $@
+$(OBJECTS_ASS): $(OBJECT_DIR)%.o: $(SOURCE_DIR)%.S | $(OUTPUT_DIRS)
+	$(CROSS_COMPILER)-$(CAS) $(ARCH) $< -c -o $@
 
 # Link all .o object files into the final .elf binary
 $(KERNEL_ELF): $(OBJECTS)

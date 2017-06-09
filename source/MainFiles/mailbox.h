@@ -1,6 +1,6 @@
 //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 /*
-* Authors: Camilo Talero Nasir Osman
+* Authors: Camilo Talero
 *
 *
 * File type: Header
@@ -177,7 +177,7 @@ uint32_t read_from_mailbox(Channel channel);
 
 void set_LED(int value);
 void init_display();
-int test();
+void test();
 
 #ifdef __cplusplus
   }

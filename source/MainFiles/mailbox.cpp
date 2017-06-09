@@ -1,6 +1,6 @@
 //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 /*
-* Authors: Camilo Talero Nasir Osman
+* Authors: Camilo Talero
 *
 *
 * File type: C++
@@ -138,9 +138,9 @@ struct temp
 
   volatile uint32_t tag4;
   volatile uint32_t buff_size4;
-  volatile uint32_t val_length4;
+  volatile uint32_t val_length4;   
   volatile uint32_t fb_ptr;
-  volatile uint32_t fb_size;   
+  volatile uint32_t fb_size;
  
   volatile uint32_t end;
 };
@@ -170,7 +170,7 @@ volatile temp t __attribute__ ((aligned (16)))=
   .tag4 = ALLOCATE,
   .buff_size4 = 8,
   .val_length4 = 4,
-  .fb_ptr = 0,
+  .fb_ptr = 16,
   .fb_size = 0,
 
   .end = END,
@@ -195,21 +195,21 @@ void blink()
 
 void init_display()
 {
-  write_to_mailbox((uint32_t) &t , (Channel)(PTAG_ARM_TO_VC));
+  write_to_mailbox((uint32_t) &t | 0xC0000000, (Channel)(PTAG_ARM_TO_VC));
   read_from_mailbox(PTAG_ARM_TO_VC);
 
   while(t.request == 0x80000001)
   {
-    blink();
+   // blink();
   }
 
-  for(int i=0; i<t.fb_size; i++)
+  for(uint32_t i=0; i < 10000; i++)//=t.depth/8)
   {
-    *(volatile uint32_t *)((t.fb_ptr) + i*4) = 0xFFFFFFFF;
+    *(volatile uint32_t *)((t.fb_ptr & ~0xC0000000) + i*4) = 0xFF00FFFF;
   }
 }
 
-int test()
+void test()
 {
   volatile Mail_Message_FB message;
 
