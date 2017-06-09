@@ -6,643 +6,591 @@ Disassembly of section .init:
 
 00008000 <_start>:
     8000:	e3a0d902 	mov	sp, #32768	; 0x8000
-    8004:	eb000051 	bl	8150 <RPi_CheckAndExitHypModeToSvcMode>
-    8008:	e3a0d902 	mov	sp, #32768	; 0x8000
-    800c:	ee110f51 	mrc	15, 0, r0, cr1, cr1, {2}
-    8010:	e3500b03 	cmp	r0, #3072	; 0xc00
-    8014:	0a000001 	beq	8020 <.free_to_enable_fpu>
-    8018:	e3800b03 	orr	r0, r0, #3072	; 0xc00
-    801c:	ee010f51 	mcr	15, 0, r0, cr1, cr1, {2}
-
-00008020 <.free_to_enable_fpu>:
-    8020:	ee110f50 	mrc	15, 0, r0, cr1, cr0, {2}
-    8024:	e380060f 	orr	r0, r0, #15728640	; 0xf00000
-    8028:	ee010f50 	mcr	15, 0, r0, cr1, cr0, {2}
-    802c:	e3a00101 	mov	r0, #1073741824	; 0x40000000
-    8030:	eee80a10 	vmsr	fpexc, r0
-    8034:	ee110f10 	mrc	15, 0, r0, cr1, cr0, {0}
-    8038:	e3800b02 	orr	r0, r0, #2048	; 0x800
-    803c:	e3800004 	orr	r0, r0, #4
-    8040:	e3800a01 	orr	r0, r0, #4096	; 0x1000
-    8044:	ee010f10 	mcr	15, 0, r0, cr1, cr0, {0}
-    8048:	e59f001c 	ldr	r0, [pc, #28]	; 806c <.clear_bss_exit+0x4>
-    804c:	e59f101c 	ldr	r1, [pc, #28]	; 8070 <.clear_bss_exit+0x8>
-    8050:	e3a02000 	mov	r2, #0
-
-00008054 <.clear_bss>:
-    8054:	e1500001 	cmp	r0, r1
-    8058:	aa000002 	bge	8068 <.clear_bss_exit>
-    805c:	e5802000 	str	r2, [r0]
-    8060:	e2800004 	add	r0, r0, #4
-    8064:	eafffffa 	b	8054 <.clear_bss>
-
-00008068 <.clear_bss_exit>:
-    8068:	ea000001 	b	8074 <kernel_main>
-    806c:	000087b8 			; <UNDEFINED> instruction: 0x000087b8
-    8070:	000087b8 			; <UNDEFINED> instruction: 0x000087b8
+    8004:	eaffffff 	b	8008 <kernel_main>
 
 Disassembly of section .text:
 
-00008074 <kernel_main>:
-    8074:	e92d4800 	push	{fp, lr}
-    8078:	e28db004 	add	fp, sp, #4
-    807c:	eb0000b6 	bl	835c <init_display>
-    8080:	eafffffe 	b	8080 <kernel_main+0xc>
+00008008 <kernel_main>:
+    8008:	e92d4800 	push	{fp, lr}
+    800c:	e28db004 	add	fp, sp, #4
+    8010:	eb0000a7 	bl	82b4 <init_display>
+    8014:	eafffffe 	b	8014 <kernel_main+0xc>
 
-00008084 <wait>:
+00008018 <wait>:
+    8018:	e52db004 	push	{fp}		; (str fp, [sp, #-4]!)
+    801c:	e28db000 	add	fp, sp, #0
+    8020:	e24dd00c 	sub	sp, sp, #12
+    8024:	e50b0008 	str	r0, [fp, #-8]
+    8028:	ea000002 	b	8038 <wait+0x20>
+    802c:	e51b3008 	ldr	r3, [fp, #-8]
+    8030:	e2433001 	sub	r3, r3, #1
+    8034:	e50b3008 	str	r3, [fp, #-8]
+    8038:	e51b3008 	ldr	r3, [fp, #-8]
+    803c:	e3530000 	cmp	r3, #0
+    8040:	1afffff9 	bne	802c <wait+0x14>
+    8044:	e320f000 	nop	{0}
+    8048:	e28bd000 	add	sp, fp, #0
+    804c:	e49db004 	pop	{fp}		; (ldr fp, [sp], #4)
+    8050:	e12fff1e 	bx	lr
+
+00008054 <_reset_>:
+    8054:	e52db004 	push	{fp}		; (str fp, [sp, #-4]!)
+    8058:	e28db000 	add	fp, sp, #0
+    805c:	e320f000 	nop	{0}
+    8060:	e28bd000 	add	sp, fp, #0
+    8064:	e49db004 	pop	{fp}		; (ldr fp, [sp], #4)
+    8068:	e12fff1e 	bx	lr
+
+0000806c <undefined_instruction_vector>:
+    806c:	e52db004 	push	{fp}		; (str fp, [sp, #-4]!)
+    8070:	e28db000 	add	fp, sp, #0
+    8074:	e320f000 	nop	{0}
+    8078:	e28bd000 	add	sp, fp, #0
+    807c:	e49db004 	pop	{fp}		; (ldr fp, [sp], #4)
+    8080:	e1b0f00e 	movs	pc, lr
+
+00008084 <software_interrupt_vector>:
     8084:	e52db004 	push	{fp}		; (str fp, [sp, #-4]!)
     8088:	e28db000 	add	fp, sp, #0
-    808c:	e24dd00c 	sub	sp, sp, #12
-    8090:	e50b0008 	str	r0, [fp, #-8]
-    8094:	ea000002 	b	80a4 <wait+0x20>
-    8098:	e51b3008 	ldr	r3, [fp, #-8]
-    809c:	e2433001 	sub	r3, r3, #1
-    80a0:	e50b3008 	str	r3, [fp, #-8]
-    80a4:	e51b3008 	ldr	r3, [fp, #-8]
-    80a8:	e3530000 	cmp	r3, #0
-    80ac:	1afffff9 	bne	8098 <wait+0x14>
-    80b0:	e320f000 	nop	{0}
-    80b4:	e28bd000 	add	sp, fp, #0
-    80b8:	e49db004 	pop	{fp}		; (ldr fp, [sp], #4)
-    80bc:	e12fff1e 	bx	lr
+    808c:	e320f000 	nop	{0}
+    8090:	e28bd000 	add	sp, fp, #0
+    8094:	e49db004 	pop	{fp}		; (ldr fp, [sp], #4)
+    8098:	e1b0f00e 	movs	pc, lr
 
-000080c0 <_reset_>:
-    80c0:	e52db004 	push	{fp}		; (str fp, [sp, #-4]!)
-    80c4:	e28db000 	add	fp, sp, #0
-    80c8:	e320f000 	nop	{0}
-    80cc:	e28bd000 	add	sp, fp, #0
-    80d0:	e49db004 	pop	{fp}		; (ldr fp, [sp], #4)
-    80d4:	e12fff1e 	bx	lr
+0000809c <prefetch_abort_vector>:
+    809c:	e52db004 	push	{fp}		; (str fp, [sp, #-4]!)
+    80a0:	e28db000 	add	fp, sp, #0
+    80a4:	e320f000 	nop	{0}
+    80a8:	e28bd000 	add	sp, fp, #0
+    80ac:	e49db004 	pop	{fp}		; (ldr fp, [sp], #4)
+    80b0:	e25ef004 	subs	pc, lr, #4
 
-000080d8 <undefined_instruction_vector>:
-    80d8:	e52db004 	push	{fp}		; (str fp, [sp, #-4]!)
-    80dc:	e28db000 	add	fp, sp, #0
-    80e0:	e320f000 	nop	{0}
-    80e4:	e28bd000 	add	sp, fp, #0
-    80e8:	e49db004 	pop	{fp}		; (ldr fp, [sp], #4)
-    80ec:	e1b0f00e 	movs	pc, lr
+000080b4 <interrupt_vector>:
+    80b4:	e52db004 	push	{fp}		; (str fp, [sp, #-4]!)
+    80b8:	e28db000 	add	fp, sp, #0
+    80bc:	e320f000 	nop	{0}
+    80c0:	e28bd000 	add	sp, fp, #0
+    80c4:	e49db004 	pop	{fp}		; (ldr fp, [sp], #4)
+    80c8:	e25ef004 	subs	pc, lr, #4
 
-000080f0 <software_interrupt_vector>:
-    80f0:	e52db004 	push	{fp}		; (str fp, [sp, #-4]!)
-    80f4:	e28db000 	add	fp, sp, #0
-    80f8:	e320f000 	nop	{0}
-    80fc:	e28bd000 	add	sp, fp, #0
-    8100:	e49db004 	pop	{fp}		; (ldr fp, [sp], #4)
-    8104:	e1b0f00e 	movs	pc, lr
+000080cc <fast_interrupt_vector>:
+    80cc:	e52db004 	push	{fp}		; (str fp, [sp, #-4]!)
+    80d0:	e28db000 	add	fp, sp, #0
+    80d4:	e320f000 	nop	{0}
+    80d8:	e28bd000 	add	sp, fp, #0
+    80dc:	e49db004 	pop	{fp}		; (ldr fp, [sp], #4)
+    80e0:	e12fff1e 	bx	lr
 
-00008108 <prefetch_abort_vector>:
-    8108:	e52db004 	push	{fp}		; (str fp, [sp, #-4]!)
-    810c:	e28db000 	add	fp, sp, #0
-    8110:	e320f000 	nop	{0}
-    8114:	e28bd000 	add	sp, fp, #0
-    8118:	e49db004 	pop	{fp}		; (ldr fp, [sp], #4)
-    811c:	e25ef004 	subs	pc, lr, #4
+000080e4 <_Z16write_to_mailboxm7Channel>:
+    80e4:	e52db004 	push	{fp}		; (str fp, [sp, #-4]!)
+    80e8:	e28db000 	add	fp, sp, #0
+    80ec:	e24dd014 	sub	sp, sp, #20
+    80f0:	e50b0010 	str	r0, [fp, #-16]
+    80f4:	e1a03001 	mov	r3, r1
+    80f8:	e54b3011 	strb	r3, [fp, #-17]	; 0xffffffef
+    80fc:	e30b3898 	movw	r3, #47256	; 0xb898
+    8100:	e3433f00 	movt	r3, #16128	; 0x3f00
+    8104:	e5933000 	ldr	r3, [r3]
+    8108:	e50b3008 	str	r3, [fp, #-8]
+    810c:	e51b3008 	ldr	r3, [fp, #-8]
+    8110:	e3530000 	cmp	r3, #0
+    8114:	aa000000 	bge	811c <_Z16write_to_mailboxm7Channel+0x38>
+    8118:	eafffff7 	b	80fc <_Z16write_to_mailboxm7Channel+0x18>
+    811c:	e30b38a0 	movw	r3, #47264	; 0xb8a0
+    8120:	e3433f00 	movt	r3, #16128	; 0x3f00
+    8124:	e51b2010 	ldr	r2, [fp, #-16]
+    8128:	e3c2200f 	bic	r2, r2, #15
+    812c:	e55b1011 	ldrb	r1, [fp, #-17]	; 0xffffffef
+    8130:	e1822001 	orr	r2, r2, r1
+    8134:	e5832000 	str	r2, [r3]
+    8138:	e320f000 	nop	{0}
+    813c:	e28bd000 	add	sp, fp, #0
+    8140:	e49db004 	pop	{fp}		; (ldr fp, [sp], #4)
+    8144:	e12fff1e 	bx	lr
 
-00008120 <interrupt_vector>:
-    8120:	e52db004 	push	{fp}		; (str fp, [sp, #-4]!)
-    8124:	e28db000 	add	fp, sp, #0
-    8128:	e320f000 	nop	{0}
-    812c:	e28bd000 	add	sp, fp, #0
-    8130:	e49db004 	pop	{fp}		; (ldr fp, [sp], #4)
-    8134:	e25ef004 	subs	pc, lr, #4
+00008148 <read_from_mailbox>:
+    8148:	e52db004 	push	{fp}		; (str fp, [sp, #-4]!)
+    814c:	e28db000 	add	fp, sp, #0
+    8150:	e24dd014 	sub	sp, sp, #20
+    8154:	e1a03000 	mov	r3, r0
+    8158:	e54b300d 	strb	r3, [fp, #-13]
+    815c:	e30b3898 	movw	r3, #47256	; 0xb898
+    8160:	e3433f00 	movt	r3, #16128	; 0x3f00
+    8164:	e5933000 	ldr	r3, [r3]
+    8168:	e50b3008 	str	r3, [fp, #-8]
+    816c:	e51b3008 	ldr	r3, [fp, #-8]
+    8170:	e2033101 	and	r3, r3, #1073741824	; 0x40000000
+    8174:	e3530000 	cmp	r3, #0
+    8178:	0a000000 	beq	8180 <read_from_mailbox+0x38>
+    817c:	eafffff6 	b	815c <read_from_mailbox+0x14>
+    8180:	e30b3880 	movw	r3, #47232	; 0xb880
+    8184:	e3433f00 	movt	r3, #16128	; 0x3f00
+    8188:	e5933000 	ldr	r3, [r3]
+    818c:	e50b300c 	str	r3, [fp, #-12]
+    8190:	e51b300c 	ldr	r3, [fp, #-12]
+    8194:	e203200f 	and	r2, r3, #15
+    8198:	e55b300d 	ldrb	r3, [fp, #-13]
+    819c:	e1520003 	cmp	r2, r3
+    81a0:	0a000000 	beq	81a8 <read_from_mailbox+0x60>
+    81a4:	eafffff5 	b	8180 <read_from_mailbox+0x38>
+    81a8:	e51b300c 	ldr	r3, [fp, #-12]
+    81ac:	e3c3300f 	bic	r3, r3, #15
+    81b0:	e1a00003 	mov	r0, r3
+    81b4:	e28bd000 	add	sp, fp, #0
+    81b8:	e49db004 	pop	{fp}		; (ldr fp, [sp], #4)
+    81bc:	e12fff1e 	bx	lr
 
-00008138 <fast_interrupt_vector>:
-    8138:	e52db004 	push	{fp}		; (str fp, [sp, #-4]!)
-    813c:	e28db000 	add	fp, sp, #0
-    8140:	e320f000 	nop	{0}
-    8144:	e28bd000 	add	sp, fp, #0
-    8148:	e49db004 	pop	{fp}		; (ldr fp, [sp], #4)
-    814c:	e12fff1e 	bx	lr
+000081c0 <set_LED>:
+    81c0:	e92d4800 	push	{fp, lr}
+    81c4:	e28db004 	add	fp, sp, #4
+    81c8:	e24dd008 	sub	sp, sp, #8
+    81cc:	e50b0008 	str	r0, [fp, #-8]
+    81d0:	e51b2008 	ldr	r2, [fp, #-8]
+    81d4:	e30836a0 	movw	r3, #34464	; 0x86a0
+    81d8:	e3403000 	movt	r3, #0
+    81dc:	e5832018 	str	r2, [r3, #24]
+    81e0:	e30836a0 	movw	r3, #34464	; 0x86a0
+    81e4:	e3403000 	movt	r3, #0
+    81e8:	e3a02000 	mov	r2, #0
+    81ec:	e5832004 	str	r2, [r3, #4]
+    81f0:	e30836a0 	movw	r3, #34464	; 0x86a0
+    81f4:	e3403000 	movt	r3, #0
+    81f8:	e3a02000 	mov	r2, #0
+    81fc:	e5832010 	str	r2, [r3, #16]
+    8200:	e30836a0 	movw	r3, #34464	; 0x86a0
+    8204:	e3403000 	movt	r3, #0
+    8208:	e3a02082 	mov	r2, #130	; 0x82
+    820c:	e5832014 	str	r2, [r3, #20]
+    8210:	e30836a0 	movw	r3, #34464	; 0x86a0
+    8214:	e3403000 	movt	r3, #0
+    8218:	e3a02000 	mov	r2, #0
+    821c:	e583201c 	str	r2, [r3, #28]
+    8220:	e30836a0 	movw	r3, #34464	; 0x86a0
+    8224:	e3403000 	movt	r3, #0
+    8228:	e3a01008 	mov	r1, #8
+    822c:	e1a00003 	mov	r0, r3
+    8230:	ebffffab 	bl	80e4 <_Z16write_to_mailboxm7Channel>
+    8234:	e3a00008 	mov	r0, #8
+    8238:	ebffffc2 	bl	8148 <read_from_mailbox>
+    823c:	e320f000 	nop	{0}
+    8240:	e24bd004 	sub	sp, fp, #4
+    8244:	e8bd8800 	pop	{fp, pc}
 
-00008150 <RPi_CheckAndExitHypModeToSvcMode>:
-    8150:	e10f0000 	mrs	r0, CPSR
-    8154:	e200101f 	and	r1, r0, #31
-    8158:	e351001a 	cmp	r1, #26
-    815c:	0a000001 	beq	8168 <.WeHaveHyperMode>
-    8160:	e3a00000 	mov	r0, #0
-    8164:	e12fff1e 	bx	lr
+00008248 <_Z4waitm>:
+    8248:	e52db004 	push	{fp}		; (str fp, [sp, #-4]!)
+    824c:	e28db000 	add	fp, sp, #0
+    8250:	e24dd00c 	sub	sp, sp, #12
+    8254:	e50b0008 	str	r0, [fp, #-8]
+    8258:	e51b3008 	ldr	r3, [fp, #-8]
+    825c:	e3530000 	cmp	r3, #0
+    8260:	0a000003 	beq	8274 <_Z4waitm+0x2c>
+    8264:	e51b3008 	ldr	r3, [fp, #-8]
+    8268:	e2433001 	sub	r3, r3, #1
+    826c:	e50b3008 	str	r3, [fp, #-8]
+    8270:	eafffff8 	b	8258 <_Z4waitm+0x10>
+    8274:	e320f000 	nop	{0}
+    8278:	e28bd000 	add	sp, fp, #0
+    827c:	e49db004 	pop	{fp}		; (ldr fp, [sp], #4)
+    8280:	e12fff1e 	bx	lr
 
-00008168 <.WeHaveHyperMode>:
-    8168:	e3c0001f 	bic	r0, r0, #31
-    816c:	e38000d3 	orr	r0, r0, #211	; 0xd3
-    8170:	e3a01000 	mov	r1, #0
-    8174:	ec411f4e 	mcrr	15, 4, r1, r1, cr14
-    8178:	e3800c01 	orr	r0, r0, #256	; 0x100
-    817c:	e16ff000 	msr	SPSR_fsxc, r0
-    8180:	e3a00001 	mov	r0, #1
-    8184:	e12ef30e 	msr	ELR_hyp, lr
-    8188:	e160006e 	eret
+00008284 <_Z5blinkv>:
+    8284:	e92d4800 	push	{fp, lr}
+    8288:	e28db004 	add	fp, sp, #4
+    828c:	e3a0080f 	mov	r0, #983040	; 0xf0000
+    8290:	ebffffec 	bl	8248 <_Z4waitm>
+    8294:	e3a00001 	mov	r0, #1
+    8298:	ebffffc8 	bl	81c0 <set_LED>
+    829c:	e3a0080f 	mov	r0, #983040	; 0xf0000
+    82a0:	ebffffe8 	bl	8248 <_Z4waitm>
+    82a4:	e3a00000 	mov	r0, #0
+    82a8:	ebffffc4 	bl	81c0 <set_LED>
+    82ac:	e320f000 	nop	{0}
+    82b0:	e8bd8800 	pop	{fp, pc}
 
-0000818c <_Z16write_to_mailboxm7Channel>:
-    818c:	e52db004 	push	{fp}		; (str fp, [sp, #-4]!)
-    8190:	e28db000 	add	fp, sp, #0
-    8194:	e24dd014 	sub	sp, sp, #20
-    8198:	e50b0010 	str	r0, [fp, #-16]
-    819c:	e1a03001 	mov	r3, r1
-    81a0:	e54b3011 	strb	r3, [fp, #-17]	; 0xffffffef
-    81a4:	e30b3898 	movw	r3, #47256	; 0xb898
-    81a8:	e3433f00 	movt	r3, #16128	; 0x3f00
-    81ac:	e5933000 	ldr	r3, [r3]
-    81b0:	e50b3008 	str	r3, [fp, #-8]
-    81b4:	e51b3008 	ldr	r3, [fp, #-8]
-    81b8:	e3530000 	cmp	r3, #0
-    81bc:	aa000000 	bge	81c4 <_Z16write_to_mailboxm7Channel+0x38>
-    81c0:	eafffff7 	b	81a4 <_Z16write_to_mailboxm7Channel+0x18>
-    81c4:	e30b38a0 	movw	r3, #47264	; 0xb8a0
-    81c8:	e3433f00 	movt	r3, #16128	; 0x3f00
-    81cc:	e51b2010 	ldr	r2, [fp, #-16]
-    81d0:	e3c2200f 	bic	r2, r2, #15
-    81d4:	e55b1011 	ldrb	r1, [fp, #-17]	; 0xffffffef
-    81d8:	e1822001 	orr	r2, r2, r1
-    81dc:	e5832000 	str	r2, [r3]
-    81e0:	e320f000 	nop	{0}
-    81e4:	e28bd000 	add	sp, fp, #0
-    81e8:	e49db004 	pop	{fp}		; (ldr fp, [sp], #4)
-    81ec:	e12fff1e 	bx	lr
+000082b4 <init_display>:
+    82b4:	e92d4800 	push	{fp, lr}
+    82b8:	e28db004 	add	fp, sp, #4
+    82bc:	e24dd008 	sub	sp, sp, #8
+    82c0:	e30836c0 	movw	r3, #34496	; 0x86c0
+    82c4:	e3403000 	movt	r3, #0
+    82c8:	e3833103 	orr	r3, r3, #-1073741824	; 0xc0000000
+    82cc:	e3a01008 	mov	r1, #8
+    82d0:	e1a00003 	mov	r0, r3
+    82d4:	ebffff82 	bl	80e4 <_Z16write_to_mailboxm7Channel>
+    82d8:	e3a00008 	mov	r0, #8
+    82dc:	ebffff99 	bl	8148 <read_from_mailbox>
+    82e0:	e30836c0 	movw	r3, #34496	; 0x86c0
+    82e4:	e3403000 	movt	r3, #0
+    82e8:	e5933004 	ldr	r3, [r3, #4]
+    82ec:	e3530106 	cmp	r3, #-2147483647	; 0x80000001
+    82f0:	03a03001 	moveq	r3, #1
+    82f4:	13a03000 	movne	r3, #0
+    82f8:	e6ef3073 	uxtb	r3, r3
+    82fc:	e3530000 	cmp	r3, #0
+    8300:	0a000000 	beq	8308 <init_display+0x54>
+    8304:	eafffff5 	b	82e0 <init_display+0x2c>
+    8308:	e3a03000 	mov	r3, #0
+    830c:	e50b3008 	str	r3, [fp, #-8]
+    8310:	e30836c0 	movw	r3, #34496	; 0x86c0
+    8314:	e3403000 	movt	r3, #0
+    8318:	e5932050 	ldr	r2, [r3, #80]	; 0x50
+    831c:	e51b3008 	ldr	r3, [fp, #-8]
+    8320:	e1520003 	cmp	r2, r3
+    8324:	83a03001 	movhi	r3, #1
+    8328:	93a03000 	movls	r3, #0
+    832c:	e6ef3073 	uxtb	r3, r3
+    8330:	e3530000 	cmp	r3, #0
+    8334:	0a000010 	beq	837c <init_display+0xc8>
+    8338:	e30836c0 	movw	r3, #34496	; 0x86c0
+    833c:	e3403000 	movt	r3, #0
+    8340:	e593304c 	ldr	r3, [r3, #76]	; 0x4c
+    8344:	e3c32103 	bic	r2, r3, #-1073741824	; 0xc0000000
+    8348:	e51b3008 	ldr	r3, [fp, #-8]
+    834c:	e0823003 	add	r3, r2, r3
+    8350:	e1a02003 	mov	r2, r3
+    8354:	e3e038ff 	mvn	r3, #16711680	; 0xff0000
+    8358:	e5823000 	str	r3, [r2]
+    835c:	e30836c0 	movw	r3, #34496	; 0x86c0
+    8360:	e3403000 	movt	r3, #0
+    8364:	e593303c 	ldr	r3, [r3, #60]	; 0x3c
+    8368:	e1a031a3 	lsr	r3, r3, #3
+    836c:	e51b2008 	ldr	r2, [fp, #-8]
+    8370:	e0823003 	add	r3, r2, r3
+    8374:	e50b3008 	str	r3, [fp, #-8]
+    8378:	eaffffe4 	b	8310 <init_display+0x5c>
+    837c:	e320f000 	nop	{0}
+    8380:	e24bd004 	sub	sp, fp, #4
+    8384:	e8bd8800 	pop	{fp, pc}
 
-000081f0 <read_from_mailbox>:
-    81f0:	e52db004 	push	{fp}		; (str fp, [sp, #-4]!)
-    81f4:	e28db000 	add	fp, sp, #0
-    81f8:	e24dd014 	sub	sp, sp, #20
-    81fc:	e1a03000 	mov	r3, r0
-    8200:	e54b300d 	strb	r3, [fp, #-13]
-    8204:	e30b3898 	movw	r3, #47256	; 0xb898
-    8208:	e3433f00 	movt	r3, #16128	; 0x3f00
-    820c:	e5933000 	ldr	r3, [r3]
-    8210:	e50b3008 	str	r3, [fp, #-8]
-    8214:	e51b3008 	ldr	r3, [fp, #-8]
-    8218:	e2033101 	and	r3, r3, #1073741824	; 0x40000000
-    821c:	e3530000 	cmp	r3, #0
-    8220:	0a000000 	beq	8228 <read_from_mailbox+0x38>
-    8224:	eafffff6 	b	8204 <read_from_mailbox+0x14>
-    8228:	e30b3880 	movw	r3, #47232	; 0xb880
-    822c:	e3433f00 	movt	r3, #16128	; 0x3f00
-    8230:	e5933000 	ldr	r3, [r3]
-    8234:	e50b300c 	str	r3, [fp, #-12]
-    8238:	e51b300c 	ldr	r3, [fp, #-12]
-    823c:	e203200f 	and	r2, r3, #15
-    8240:	e55b300d 	ldrb	r3, [fp, #-13]
-    8244:	e1520003 	cmp	r2, r3
-    8248:	0a000000 	beq	8250 <read_from_mailbox+0x60>
-    824c:	eafffff5 	b	8228 <read_from_mailbox+0x38>
-    8250:	e51b300c 	ldr	r3, [fp, #-12]
-    8254:	e3c3300f 	bic	r3, r3, #15
-    8258:	e1a00003 	mov	r0, r3
-    825c:	e28bd000 	add	sp, fp, #0
-    8260:	e49db004 	pop	{fp}		; (ldr fp, [sp], #4)
-    8264:	e12fff1e 	bx	lr
+00008388 <test>:
+    8388:	e92d4800 	push	{fp, lr}
+    838c:	e28db004 	add	fp, sp, #4
+    8390:	e24dd020 	sub	sp, sp, #32
+    8394:	e3a03020 	mov	r3, #32
+    8398:	e50b3024 	str	r3, [fp, #-36]	; 0xffffffdc
+    839c:	e3a03000 	mov	r3, #0
+    83a0:	e50b3020 	str	r3, [fp, #-32]	; 0xffffffe0
+    83a4:	e3a03002 	mov	r3, #2
+    83a8:	e3403004 	movt	r3, #4
+    83ac:	e50b301c 	str	r3, [fp, #-28]	; 0xffffffe4
+    83b0:	e3a03004 	mov	r3, #4
+    83b4:	e50b3018 	str	r3, [fp, #-24]	; 0xffffffe8
+    83b8:	e3a03004 	mov	r3, #4
+    83bc:	e50b3014 	str	r3, [fp, #-20]	; 0xffffffec
+    83c0:	e3a03001 	mov	r3, #1
+    83c4:	e50b3010 	str	r3, [fp, #-16]
+    83c8:	e3a03000 	mov	r3, #0
+    83cc:	e50b300c 	str	r3, [fp, #-12]
+    83d0:	e3a03000 	mov	r3, #0
+    83d4:	e50b3008 	str	r3, [fp, #-8]
+    83d8:	e24b3024 	sub	r3, fp, #36	; 0x24
+    83dc:	e3a01008 	mov	r1, #8
+    83e0:	e1a00003 	mov	r0, r3
+    83e4:	ebffff3e 	bl	80e4 <_Z16write_to_mailboxm7Channel>
+    83e8:	e3a00008 	mov	r0, #8
+    83ec:	ebffff55 	bl	8148 <read_from_mailbox>
+    83f0:	e320f000 	nop	{0}
+    83f4:	e24bd004 	sub	sp, fp, #4
+    83f8:	e8bd8800 	pop	{fp, pc}
 
-00008268 <set_LED>:
-    8268:	e92d4800 	push	{fp, lr}
-    826c:	e28db004 	add	fp, sp, #4
-    8270:	e24dd008 	sub	sp, sp, #8
-    8274:	e50b0008 	str	r0, [fp, #-8]
-    8278:	e51b2008 	ldr	r2, [fp, #-8]
-    827c:	e3083740 	movw	r3, #34624	; 0x8740
-    8280:	e3403000 	movt	r3, #0
-    8284:	e5832018 	str	r2, [r3, #24]
-    8288:	e3083740 	movw	r3, #34624	; 0x8740
-    828c:	e3403000 	movt	r3, #0
-    8290:	e3a02000 	mov	r2, #0
-    8294:	e5832004 	str	r2, [r3, #4]
-    8298:	e3083740 	movw	r3, #34624	; 0x8740
-    829c:	e3403000 	movt	r3, #0
-    82a0:	e3a02000 	mov	r2, #0
-    82a4:	e5832010 	str	r2, [r3, #16]
-    82a8:	e3083740 	movw	r3, #34624	; 0x8740
-    82ac:	e3403000 	movt	r3, #0
-    82b0:	e3a02082 	mov	r2, #130	; 0x82
-    82b4:	e5832014 	str	r2, [r3, #20]
-    82b8:	e3083740 	movw	r3, #34624	; 0x8740
-    82bc:	e3403000 	movt	r3, #0
-    82c0:	e3a02000 	mov	r2, #0
-    82c4:	e583201c 	str	r2, [r3, #28]
-    82c8:	e3083740 	movw	r3, #34624	; 0x8740
-    82cc:	e3403000 	movt	r3, #0
-    82d0:	e3a01008 	mov	r1, #8
-    82d4:	e1a00003 	mov	r0, r3
-    82d8:	ebffffab 	bl	818c <_Z16write_to_mailboxm7Channel>
-    82dc:	e3a00008 	mov	r0, #8
-    82e0:	ebffffc2 	bl	81f0 <read_from_mailbox>
-    82e4:	e320f000 	nop	{0}
-    82e8:	e24bd004 	sub	sp, fp, #4
-    82ec:	e8bd8800 	pop	{fp, pc}
+000083fc <GetGpioAddress>:
+    83fc:	e59f00cc 	ldr	r0, [pc, #204]	; 84d0 <GetGpio+0x44>
+    8400:	e1a0f00e 	mov	pc, lr
 
-000082f0 <_Z4waitm>:
-    82f0:	e52db004 	push	{fp}		; (str fp, [sp, #-4]!)
-    82f4:	e28db000 	add	fp, sp, #0
-    82f8:	e24dd00c 	sub	sp, sp, #12
-    82fc:	e50b0008 	str	r0, [fp, #-8]
-    8300:	e51b3008 	ldr	r3, [fp, #-8]
-    8304:	e3530000 	cmp	r3, #0
-    8308:	0a000003 	beq	831c <_Z4waitm+0x2c>
-    830c:	e51b3008 	ldr	r3, [fp, #-8]
-    8310:	e2433001 	sub	r3, r3, #1
-    8314:	e50b3008 	str	r3, [fp, #-8]
-    8318:	eafffff8 	b	8300 <_Z4waitm+0x10>
-    831c:	e320f000 	nop	{0}
-    8320:	e28bd000 	add	sp, fp, #0
-    8324:	e49db004 	pop	{fp}		; (ldr fp, [sp], #4)
-    8328:	e12fff1e 	bx	lr
+00008404 <SetGpioFunction>:
+    8404:	e3500035 	cmp	r0, #53	; 0x35
+    8408:	93510007 	cmpls	r1, #7
+    840c:	81a0f00e 	movhi	pc, lr
+    8410:	e52de004 	push	{lr}		; (str lr, [sp, #-4]!)
+    8414:	e1a02000 	mov	r2, r0
+    8418:	ebfffff7 	bl	83fc <GetGpioAddress>
 
-0000832c <_Z5blinkv>:
-    832c:	e92d4800 	push	{fp, lr}
-    8330:	e28db004 	add	fp, sp, #4
-    8334:	e3a0080f 	mov	r0, #983040	; 0xf0000
-    8338:	ebffffec 	bl	82f0 <_Z4waitm>
-    833c:	e3a00001 	mov	r0, #1
-    8340:	ebffffc8 	bl	8268 <set_LED>
-    8344:	e3a0080f 	mov	r0, #983040	; 0xf0000
-    8348:	ebffffe8 	bl	82f0 <_Z4waitm>
-    834c:	e3a00000 	mov	r0, #0
-    8350:	ebffffc4 	bl	8268 <set_LED>
-    8354:	e320f000 	nop	{0}
-    8358:	e8bd8800 	pop	{fp, pc}
+0000841c <functionLoop$>:
+    841c:	e3520009 	cmp	r2, #9
+    8420:	8242200a 	subhi	r2, r2, #10
+    8424:	82800004 	addhi	r0, r0, #4
+    8428:	8afffffb 	bhi	841c <functionLoop$>
+    842c:	e0822082 	add	r2, r2, r2, lsl #1
+    8430:	e1a01211 	lsl	r1, r1, r2
+    8434:	e3a03007 	mov	r3, #7
+    8438:	e1a03213 	lsl	r3, r3, r2
+    843c:	e5902000 	ldr	r2, [r0]
+    8440:	e1c22003 	bic	r2, r2, r3
+    8444:	e1811002 	orr	r1, r1, r2
+    8448:	e5801000 	str	r1, [r0]
+    844c:	e49df004 	pop	{pc}		; (ldr pc, [sp], #4)
 
-0000835c <init_display>:
-    835c:	e92d4800 	push	{fp, lr}
-    8360:	e28db004 	add	fp, sp, #4
-    8364:	e24dd008 	sub	sp, sp, #8
-    8368:	e3083760 	movw	r3, #34656	; 0x8760
-    836c:	e3403000 	movt	r3, #0
-    8370:	e3833103 	orr	r3, r3, #-1073741824	; 0xc0000000
-    8374:	e3a01008 	mov	r1, #8
-    8378:	e1a00003 	mov	r0, r3
-    837c:	ebffff82 	bl	818c <_Z16write_to_mailboxm7Channel>
-    8380:	e3a00008 	mov	r0, #8
-    8384:	ebffff99 	bl	81f0 <read_from_mailbox>
-    8388:	e3083760 	movw	r3, #34656	; 0x8760
-    838c:	e3403000 	movt	r3, #0
-    8390:	e5933004 	ldr	r3, [r3, #4]
-    8394:	e3530106 	cmp	r3, #-2147483647	; 0x80000001
-    8398:	03a03001 	moveq	r3, #1
-    839c:	13a03000 	movne	r3, #0
-    83a0:	e6ef3073 	uxtb	r3, r3
-    83a4:	e3530000 	cmp	r3, #0
-    83a8:	0a000000 	beq	83b0 <init_display+0x54>
-    83ac:	eafffff5 	b	8388 <init_display+0x2c>
-    83b0:	e3a03000 	mov	r3, #0
-    83b4:	e50b3008 	str	r3, [fp, #-8]
-    83b8:	e3083760 	movw	r3, #34656	; 0x8760
-    83bc:	e3403000 	movt	r3, #0
-    83c0:	e5932050 	ldr	r2, [r3, #80]	; 0x50
-    83c4:	e51b3008 	ldr	r3, [fp, #-8]
-    83c8:	e1520003 	cmp	r2, r3
-    83cc:	83a03001 	movhi	r3, #1
-    83d0:	93a03000 	movls	r3, #0
-    83d4:	e6ef3073 	uxtb	r3, r3
-    83d8:	e3530000 	cmp	r3, #0
-    83dc:	0a000010 	beq	8424 <init_display+0xc8>
-    83e0:	e3083760 	movw	r3, #34656	; 0x8760
-    83e4:	e3403000 	movt	r3, #0
-    83e8:	e593304c 	ldr	r3, [r3, #76]	; 0x4c
-    83ec:	e3c32103 	bic	r2, r3, #-1073741824	; 0xc0000000
-    83f0:	e51b3008 	ldr	r3, [fp, #-8]
-    83f4:	e0823003 	add	r3, r2, r3
-    83f8:	e1a02003 	mov	r2, r3
-    83fc:	e3e038ff 	mvn	r3, #16711680	; 0xff0000
-    8400:	e5823000 	str	r3, [r2]
-    8404:	e3083760 	movw	r3, #34656	; 0x8760
-    8408:	e3403000 	movt	r3, #0
-    840c:	e593303c 	ldr	r3, [r3, #60]	; 0x3c
-    8410:	e1a031a3 	lsr	r3, r3, #3
-    8414:	e51b2008 	ldr	r2, [fp, #-8]
-    8418:	e0823003 	add	r3, r2, r3
-    841c:	e50b3008 	str	r3, [fp, #-8]
-    8420:	eaffffe4 	b	83b8 <init_display+0x5c>
-    8424:	e320f000 	nop	{0}
-    8428:	e24bd004 	sub	sp, fp, #4
-    842c:	e8bd8800 	pop	{fp, pc}
+00008450 <SetGpio>:
+    8450:	e3500035 	cmp	r0, #53	; 0x35
+    8454:	81a0f00e 	movhi	pc, lr
+    8458:	e52de004 	push	{lr}		; (str lr, [sp, #-4]!)
+    845c:	e1a02000 	mov	r2, r0
+    8460:	ebffffe5 	bl	83fc <GetGpioAddress>
+    8464:	e1a032a2 	lsr	r3, r2, #5
+    8468:	e1a03103 	lsl	r3, r3, #2
+    846c:	e0800003 	add	r0, r0, r3
+    8470:	e202201f 	and	r2, r2, #31
+    8474:	e3a03001 	mov	r3, #1
+    8478:	e1a03213 	lsl	r3, r3, r2
+    847c:	e3310000 	teq	r1, #0
+    8480:	05803028 	streq	r3, [r0, #40]	; 0x28
+    8484:	1580301c 	strne	r3, [r0, #28]
+    8488:	e49df004 	pop	{pc}		; (ldr pc, [sp], #4)
 
-00008430 <test>:
-    8430:	e92d4800 	push	{fp, lr}
-    8434:	e28db004 	add	fp, sp, #4
-    8438:	e24dd020 	sub	sp, sp, #32
-    843c:	e3a03020 	mov	r3, #32
-    8440:	e50b3024 	str	r3, [fp, #-36]	; 0xffffffdc
-    8444:	e3a03000 	mov	r3, #0
-    8448:	e50b3020 	str	r3, [fp, #-32]	; 0xffffffe0
-    844c:	e3a03002 	mov	r3, #2
-    8450:	e3403004 	movt	r3, #4
-    8454:	e50b301c 	str	r3, [fp, #-28]	; 0xffffffe4
-    8458:	e3a03004 	mov	r3, #4
-    845c:	e50b3018 	str	r3, [fp, #-24]	; 0xffffffe8
-    8460:	e3a03004 	mov	r3, #4
-    8464:	e50b3014 	str	r3, [fp, #-20]	; 0xffffffec
-    8468:	e3a03001 	mov	r3, #1
-    846c:	e50b3010 	str	r3, [fp, #-16]
-    8470:	e3a03000 	mov	r3, #0
-    8474:	e50b300c 	str	r3, [fp, #-12]
-    8478:	e3a03000 	mov	r3, #0
-    847c:	e50b3008 	str	r3, [fp, #-8]
-    8480:	e24b3024 	sub	r3, fp, #36	; 0x24
-    8484:	e3a01008 	mov	r1, #8
-    8488:	e1a00003 	mov	r0, r3
-    848c:	ebffff3e 	bl	818c <_Z16write_to_mailboxm7Channel>
-    8490:	e3a00008 	mov	r0, #8
-    8494:	ebffff55 	bl	81f0 <read_from_mailbox>
-    8498:	e320f000 	nop	{0}
-    849c:	e24bd004 	sub	sp, fp, #4
-    84a0:	e8bd8800 	pop	{fp, pc}
+0000848c <GetGpio>:
+    848c:	e3500035 	cmp	r0, #53	; 0x35
+    8490:	81a0f00e 	movhi	pc, lr
+    8494:	e92d4010 	push	{r4, lr}
+    8498:	e1a04000 	mov	r4, r0
+    849c:	ebffffd6 	bl	83fc <GetGpioAddress>
+    84a0:	e1a032a4 	lsr	r3, r4, #5
+    84a4:	e1a03103 	lsl	r3, r3, #2
+    84a8:	e0800003 	add	r0, r0, r3
+    84ac:	e204401f 	and	r4, r4, #31
+    84b0:	e3a03001 	mov	r3, #1
+    84b4:	e1a03413 	lsl	r3, r3, r4
+    84b8:	e5904034 	ldr	r4, [r0, #52]	; 0x34
+    84bc:	e0044003 	and	r4, r4, r3
+    84c0:	e3340000 	teq	r4, #0
+    84c4:	03a00000 	moveq	r0, #0
+    84c8:	13a00001 	movne	r0, #1
+    84cc:	e8bd8010 	pop	{r4, pc}
+    84d0:	3f200000 	svccc	0x00200000
 
-000084a4 <GetGpioAddress>:
-    84a4:	e59f00cc 	ldr	r0, [pc, #204]	; 8578 <GetGpio+0x44>
-    84a8:	e1a0f00e 	mov	pc, lr
+000084d4 <InitUART>:
+    84d4:	e52de004 	push	{lr}		; (str lr, [sp, #-4]!)
+    84d8:	e59f017c 	ldr	r0, [pc, #380]	; 865c <WaitForCycles+0x10>
+    84dc:	e3a01001 	mov	r1, #1
+    84e0:	e5801000 	str	r1, [r0]
+    84e4:	e59f0174 	ldr	r0, [pc, #372]	; 8660 <WaitForCycles+0x14>
+    84e8:	e0211001 	eor	r1, r1, r1
+    84ec:	e5801000 	str	r1, [r0]
+    84f0:	e59f016c 	ldr	r0, [pc, #364]	; 8664 <WaitForCycles+0x18>
+    84f4:	e0211001 	eor	r1, r1, r1
+    84f8:	e5801000 	str	r1, [r0]
+    84fc:	e59f0164 	ldr	r0, [pc, #356]	; 8668 <WaitForCycles+0x1c>
+    8500:	e3a01003 	mov	r1, #3
+    8504:	e5801000 	str	r1, [r0]
+    8508:	e59f015c 	ldr	r0, [pc, #348]	; 866c <WaitForCycles+0x20>
+    850c:	e0211001 	eor	r1, r1, r1
+    8510:	e5801000 	str	r1, [r0]
+    8514:	e59f0144 	ldr	r0, [pc, #324]	; 8660 <WaitForCycles+0x14>
+    8518:	e0211001 	eor	r1, r1, r1
+    851c:	e5801000 	str	r1, [r0]
+    8520:	e59f0148 	ldr	r0, [pc, #328]	; 8670 <WaitForCycles+0x24>
+    8524:	e3a010c6 	mov	r1, #198	; 0xc6
+    8528:	e5801000 	str	r1, [r0]
+    852c:	e59f0140 	ldr	r0, [pc, #320]	; 8674 <WaitForCycles+0x28>
+    8530:	e59f1140 	ldr	r1, [pc, #320]	; 8678 <WaitForCycles+0x2c>
+    8534:	e5801000 	str	r1, [r0]
+    8538:	e3a0000e 	mov	r0, #14
+    853c:	e3a01002 	mov	r1, #2
+    8540:	ebffffaf 	bl	8404 <SetGpioFunction>
+    8544:	e3a0000f 	mov	r0, #15
+    8548:	e3a01002 	mov	r1, #2
+    854c:	ebffffac 	bl	8404 <SetGpioFunction>
+    8550:	e59f0124 	ldr	r0, [pc, #292]	; 867c <WaitForCycles+0x30>
+    8554:	e0211001 	eor	r1, r1, r1
+    8558:	e5801000 	str	r1, [r0]
+    855c:	e3a00096 	mov	r0, #150	; 0x96
+    8560:	eb000039 	bl	864c <WaitForCycles>
+    8564:	e59f0114 	ldr	r0, [pc, #276]	; 8680 <WaitForCycles+0x34>
+    8568:	e3a01903 	mov	r1, #49152	; 0xc000
+    856c:	e5801000 	str	r1, [r0]
+    8570:	e3a00096 	mov	r0, #150	; 0x96
+    8574:	eb000034 	bl	864c <WaitForCycles>
+    8578:	e59f0100 	ldr	r0, [pc, #256]	; 8680 <WaitForCycles+0x34>
+    857c:	e0211001 	eor	r1, r1, r1
+    8580:	e5801000 	str	r1, [r0]
+    8584:	e59f00d8 	ldr	r0, [pc, #216]	; 8664 <WaitForCycles+0x18>
+    8588:	e3a01003 	mov	r1, #3
+    858c:	e5801000 	str	r1, [r0]
+    8590:	e49df004 	pop	{pc}		; (ldr pc, [sp], #4)
 
-000084ac <SetGpioFunction>:
-    84ac:	e3500035 	cmp	r0, #53	; 0x35
-    84b0:	93510007 	cmpls	r1, #7
-    84b4:	81a0f00e 	movhi	pc, lr
-    84b8:	e52de004 	push	{lr}		; (str lr, [sp, #-4]!)
-    84bc:	e1a02000 	mov	r2, r0
-    84c0:	ebfffff7 	bl	84a4 <GetGpioAddress>
+00008594 <PutCharUART>:
+    8594:	e59f20e8 	ldr	r2, [pc, #232]	; 8684 <WaitForCycles+0x38>
 
-000084c4 <functionLoop$>:
-    84c4:	e3520009 	cmp	r2, #9
-    84c8:	8242200a 	subhi	r2, r2, #10
-    84cc:	82800004 	addhi	r0, r0, #4
-    84d0:	8afffffb 	bhi	84c4 <functionLoop$>
-    84d4:	e0822082 	add	r2, r2, r2, lsl #1
-    84d8:	e1a01211 	lsl	r1, r1, r2
-    84dc:	e3a03007 	mov	r3, #7
-    84e0:	e1a03213 	lsl	r3, r3, r2
-    84e4:	e5902000 	ldr	r2, [r0]
-    84e8:	e1c22003 	bic	r2, r2, r3
-    84ec:	e1811002 	orr	r1, r1, r2
-    84f0:	e5801000 	str	r1, [r0]
-    84f4:	e49df004 	pop	{pc}		; (ldr pc, [sp], #4)
+00008598 <putWaitLoop$>:
+    8598:	e5921000 	ldr	r1, [r2]
+    859c:	e3110020 	tst	r1, #32
+    85a0:	0afffffc 	beq	8598 <putWaitLoop$>
+    85a4:	e59f20dc 	ldr	r2, [pc, #220]	; 8688 <WaitForCycles+0x3c>
+    85a8:	e5820000 	str	r0, [r2]
+    85ac:	e1a0f00e 	mov	pc, lr
 
-000084f8 <SetGpio>:
-    84f8:	e3500035 	cmp	r0, #53	; 0x35
-    84fc:	81a0f00e 	movhi	pc, lr
-    8500:	e52de004 	push	{lr}		; (str lr, [sp, #-4]!)
-    8504:	e1a02000 	mov	r2, r0
-    8508:	ebffffe5 	bl	84a4 <GetGpioAddress>
-    850c:	e1a032a2 	lsr	r3, r2, #5
-    8510:	e1a03103 	lsl	r3, r3, #2
-    8514:	e0800003 	add	r0, r0, r3
-    8518:	e202201f 	and	r2, r2, #31
-    851c:	e3a03001 	mov	r3, #1
-    8520:	e1a03213 	lsl	r3, r3, r2
-    8524:	e3310000 	teq	r1, #0
-    8528:	05803028 	streq	r3, [r0, #40]	; 0x28
-    852c:	1580301c 	strne	r3, [r0, #28]
-    8530:	e49df004 	pop	{pc}		; (ldr pc, [sp], #4)
+000085b0 <GetCharUART>:
+    85b0:	e59f20cc 	ldr	r2, [pc, #204]	; 8684 <WaitForCycles+0x38>
 
-00008534 <GetGpio>:
-    8534:	e3500035 	cmp	r0, #53	; 0x35
-    8538:	81a0f00e 	movhi	pc, lr
-    853c:	e92d4010 	push	{r4, lr}
-    8540:	e1a04000 	mov	r4, r0
-    8544:	ebffffd6 	bl	84a4 <GetGpioAddress>
-    8548:	e1a032a4 	lsr	r3, r4, #5
-    854c:	e1a03103 	lsl	r3, r3, #2
-    8550:	e0800003 	add	r0, r0, r3
-    8554:	e204401f 	and	r4, r4, #31
-    8558:	e3a03001 	mov	r3, #1
-    855c:	e1a03413 	lsl	r3, r3, r4
-    8560:	e5904034 	ldr	r4, [r0, #52]	; 0x34
-    8564:	e0044003 	and	r4, r4, r3
-    8568:	e3340000 	teq	r4, #0
-    856c:	03a00000 	moveq	r0, #0
-    8570:	13a00001 	movne	r0, #1
-    8574:	e8bd8010 	pop	{r4, pc}
-    8578:	3f200000 	svccc	0x00200000
+000085b4 <getWaitLoop$>:
+    85b4:	e5921000 	ldr	r1, [r2]
+    85b8:	e3110001 	tst	r1, #1
+    85bc:	0afffffc 	beq	85b4 <getWaitLoop$>
+    85c0:	e59f20c0 	ldr	r2, [pc, #192]	; 8688 <WaitForCycles+0x3c>
+    85c4:	e5920000 	ldr	r0, [r2]
+    85c8:	e1a0f00e 	mov	pc, lr
 
-0000857c <InitUART>:
-    857c:	e52de004 	push	{lr}		; (str lr, [sp, #-4]!)
-    8580:	e59f017c 	ldr	r0, [pc, #380]	; 8704 <WaitForCycles+0x10>
-    8584:	e3a01001 	mov	r1, #1
-    8588:	e5801000 	str	r1, [r0]
-    858c:	e59f0174 	ldr	r0, [pc, #372]	; 8708 <WaitForCycles+0x14>
-    8590:	e0211001 	eor	r1, r1, r1
-    8594:	e5801000 	str	r1, [r0]
-    8598:	e59f016c 	ldr	r0, [pc, #364]	; 870c <WaitForCycles+0x18>
-    859c:	e0211001 	eor	r1, r1, r1
-    85a0:	e5801000 	str	r1, [r0]
-    85a4:	e59f0164 	ldr	r0, [pc, #356]	; 8710 <WaitForCycles+0x1c>
-    85a8:	e3a01003 	mov	r1, #3
-    85ac:	e5801000 	str	r1, [r0]
-    85b0:	e59f015c 	ldr	r0, [pc, #348]	; 8714 <WaitForCycles+0x20>
-    85b4:	e0211001 	eor	r1, r1, r1
-    85b8:	e5801000 	str	r1, [r0]
-    85bc:	e59f0144 	ldr	r0, [pc, #324]	; 8708 <WaitForCycles+0x14>
-    85c0:	e0211001 	eor	r1, r1, r1
-    85c4:	e5801000 	str	r1, [r0]
-    85c8:	e59f0148 	ldr	r0, [pc, #328]	; 8718 <WaitForCycles+0x24>
-    85cc:	e3a010c6 	mov	r1, #198	; 0xc6
-    85d0:	e5801000 	str	r1, [r0]
-    85d4:	e59f0140 	ldr	r0, [pc, #320]	; 871c <WaitForCycles+0x28>
-    85d8:	e59f1140 	ldr	r1, [pc, #320]	; 8720 <WaitForCycles+0x2c>
-    85dc:	e5801000 	str	r1, [r0]
-    85e0:	e3a0000e 	mov	r0, #14
-    85e4:	e3a01002 	mov	r1, #2
-    85e8:	ebffffaf 	bl	84ac <SetGpioFunction>
-    85ec:	e3a0000f 	mov	r0, #15
-    85f0:	e3a01002 	mov	r1, #2
-    85f4:	ebffffac 	bl	84ac <SetGpioFunction>
-    85f8:	e59f0124 	ldr	r0, [pc, #292]	; 8724 <WaitForCycles+0x30>
-    85fc:	e0211001 	eor	r1, r1, r1
-    8600:	e5801000 	str	r1, [r0]
-    8604:	e3a00096 	mov	r0, #150	; 0x96
-    8608:	eb000039 	bl	86f4 <WaitForCycles>
-    860c:	e59f0114 	ldr	r0, [pc, #276]	; 8728 <WaitForCycles+0x34>
-    8610:	e3a01903 	mov	r1, #49152	; 0xc000
-    8614:	e5801000 	str	r1, [r0]
-    8618:	e3a00096 	mov	r0, #150	; 0x96
-    861c:	eb000034 	bl	86f4 <WaitForCycles>
-    8620:	e59f0100 	ldr	r0, [pc, #256]	; 8728 <WaitForCycles+0x34>
-    8624:	e0211001 	eor	r1, r1, r1
-    8628:	e5801000 	str	r1, [r0]
-    862c:	e59f00d8 	ldr	r0, [pc, #216]	; 870c <WaitForCycles+0x18>
-    8630:	e3a01003 	mov	r1, #3
-    8634:	e5801000 	str	r1, [r0]
-    8638:	e49df004 	pop	{pc}		; (ldr pc, [sp], #4)
+000085cc <WriteStringUART>:
+    85cc:	e92d4070 	push	{r4, r5, r6, lr}
+    85d0:	e1a04000 	mov	r4, r0
+    85d4:	e1a05001 	mov	r5, r1
+    85d8:	e3a06000 	mov	r6, #0
 
-0000863c <PutCharUART>:
-    863c:	e59f20e8 	ldr	r2, [pc, #232]	; 872c <WaitForCycles+0x38>
+000085dc <writeLoop$>:
+    85dc:	e3550000 	cmp	r5, #0
+    85e0:	da000004 	ble	85f8 <writeLoopEnd$>
+    85e4:	e7d40006 	ldrb	r0, [r4, r6]
+    85e8:	ebffffe9 	bl	8594 <PutCharUART>
+    85ec:	e2866001 	add	r6, r6, #1
+    85f0:	e2455001 	sub	r5, r5, #1
+    85f4:	eafffff8 	b	85dc <writeLoop$>
 
-00008640 <putWaitLoop$>:
-    8640:	e5921000 	ldr	r1, [r2]
-    8644:	e3110020 	tst	r1, #32
-    8648:	0afffffc 	beq	8640 <putWaitLoop$>
-    864c:	e59f20dc 	ldr	r2, [pc, #220]	; 8730 <WaitForCycles+0x3c>
-    8650:	e5820000 	str	r0, [r2]
-    8654:	e1a0f00e 	mov	pc, lr
+000085f8 <writeLoopEnd$>:
+    85f8:	e8bd8070 	pop	{r4, r5, r6, pc}
 
-00008658 <GetCharUART>:
-    8658:	e59f20cc 	ldr	r2, [pc, #204]	; 872c <WaitForCycles+0x38>
+000085fc <ReadLineUART>:
+    85fc:	e92d4070 	push	{r4, r5, r6, lr}
+    8600:	e1a04000 	mov	r4, r0
+    8604:	e1a05001 	mov	r5, r1
+    8608:	e3a06000 	mov	r6, #0
 
-0000865c <getWaitLoop$>:
-    865c:	e5921000 	ldr	r1, [r2]
-    8660:	e3110001 	tst	r1, #1
-    8664:	0afffffc 	beq	865c <getWaitLoop$>
-    8668:	e59f20c0 	ldr	r2, [pc, #192]	; 8730 <WaitForCycles+0x3c>
-    866c:	e5920000 	ldr	r0, [r2]
-    8670:	e1a0f00e 	mov	pc, lr
+0000860c <readLoop$>:
+    860c:	e1360005 	teq	r6, r5
+    8610:	0a00000b 	beq	8644 <readLoopEnd$>
+    8614:	ebffffe5 	bl	85b0 <GetCharUART>
+    8618:	ebffffdd 	bl	8594 <PutCharUART>
+    861c:	e5c40000 	strb	r0, [r4]
+    8620:	e2866001 	add	r6, r6, #1
+    8624:	e2844001 	add	r4, r4, #1
+    8628:	e330000d 	teq	r0, #13
+    862c:	1afffff6 	bne	860c <readLoop$>
+    8630:	e3a0000a 	mov	r0, #10
+    8634:	ebffffd6 	bl	8594 <PutCharUART>
+    8638:	e2444001 	sub	r4, r4, #1
+    863c:	e3a00000 	mov	r0, #0
+    8640:	e5c40000 	strb	r0, [r4]
 
-00008674 <WriteStringUART>:
-    8674:	e92d4070 	push	{r4, r5, r6, lr}
-    8678:	e1a04000 	mov	r4, r0
-    867c:	e1a05001 	mov	r5, r1
-    8680:	e3a06000 	mov	r6, #0
+00008644 <readLoopEnd$>:
+    8644:	e2460001 	sub	r0, r6, #1
+    8648:	e8bd8070 	pop	{r4, r5, r6, pc}
 
-00008684 <writeLoop$>:
-    8684:	e3550000 	cmp	r5, #0
-    8688:	da000004 	ble	86a0 <writeLoopEnd$>
-    868c:	e7d40006 	ldrb	r0, [r4, r6]
-    8690:	ebffffe9 	bl	863c <PutCharUART>
-    8694:	e2866001 	add	r6, r6, #1
-    8698:	e2455001 	sub	r5, r5, #1
-    869c:	eafffff8 	b	8684 <writeLoop$>
-
-000086a0 <writeLoopEnd$>:
-    86a0:	e8bd8070 	pop	{r4, r5, r6, pc}
-
-000086a4 <ReadLineUART>:
-    86a4:	e92d4070 	push	{r4, r5, r6, lr}
-    86a8:	e1a04000 	mov	r4, r0
-    86ac:	e1a05001 	mov	r5, r1
-    86b0:	e3a06000 	mov	r6, #0
-
-000086b4 <readLoop$>:
-    86b4:	e1360005 	teq	r6, r5
-    86b8:	0a00000b 	beq	86ec <readLoopEnd$>
-    86bc:	ebffffe5 	bl	8658 <GetCharUART>
-    86c0:	ebffffdd 	bl	863c <PutCharUART>
-    86c4:	e5c40000 	strb	r0, [r4]
-    86c8:	e2866001 	add	r6, r6, #1
-    86cc:	e2844001 	add	r4, r4, #1
-    86d0:	e330000d 	teq	r0, #13
-    86d4:	1afffff6 	bne	86b4 <readLoop$>
-    86d8:	e3a0000a 	mov	r0, #10
-    86dc:	ebffffd6 	bl	863c <PutCharUART>
-    86e0:	e2444001 	sub	r4, r4, #1
-    86e4:	e3a00000 	mov	r0, #0
-    86e8:	e5c40000 	strb	r0, [r4]
-
-000086ec <readLoopEnd$>:
-    86ec:	e2460001 	sub	r0, r6, #1
-    86f0:	e8bd8070 	pop	{r4, r5, r6, pc}
-
-000086f4 <WaitForCycles>:
-    86f4:	e2400001 	sub	r0, r0, #1
-    86f8:	e3500000 	cmp	r0, #0
-    86fc:	aafffffc 	bge	86f4 <WaitForCycles>
-    8700:	e1a0f00e 	mov	pc, lr
-    8704:	3f215004 	svccc	0x00215004
-    8708:	3f215044 	svccc	0x00215044
-    870c:	3f215060 	svccc	0x00215060
-    8710:	3f21504c 	svccc	0x0021504c
-    8714:	3f215050 	svccc	0x00215050
-    8718:	3f215048 	svccc	0x00215048
-    871c:	3f215068 	svccc	0x00215068
-    8720:	0000010e 	andeq	r0, r0, lr, lsl #2
-    8724:	3f200094 	svccc	0x00200094
-    8728:	3f200098 	svccc	0x00200098
-    872c:	3f215054 	svccc	0x00215054
-    8730:	3f215040 	svccc	0x00215040
+0000864c <WaitForCycles>:
+    864c:	e2400001 	sub	r0, r0, #1
+    8650:	e3500000 	cmp	r0, #0
+    8654:	aafffffc 	bge	864c <WaitForCycles>
+    8658:	e1a0f00e 	mov	pc, lr
+    865c:	3f215004 	svccc	0x00215004
+    8660:	3f215044 	svccc	0x00215044
+    8664:	3f215060 	svccc	0x00215060
+    8668:	3f21504c 	svccc	0x0021504c
+    866c:	3f215050 	svccc	0x00215050
+    8670:	3f215048 	svccc	0x00215048
+    8674:	3f215068 	svccc	0x00215068
+    8678:	0000010e 	andeq	r0, r0, lr, lsl #2
+    867c:	3f200094 	svccc	0x00200094
+    8680:	3f200098 	svccc	0x00200098
+    8684:	3f215054 	svccc	0x00215054
+    8688:	3f215040 	svccc	0x00215040
 
 Disassembly of section .ARM.exidx:
 
-00008734 <.ARM.exidx>:
-    8734:	7ffffa58 	svcvc	0x00fffa58
-    8738:	00000001 	andeq	r0, r0, r1
+0000868c <.ARM.exidx>:
+    868c:	7ffffa58 	svcvc	0x00fffa58
+    8690:	00000001 	andeq	r0, r0, r1
 
 Disassembly of section .data:
 
-0000873c <led_message-0x4>:
-    873c:	00000000 	andeq	r0, r0, r0
+00008694 <led_message-0xc>:
+	...
 
-00008740 <led_message>:
-    8740:	00000020 	andeq	r0, r0, r0, lsr #32
-    8744:	00000000 	andeq	r0, r0, r0
-    8748:	00038041 	andeq	r8, r3, r1, asr #32
-    874c:	00000008 	andeq	r0, r0, r8
-    8750:	00000000 	andeq	r0, r0, r0
-    8754:	00000082 	andeq	r0, r0, r2, lsl #1
-    8758:	00000001 	andeq	r0, r0, r1
-    875c:	00000000 	andeq	r0, r0, r0
+000086a0 <led_message>:
+    86a0:	00000020 	andeq	r0, r0, r0, lsr #32
+    86a4:	00000000 	andeq	r0, r0, r0
+    86a8:	00038041 	andeq	r8, r3, r1, asr #32
+    86ac:	00000008 	andeq	r0, r0, r8
+    86b0:	00000000 	andeq	r0, r0, r0
+    86b4:	00000082 	andeq	r0, r0, r2, lsl #1
+    86b8:	00000001 	andeq	r0, r0, r1
+    86bc:	00000000 	andeq	r0, r0, r0
 
-00008760 <t>:
-    8760:	00000058 	andeq	r0, r0, r8, asr r0
-    8764:	00000000 	andeq	r0, r0, r0
-    8768:	00048003 	andeq	r8, r4, r3
-    876c:	00000008 	andeq	r0, r0, r8
-    8770:	00000008 	andeq	r0, r0, r8
-    8774:	00000400 	andeq	r0, r0, r0, lsl #8
-    8778:	00000300 	andeq	r0, r0, r0, lsl #6
-    877c:	00048004 	andeq	r8, r4, r4
-    8780:	00000008 	andeq	r0, r0, r8
-    8784:	00000008 	andeq	r0, r0, r8
-    8788:	00000400 	andeq	r0, r0, r0, lsl #8
-    878c:	00000300 	andeq	r0, r0, r0, lsl #6
-    8790:	00048005 	andeq	r8, r4, r5
-    8794:	00000004 	andeq	r0, r0, r4
-    8798:	00000004 	andeq	r0, r0, r4
-    879c:	00000020 	andeq	r0, r0, r0, lsr #32
-    87a0:	00040001 	andeq	r0, r4, r1
-    87a4:	00000008 	andeq	r0, r0, r8
-    87a8:	00000004 	andeq	r0, r0, r4
-    87ac:	00000010 	andeq	r0, r0, r0, lsl r0
+000086c0 <t>:
+    86c0:	00000058 	andeq	r0, r0, r8, asr r0
+    86c4:	00000000 	andeq	r0, r0, r0
+    86c8:	00048003 	andeq	r8, r4, r3
+    86cc:	00000008 	andeq	r0, r0, r8
+    86d0:	00000008 	andeq	r0, r0, r8
+    86d4:	00000400 	andeq	r0, r0, r0, lsl #8
+    86d8:	00000300 	andeq	r0, r0, r0, lsl #6
+    86dc:	00048004 	andeq	r8, r4, r4
+    86e0:	00000008 	andeq	r0, r0, r8
+    86e4:	00000008 	andeq	r0, r0, r8
+    86e8:	00000400 	andeq	r0, r0, r0, lsl #8
+    86ec:	00000300 	andeq	r0, r0, r0, lsl #6
+    86f0:	00048005 	andeq	r8, r4, r5
+    86f4:	00000004 	andeq	r0, r0, r4
+    86f8:	00000004 	andeq	r0, r0, r4
+    86fc:	00000020 	andeq	r0, r0, r0, lsr #32
+    8700:	00040001 	andeq	r0, r4, r1
+    8704:	00000008 	andeq	r0, r0, r8
+    8708:	00000004 	andeq	r0, r0, r4
+    870c:	00000010 	andeq	r0, r0, r0, lsl r0
 	...
 
 Disassembly of section .comment:
 
-000087b8 <.comment>:
-    87b8:	3a434347 	bcc	10d94dc <__bss_end__+0x10d0d24>
-    87bc:	4e472820 	cdpmi	8, 4, cr2, cr7, cr0, {1}
-    87c0:	6f542055 	svcvs	0x00542055
-    87c4:	20736c6f 	rsbscs	r6, r3, pc, ror #24
-    87c8:	20726f66 	rsbscs	r6, r2, r6, ror #30
-    87cc:	204d5241 	subcs	r5, sp, r1, asr #4
-    87d0:	65626d45 	strbvs	r6, [r2, #-3397]!	; 0xfffff2bb
-    87d4:	64656464 	strbtvs	r6, [r5], #-1124	; 0xfffffb9c
-    87d8:	6f725020 	svcvs	0x00725020
-    87dc:	73736563 	cmnvc	r3, #415236096	; 0x18c00000
-    87e0:	2073726f 	rsbscs	r7, r3, pc, ror #4
-    87e4:	30322d36 	eorscc	r2, r2, r6, lsr sp
-    87e8:	712d3731 			; <UNDEFINED> instruction: 0x712d3731
-    87ec:	70752d32 	rsbsvc	r2, r5, r2, lsr sp
-    87f0:	65746164 	ldrbvs	r6, [r4, #-356]!	; 0xfffffe9c
-    87f4:	2e362029 	cdpcs	0, 3, cr2, cr6, cr9, {1}
-    87f8:	20312e33 	eorscs	r2, r1, r3, lsr lr
-    87fc:	37313032 			; <UNDEFINED> instruction: 0x37313032
-    8800:	35313230 	ldrcc	r3, [r1, #-560]!	; 0xfffffdd0
-    8804:	65722820 	ldrbvs	r2, [r2, #-2080]!	; 0xfffff7e0
-    8808:	7361656c 	cmnvc	r1, #108, 10	; 0x1b000000
-    880c:	5b202965 	blpl	812da8 <__bss_end__+0x80a5f0>
-    8810:	2f4d5241 	svccs	0x004d5241
-    8814:	65626d65 	strbvs	r6, [r2, #-3429]!	; 0xfffff29b
-    8818:	64656464 	strbtvs	r6, [r5], #-1124	; 0xfffffb9c
-    881c:	622d362d 	eorvs	r3, sp, #47185920	; 0x2d00000
-    8820:	636e6172 	cmnvs	lr, #-2147483620	; 0x8000001c
-    8824:	65722068 	ldrbvs	r2, [r2, #-104]!	; 0xffffff98
-    8828:	69736976 	ldmdbvs	r3!, {r1, r2, r4, r5, r6, r8, fp, sp, lr}^
-    882c:	32206e6f 	eorcc	r6, r0, #1776	; 0x6f0
-    8830:	31353534 	teqcc	r5, r4, lsr r5
-    8834:	Address 0x0000000000008834 is out of bounds.
+00008718 <.comment>:
+    8718:	3a434347 	bcc	10d943c <__bss_end__+0x10d0d24>
+    871c:	4e472820 	cdpmi	8, 4, cr2, cr7, cr0, {1}
+    8720:	6f542055 	svcvs	0x00542055
+    8724:	20736c6f 	rsbscs	r6, r3, pc, ror #24
+    8728:	20726f66 	rsbscs	r6, r2, r6, ror #30
+    872c:	204d5241 	subcs	r5, sp, r1, asr #4
+    8730:	65626d45 	strbvs	r6, [r2, #-3397]!	; 0xfffff2bb
+    8734:	64656464 	strbtvs	r6, [r5], #-1124	; 0xfffffb9c
+    8738:	6f725020 	svcvs	0x00725020
+    873c:	73736563 	cmnvc	r3, #415236096	; 0x18c00000
+    8740:	2073726f 	rsbscs	r7, r3, pc, ror #4
+    8744:	30322d36 	eorscc	r2, r2, r6, lsr sp
+    8748:	712d3731 			; <UNDEFINED> instruction: 0x712d3731
+    874c:	70752d32 	rsbsvc	r2, r5, r2, lsr sp
+    8750:	65746164 	ldrbvs	r6, [r4, #-356]!	; 0xfffffe9c
+    8754:	2e362029 	cdpcs	0, 3, cr2, cr6, cr9, {1}
+    8758:	20312e33 	eorscs	r2, r1, r3, lsr lr
+    875c:	37313032 			; <UNDEFINED> instruction: 0x37313032
+    8760:	35313230 	ldrcc	r3, [r1, #-560]!	; 0xfffffdd0
+    8764:	65722820 	ldrbvs	r2, [r2, #-2080]!	; 0xfffff7e0
+    8768:	7361656c 	cmnvc	r1, #108, 10	; 0x1b000000
+    876c:	5b202965 	blpl	812d08 <__bss_end__+0x80a5f0>
+    8770:	2f4d5241 	svccs	0x004d5241
+    8774:	65626d65 	strbvs	r6, [r2, #-3429]!	; 0xfffff29b
+    8778:	64656464 	strbtvs	r6, [r5], #-1124	; 0xfffffb9c
+    877c:	622d362d 	eorvs	r3, sp, #47185920	; 0x2d00000
+    8780:	636e6172 	cmnvs	lr, #-2147483620	; 0x8000001c
+    8784:	65722068 	ldrbvs	r2, [r2, #-104]!	; 0xffffff98
+    8788:	69736976 	ldmdbvs	r3!, {r1, r2, r4, r5, r6, r8, fp, sp, lr}^
+    878c:	32206e6f 	eorcc	r6, r0, #1776	; 0x6f0
+    8790:	31353534 	teqcc	r5, r4, lsr r5
+    8794:	Address 0x0000000000008794 is out of bounds.
 
 
 Disassembly of section .ARM.attributes:
 
-000087b8 <.ARM.attributes>:
-    87b8:	00003d41 	andeq	r3, r0, r1, asr #26
-    87bc:	61656100 	cmnvs	r5, r0, lsl #2
-    87c0:	01006962 	tsteq	r0, r2, ror #18
-    87c4:	00000033 	andeq	r0, r0, r3, lsr r0
-    87c8:	726f4305 	rsbvc	r4, pc, #335544320	; 0x14000000
-    87cc:	2d786574 	cfldr64cs	mvdx6, [r8, #-464]!	; 0xfffffe30
-    87d0:	00333541 	eorseq	r3, r3, r1, asr #10
-    87d4:	41070e06 	tstmi	r7, r6, lsl #28
-    87d8:	02090108 	andeq	r0, r9, #8, 2
-    87dc:	0412050a 	ldreq	r0, [r2], #-1290	; 0xfffffaf6
-    87e0:	01150114 	tsteq	r5, r4, lsl r1
-    87e4:	01180317 	tsteq	r8, r7, lsl r3
-    87e8:	011c011a 	tsteq	ip, sl, lsl r1
-    87ec:	0122061e 			; <UNDEFINED> instruction: 0x0122061e
-    87f0:	022c012a 	eoreq	r0, ip, #-2147483638	; 0x8000000a
-    87f4:	Address 0x00000000000087f4 is out of bounds.
+00008718 <.ARM.attributes>:
+    8718:	00003d41 	andeq	r3, r0, r1, asr #26
+    871c:	61656100 	cmnvs	r5, r0, lsl #2
+    8720:	01006962 	tsteq	r0, r2, ror #18
+    8724:	00000033 	andeq	r0, r0, r3, lsr r0
+    8728:	726f4305 	rsbvc	r4, pc, #335544320	; 0x14000000
+    872c:	2d786574 	cfldr64cs	mvdx6, [r8, #-464]!	; 0xfffffe30
+    8730:	00333541 	eorseq	r3, r3, r1, asr #10
+    8734:	41070e06 	tstmi	r7, r6, lsl #28
+    8738:	02090108 	andeq	r0, r9, #8, 2
+    873c:	0412050a 	ldreq	r0, [r2], #-1290	; 0xfffffaf6
+    8740:	01150114 	tsteq	r5, r4, lsl r1
+    8744:	01180317 	tsteq	r8, r7, lsl r3
+    8748:	011c011a 	tsteq	ip, sl, lsl r1
+    874c:	0122061e 			; <UNDEFINED> instruction: 0x0122061e
+    8750:	022c012a 	eoreq	r0, ip, #-2147483638	; 0x8000000a
+    8754:	Address 0x0000000000008754 is out of bounds.
 
 
 Disassembly of section .debug_line:
@@ -660,7 +608,7 @@ Disassembly of section .debug_line:
   24:	2e6f6970 			; <UNDEFINED> instruction: 0x2e6f6970
   28:	00010073 	andeq	r0, r1, r3, ror r0
   2c:	05000000 	streq	r0, [r0, #-0]
-  30:	0084a402 	addeq	sl, r4, r2, lsl #8
+  30:	0083fc02 	addeq	pc, r3, r2, lsl #24
   34:	032f1500 			; <UNDEFINED> instruction: 0x032f1500
   38:	2f2f2e0a 	svccs	0x002f2e0a
   3c:	312f2f30 			; <UNDEFINED> instruction: 0x312f2f30
@@ -690,7 +638,7 @@ Disassembly of section .debug_line:
   9c:	74726175 	ldrbtvc	r6, [r2], #-373	; 0xfffffe8b
   a0:	0100732e 	tsteq	r0, lr, lsr #6
   a4:	00000000 	andeq	r0, r0, r0
-  a8:	857c0205 	ldrbhi	r0, [ip, #-517]!	; 0xfffffdfb
+  a8:	84d40205 	ldrbhi	r0, [r4], #517	; 0x205
   ac:	17030000 	strne	r0, [r3, -r0]
   b0:	2f2f3001 	svccs	0x002f3001
   b4:	302f2f30 	eorcc	r2, pc, r0, lsr pc	; <UNPREDICTABLE>
@@ -711,7 +659,7 @@ Disassembly of section .debug_line:
   f0:	342e0903 	strtcc	r0, [lr], #-2307	; 0xfffff6fd
   f4:	2f312f2f 	svccs	0x00312f2f
   f8:	30302f30 	eorscc	r2, r0, r0, lsr pc
-  fc:	0a033230 	beq	cc9c4 <__bss_end__+0xc420c>
+  fc:	0a033230 	beq	cc9c4 <__bss_end__+0xc42ac>
  100:	2f2f342e 	svccs	0x002f342e
  104:	30302f31 	eorscc	r2, r0, r1, lsr pc
  108:	302f3030 	eorcc	r3, pc, r0, lsr r0	; <UNPREDICTABLE>
@@ -732,8 +680,8 @@ Disassembly of section .debug_info:
    4:	00000002 	andeq	r0, r0, r2
    8:	01040000 	mrseq	r0, (UNDEF: 4)
    c:	00000000 	andeq	r0, r0, r0
-  10:	000084a4 	andeq	r8, r0, r4, lsr #9
-  14:	0000857c 	andeq	r8, r0, ip, ror r5
+  10:	000083fc 	strdeq	r8, [r0], -ip
+  14:	000084d4 	ldrdeq	r8, [r0], -r4
   18:	72756f73 	rsbsvc	r6, r5, #460	; 0x1cc
   1c:	672f6563 	strvs	r6, [pc, -r3, ror #10]!
   20:	2e6f6970 			; <UNDEFINED> instruction: 0x2e6f6970
@@ -759,8 +707,8 @@ Disassembly of section .debug_info:
   70:	14000200 	strne	r0, [r0], #-512	; 0xfffffe00
   74:	04000000 	streq	r0, [r0], #-0
   78:	00007901 	andeq	r7, r0, r1, lsl #18
-  7c:	00857c00 	addeq	r7, r5, r0, lsl #24
-  80:	00873400 	addeq	r3, r7, r0, lsl #8
+  7c:	0084d400 	addeq	sp, r4, r0, lsl #8
+  80:	00868c00 	addeq	r8, r6, r0, lsl #24
   84:	756f7300 	strbvc	r7, [pc, #-768]!	; fffffd8c <AUX_MU_BAUD_REG+0xc0dead24>
   88:	2f656372 	svccs	0x00656372
   8c:	74726175 	ldrbtvc	r6, [r2], #-373	; 0xfffffe8b
@@ -770,7 +718,7 @@ Disassembly of section .debug_info:
   9c:	6d2f7364 	stcvs	3, cr7, [pc, #-400]!	; ffffff14 <AUX_MU_BAUD_REG+0xc0deaeac>
   a0:	6f7a6c65 	svcvs	0x007a6c65
   a4:	2f696268 	svccs	0x00696268
-  a8:	6b736544 	blvs	1cd95c0 <__bss_end__+0x1cd0e08>
+  a8:	6b736544 	blvs	1cd95c0 <__bss_end__+0x1cd0ea8>
   ac:	2f706f74 	svccs	0x00706f74
   b0:	70736152 	rsbsvc	r6, r3, r2, asr r1
   b4:	72726562 	rsbsvc	r6, r2, #411041792	; 0x18800000
@@ -790,12 +738,12 @@ Disassembly of section .debug_abbrev:
 00000000 <.debug_abbrev>:
    0:	10001101 	andne	r1, r0, r1, lsl #2
    4:	12011106 	andne	r1, r1, #-2147483647	; 0x80000001
-   8:	1b080301 	blne	200c14 <__bss_end__+0x1f845c>
+   8:	1b080301 	blne	200c14 <__bss_end__+0x1f84fc>
    c:	13082508 	movwne	r2, #34056	; 0x8508
   10:	00000005 	andeq	r0, r0, r5
   14:	10001101 	andne	r1, r0, r1, lsl #2
   18:	12011106 	andne	r1, r1, #-2147483647	; 0x80000001
-  1c:	1b080301 	blne	200c28 <__bss_end__+0x1f8470>
+  1c:	1b080301 	blne	200c28 <__bss_end__+0x1f8510>
   20:	13082508 	movwne	r2, #34056	; 0x8508
   24:	00000005 	andeq	r0, r0, r5
 
@@ -806,13 +754,13 @@ Disassembly of section .debug_aranges:
    4:	00000002 	andeq	r0, r0, r2
    8:	00040000 	andeq	r0, r4, r0
    c:	00000000 	andeq	r0, r0, r0
-  10:	000084a4 	andeq	r8, r0, r4, lsr #9
+  10:	000083fc 	strdeq	r8, [r0], -ip
   14:	000000d8 	ldrdeq	r0, [r0], -r8
 	...
   20:	0000001c 	andeq	r0, r0, ip, lsl r0
   24:	006d0002 	rsbeq	r0, sp, r2
   28:	00040000 	andeq	r0, r4, r0
   2c:	00000000 	andeq	r0, r0, r0
-  30:	0000857c 	andeq	r8, r0, ip, ror r5
+  30:	000084d4 	ldrdeq	r8, [r0], -r4
   34:	000001b8 			; <UNDEFINED> instruction: 0x000001b8
 	...

@@ -19,7 +19,7 @@ _start:
 
 
  /* CHANGES ADDED BY LdB */
-        bl  RPi_CheckAndExitHypModeToSvcMode;   ;@ First check for HYP_MODE and if in it drop out to SRV_MODE
+      /*  bl  RPi_CheckAndExitHypModeToSvcMode;   ;@ First check for HYP_MODE and if in it drop out to SRV_MODE
 
        ldr sp, =0x8000               ;@ Reset the stack pointer for that mode
 
@@ -51,7 +51,7 @@ _start:
 /*==========================================================================}
 ;{           RASPBERRY PI LEVEL L1 CACHE CONSTANTS DEFINED                }
 ;{=========================================================================*/
-#define SCTLR_ENABLE_DATA_CACHE         0x4
+/*#define SCTLR_ENABLE_DATA_CACHE         0x4
 #define SCTLR_ENABLE_BRANCH_PREDICTION   0x800
 #define SCTLR_ENABLE_INSTRUCTION_CACHE  0x1000
 
@@ -60,11 +60,11 @@ _start:
     orr r0, #SCTLR_ENABLE_DATA_CACHE
     orr r0, #SCTLR_ENABLE_INSTRUCTION_CACHE
 
-    mcr p15,0,r0,c1,c0,0               ;@ System Control Register = R0
+    mcr p15,0,r0,c1,c0,0               ;@ System Control Register = R0*/
 ;@"================================================================"
 ;@ Now Clear the .BSS segment as the C compiler expects us to do
 ;@"================================================================"
-   ldr   r0, =__bss_start__
+  /* ldr   r0, =__bss_start__
    ldr   r1, =__bss_end__   
    mov   r2, #0
 .clear_bss:
@@ -73,7 +73,7 @@ _start:
     str   r2, [r0]
    add   r0, r0, #4
     b .clear_bss
-.clear_bss_exit: 
+.clear_bss_exit: */
 
  /* END OF CHANGES ADDED BY LdB */
      
@@ -84,7 +84,7 @@ _start:
 
  /* CODED ADDED BY LdB */
 /* "PROVIDE C FUNCTION: bool RPi_CheckAndExitHypModeToSvcMode (void);" */
-.section .text.RPi_CheckAndExitHypModeToSvcMode, "ax", %progbits
+/*.section .text.RPi_CheckAndExitHypModeToSvcMode, "ax", %progbits
 .balign   4
 .type RPi_CheckAndExitHypModeToSvcMode, %function
 .syntax unified
@@ -113,7 +113,7 @@ RPi_CheckAndExitHypModeToSvcMode:
    /* The ARM6 compiler does not know these instructions so it is a way to get needed opcode here */
     /* So our ARM6 code can drop an arm7 or arm8 out of HYP mode and run on an ARM7/8.             */
     /* Native ARM7/8 compilers already understand the OPCODE but do not mind it this way either      */        
-   .long 0xE12EF30E                  ;@ "msr ELR_hyp, lr"
+   /*.long 0xE12EF30E                  ;@ "msr ELR_hyp, lr"
    .long 0xE160006E                  ;@ "eret"   
 ;@ No ltorg data required for this function 
-.size   RPi_CheckAndExitHypModeToSvcMode, .-RPi_CheckAndExitHypModeToSvcMode
+.size   RPi_CheckAndExitHypModeToSvcMode, .-RPi_CheckAndExitHypModeToSvcMode*/
