@@ -23,6 +23,9 @@
 #define MAIL_EMPTY 0x40000000 // 32 bit value, 31st is 1, used to check state of 31st
                               // bit (empty bit in the mailbox status register)
 
+#define RESPONSE_OK     0x80000000
+#define RESPONSE_ERROR  0x80000001                     
+
 //Taken from: https://github.com/raspberrypi/linux/blob/rpi-4.9.y/include/soc/bcm2835/raspberrypi-firmware.h
 typedef enum {
   END =                                    0,

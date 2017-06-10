@@ -1,0 +1,789 @@
+# 1 "source/MainFiles/mailbox.cpp"
+# 1 "<built-in>"
+# 1 "<command-line>"
+# 1 "/usr/include/stdc-predef.h" 1 3 4
+# 1 "<command-line>" 2
+# 1 "source/MainFiles/mailbox.cpp"
+# 1 "source/MainFiles/mailbox.cpp"
+# 1 "<built-in>"
+# 1 "<command-line>"
+# 1 "/usr/include/stdc-predef.h" 1 3 4
+# 1 "<command-line>" 2
+# 1 "source/MainFiles/mailbox.cpp"
+# 19 "source/MainFiles/mailbox.cpp"
+# 1 "source/MainFiles/mailbox.h" 1
+# 15 "source/MainFiles/mailbox.h"
+# 1 "/usr/lib/gcc/x86_64-linux-gnu/5/include/stdint.h" 1 3 4
+# 9 "/usr/lib/gcc/x86_64-linux-gnu/5/include/stdint.h" 3 4
+# 1 "/usr/include/stdint.h" 1 3 4
+# 25 "/usr/include/stdint.h" 3 4
+# 1 "/usr/include/features.h" 1 3 4
+# 367 "/usr/include/features.h" 3 4
+# 1 "/usr/include/x86_64-linux-gnu/sys/cdefs.h" 1 3 4
+# 410 "/usr/include/x86_64-linux-gnu/sys/cdefs.h" 3 4
+# 1 "/usr/include/x86_64-linux-gnu/bits/wordsize.h" 1 3 4
+# 411 "/usr/include/x86_64-linux-gnu/sys/cdefs.h" 2 3 4
+# 368 "/usr/include/features.h" 2 3 4
+# 391 "/usr/include/features.h" 3 4
+# 1 "/usr/include/x86_64-linux-gnu/gnu/stubs.h" 1 3 4
+# 10 "/usr/include/x86_64-linux-gnu/gnu/stubs.h" 3 4
+# 1 "/usr/include/x86_64-linux-gnu/gnu/stubs-64.h" 1 3 4
+# 11 "/usr/include/x86_64-linux-gnu/gnu/stubs.h" 2 3 4
+# 392 "/usr/include/features.h" 2 3 4
+# 26 "/usr/include/stdint.h" 2 3 4
+# 1 "/usr/include/x86_64-linux-gnu/bits/wchar.h" 1 3 4
+# 27 "/usr/include/stdint.h" 2 3 4
+# 1 "/usr/include/x86_64-linux-gnu/bits/wordsize.h" 1 3 4
+# 28 "/usr/include/stdint.h" 2 3 4
+# 36 "/usr/include/stdint.h" 3 4
+
+# 36 "/usr/include/stdint.h" 3 4
+typedef signed char int8_t;
+typedef short int int16_t;
+typedef int int32_t;
+
+typedef long int int64_t;
+
+
+
+
+
+
+
+typedef unsigned char uint8_t;
+typedef unsigned short int uint16_t;
+
+typedef unsigned int uint32_t;
+
+
+
+typedef unsigned long int uint64_t;
+# 65 "/usr/include/stdint.h" 3 4
+typedef signed char int_least8_t;
+typedef short int int_least16_t;
+typedef int int_least32_t;
+
+typedef long int int_least64_t;
+
+
+
+
+
+
+typedef unsigned char uint_least8_t;
+typedef unsigned short int uint_least16_t;
+typedef unsigned int uint_least32_t;
+
+typedef unsigned long int uint_least64_t;
+# 90 "/usr/include/stdint.h" 3 4
+typedef signed char int_fast8_t;
+
+typedef long int int_fast16_t;
+typedef long int int_fast32_t;
+typedef long int int_fast64_t;
+# 103 "/usr/include/stdint.h" 3 4
+typedef unsigned char uint_fast8_t;
+
+typedef unsigned long int uint_fast16_t;
+typedef unsigned long int uint_fast32_t;
+typedef unsigned long int uint_fast64_t;
+# 119 "/usr/include/stdint.h" 3 4
+typedef long int intptr_t;
+
+
+typedef unsigned long int uintptr_t;
+# 134 "/usr/include/stdint.h" 3 4
+typedef long int intmax_t;
+typedef unsigned long int uintmax_t;
+# 10 "/usr/lib/gcc/x86_64-linux-gnu/5/include/stdint.h" 2 3 4
+# 16 "source/MainFiles/mailbox.h" 2
+# 1 "source/MainFiles/mailbox.cpp"
+# 1 "<built-in>"
+# 1 "<command-line>"
+# 1 "/usr/include/stdc-predef.h" 1 3 4
+# 1 "<command-line>" 2
+# 1 "source/MainFiles/mailbox.cpp"
+# 19 "source/MainFiles/mailbox.cpp"
+# 1 "source/MainFiles/mailbox.h" 1
+# 15 "source/MainFiles/mailbox.h"
+# 1 "/usr/lib/gcc/x86_64-linux-gnu/5/include/stdint.h" 1 3 4
+# 9 "/usr/lib/gcc/x86_64-linux-gnu/5/include/stdint.h" 3 4
+# 1 "/usr/include/stdint.h" 1 3 4
+# 25 "/usr/include/stdint.h" 3 4
+# 1 "/usr/include/features.h" 1 3 4
+# 367 "/usr/include/features.h" 3 4
+# 1 "/usr/include/x86_64-linux-gnu/sys/cdefs.h" 1 3 4
+# 410 "/usr/include/x86_64-linux-gnu/sys/cdefs.h" 3 4
+# 1 "/usr/include/x86_64-linux-gnu/bits/wordsize.h" 1 3 4
+# 411 "/usr/include/x86_64-linux-gnu/sys/cdefs.h" 2 3 4
+# 368 "/usr/include/features.h" 2 3 4
+# 391 "/usr/include/features.h" 3 4
+# 1 "/usr/include/x86_64-linux-gnu/gnu/stubs.h" 1 3 4
+# 10 "/usr/include/x86_64-linux-gnu/gnu/stubs.h" 3 4
+# 1 "/usr/include/x86_64-linux-gnu/gnu/stubs-64.h" 1 3 4
+# 11 "/usr/include/x86_64-linux-gnu/gnu/stubs.h" 2 3 4
+# 392 "/usr/include/features.h" 2 3 4
+# 26 "/usr/include/stdint.h" 2 3 4
+# 1 "/usr/include/x86_64-linux-gnu/bits/wchar.h" 1 3 4
+# 27 "/usr/include/stdint.h" 2 3 4
+# 1 "/usr/include/x86_64-linux-gnu/bits/wordsize.h" 1 3 4
+# 28 "/usr/include/stdint.h" 2 3 4
+# 36 "/usr/include/stdint.h" 3 4
+
+# 36 "/usr/include/stdint.h" 3 4
+typedef signed char int8_t;
+typedef short int int16_t;
+typedef int int32_t;
+
+typedef long int int64_t;
+
+
+
+
+
+
+
+typedef unsigned char uint8_t;
+typedef unsigned short int uint16_t;
+
+typedef unsigned int uint32_t;
+
+
+
+typedef unsigned long int uint64_t;
+# 65 "/usr/include/stdint.h" 3 4
+typedef signed char int_least8_t;
+typedef short int int_least16_t;
+typedef int int_least32_t;
+
+typedef long int int_least64_t;
+
+
+
+
+
+
+typedef unsigned char uint_least8_t;
+typedef unsigned short int uint_least16_t;
+typedef unsigned int uint_least32_t;
+
+typedef unsigned long int uint_least64_t;
+# 90 "/usr/include/stdint.h" 3 4
+typedef signed char int_fast8_t;
+
+typedef long int int_fast16_t;
+typedef long int int_fast32_t;
+typedef long int int_fast64_t;
+# 103 "/usr/include/stdint.h" 3 4
+typedef unsigned char uint_fast8_t;
+
+typedef unsigned long int uint_fast16_t;
+typedef unsigned long int uint_fast32_t;
+typedef unsigned long int uint_fast64_t;
+# 119 "/usr/include/stdint.h" 3 4
+typedef long int intptr_t;
+
+
+typedef unsigned long int uintptr_t;
+# 134 "/usr/include/stdint.h" 3 4
+typedef long int intmax_t;
+typedef unsigned long int uintmax_t;
+# 10 "/usr/lib/gcc/x86_64-linux-gnu/5/include/stdint.h" 2 3 4
+# 16 "source/MainFiles/mailbox.h" 2
+# 1 "source/boot/peripherals.h" 1
+# 17 "source/MainFiles/mailbox.h" 2
+# 30 "source/MainFiles/mailbox.h"
+
+# 30 "source/MainFiles/mailbox.h"
+typedef enum {
+  END = 0,
+  GET_FIRMWARE_REVISION = 0x00000001,
+
+  SET_CURSOR_INFO = 0x00008010,
+  SET_CURSOR_STATE = 0x00008011,
+
+  GET_BOARD_MODEL = 0x00010001,
+  GET_BOARD_REVISION = 0x00010002,
+  GET_BOARD_MAC_ADDRESS = 0x00010003,
+  GET_BOARD_SERIAL = 0x00010004,
+  GET_ARM_MEMORY = 0x00010005,
+  GET_VC_MEMORY = 0x00010006,
+  GET_CLOCKS = 0x00010007,
+  GET_POWER_STATE = 0x00020001,
+  GET_TIMING = 0x00020002,
+  SET_POWER_STATE = 0x00028001,
+  GET_CLOCK_STATE = 0x00030001,
+  GET_CLOCK_RATE = 0x00030002,
+  GET_VOLTAGE = 0x00030003,
+  GET_MAX_CLOCK_RATE = 0x00030004,
+  GET_MAX_VOLTAGE = 0x00030005,
+  GET_TEMPERATURE = 0x00030006,
+  GET_MIN_CLOCK_RATE = 0x00030007,
+  GET_MIN_VOLTAGE = 0x00030008,
+  GET_TURBO = 0x00030009,
+  GET_MAX_TEMPERATURE = 0x0003000a,
+  GET_STC = 0x0003000b,
+  ALLOCATE_MEMORY = 0x0003000c,
+  LOCK_MEMORY = 0x0003000d,
+  UNLOCK_MEMORY = 0x0003000e,
+  RELEASE_MEMORY = 0x0003000f,
+  EXECUTE_CODE = 0x00030010,
+  EXECUTE_QPU = 0x00030011,
+  SET_ENABLE_QPU = 0x00030012,
+  GET_DISPMANX_RESOURCE_MEM_HANDLE = 0x00030014,
+  GET_EDID_BLOCK = 0x00030020,
+  GET_CUSTOMER_OTP = 0x00030021,
+  GET_DOMAIN_STATE = 0x00030030,
+  SET_CLOCK_STATE = 0x00038001,
+  SET_CLOCK_RATE = 0x00038002,
+  SET_VOLTAGE = 0x00038003,
+  SET_TURBO = 0x00038009,
+  SET_CUSTOMER_OTP = 0x00038021,
+  SET_DOMAIN_STATE = 0x00038030,
+  GET_GPIO_STATE = 0x00030041,
+  SET_GPIO_STATE = 0x00038041,
+  SET_SDHOST_CLOCK = 0x00038042,
+  GET_GPIO_CONFIG = 0x00030043,
+  SET_GPIO_CONFIG = 0x00038043,
+
+
+  ALLOCATE = 0x00040001,
+  BLANK_SCREEN = 0x00040002,
+  GET_PHYSICAL_WIDTH_HEIGHT = 0x00040003,
+  GET_VIRTUAL_WIDTH_HEIGHT = 0x00040004,
+  GET_DEPTH = 0x00040005,
+  GET_PIXEL_ORDER = 0x00040006,
+  GET_ALPHA_MODE = 0x00040007,
+  GET_PITCH = 0x00040008,
+  GET_VIRTUAL_OFFSET = 0x00040009,
+  GET_OVERSCAN = 0x0004000a,
+  GET_PALETTE = 0x0004000b,
+  GET_TOUCHBUF = 0x0004000f,
+  GET_GPIOVIRTBUF = 0x00040010,
+  RELEASE = 0x00048001,
+  TEST_PHYSICAL_WIDTH_HEIGHT = 0x00044003,
+  TEST_VIRTUAL_WIDTH_HEIGHT = 0x00044004,
+  TEST_DEPTH = 0x00044005,
+  TEST_PIXEL_ORDER = 0x00044006,
+  TEST_ALPHA_MODE = 0x00044007,
+  TEST_VIRTUAL_OFFSET = 0x00044009,
+  TEST_OVERSCAN = 0x0004400a,
+  TEST_PALETTE = 0x0004400b,
+  TEST_VSYNC = 0x0004400e,
+  SET_PHYSICAL_WIDTH_HEIGHT = 0x00048003,
+  SET_VIRTUAL_WIDTH_HEIGHT = 0x00048004,
+  SET_DEPTH = 0x00048005,
+  SET_PIXEL_ORDER = 0x00048006,
+  SET_ALPHA_MODE = 0x00048007,
+  SET_VIRTUAL_OFFSET = 0x00048009,
+  SET_OVERSCAN = 0x0004800a,
+  SET_PALETTE = 0x0004800b,
+  SET_TOUCHBUF = 0x0004801f,
+  SET_GPIOVIRTBUF = 0x00048020,
+  SET_VSYNC = 0x0004800e,
+  SET_BACKLIGHT = 0x0004800f,
+
+  VCHIQ_INIT = 0x00048010,
+
+  GET_COMMAND_LINE = 0x00050001,
+  GET_DMA_CHANNELS = 0x00060001,
+}Property_tag;
+
+
+typedef enum
+{
+  POWER_MANAGEMENT = 0,
+  FRAMEBUFFER,
+  VIRTUAL_UART,
+  VCHIQ,
+  LEDS,
+  BUTTONS,
+  TOUCH_SCREEN,
+  UNDEFINED,
+  PTAG_ARM_TO_VC,
+  PTAG_VC_TO_ARM
+
+}Channel;
+
+
+
+
+struct Mail_Message_LED
+{
+  uint32_t messageSize;
+  uint32_t request_response_code;
+  Property_tag tagID;
+  uint32_t bufferSize;
+  uint32_t requestSize;
+  uint32_t pinNum;
+  uint32_t on_off_switch;
+  uint32_t end;
+};
+
+
+
+
+struct Mail_Message_FB
+{
+  int messageSize;
+  int request_response_code;
+
+  int tagID;
+  int bufferSize;
+  int requestSize;
+
+  int response_request1;
+  int response_request2;
+
+  int end;
+};
+
+
+  extern "C"
+  {
+
+
+void write_to_mailbox(uint32_t message, uint32_t channel);
+uint32_t read_from_mailbox(Channel channel);
+
+void set_LED(int value);
+void init_display();
+void test();
+
+
+  }
+# 20 "source/MainFiles/mailbox.cpp" 2
+# 1 "source/MainFiles/mailbox.cpp"
+# 1 "<built-in>"
+# 1 "<command-line>"
+# 1 "/usr/include/stdc-predef.h" 1 3 4
+# 1 "<command-line>" 2
+# 1 "source/MainFiles/mailbox.cpp"
+# 19 "source/MainFiles/mailbox.cpp"
+# 1 "source/MainFiles/mailbox.h" 1
+# 15 "source/MainFiles/mailbox.h"
+# 1 "/usr/lib/gcc/x86_64-linux-gnu/5/include/stdint.h" 1 3 4
+# 9 "/usr/lib/gcc/x86_64-linux-gnu/5/include/stdint.h" 3 4
+# 1 "/usr/include/stdint.h" 1 3 4
+# 25 "/usr/include/stdint.h" 3 4
+# 1 "/usr/include/features.h" 1 3 4
+# 367 "/usr/include/features.h" 3 4
+# 1 "/usr/include/x86_64-linux-gnu/sys/cdefs.h" 1 3 4
+# 410 "/usr/include/x86_64-linux-gnu/sys/cdefs.h" 3 4
+# 1 "/usr/include/x86_64-linux-gnu/bits/wordsize.h" 1 3 4
+# 411 "/usr/include/x86_64-linux-gnu/sys/cdefs.h" 2 3 4
+# 368 "/usr/include/features.h" 2 3 4
+# 391 "/usr/include/features.h" 3 4
+# 1 "/usr/include/x86_64-linux-gnu/gnu/stubs.h" 1 3 4
+# 10 "/usr/include/x86_64-linux-gnu/gnu/stubs.h" 3 4
+# 1 "/usr/include/x86_64-linux-gnu/gnu/stubs-64.h" 1 3 4
+# 11 "/usr/include/x86_64-linux-gnu/gnu/stubs.h" 2 3 4
+# 392 "/usr/include/features.h" 2 3 4
+# 26 "/usr/include/stdint.h" 2 3 4
+# 1 "/usr/include/x86_64-linux-gnu/bits/wchar.h" 1 3 4
+# 27 "/usr/include/stdint.h" 2 3 4
+# 1 "/usr/include/x86_64-linux-gnu/bits/wordsize.h" 1 3 4
+# 28 "/usr/include/stdint.h" 2 3 4
+# 36 "/usr/include/stdint.h" 3 4
+
+# 36 "/usr/include/stdint.h" 3 4
+typedef signed char int8_t;
+typedef short int int16_t;
+typedef int int32_t;
+
+typedef long int int64_t;
+
+
+
+
+
+
+
+typedef unsigned char uint8_t;
+typedef unsigned short int uint16_t;
+
+typedef unsigned int uint32_t;
+
+
+
+typedef unsigned long int uint64_t;
+# 65 "/usr/include/stdint.h" 3 4
+typedef signed char int_least8_t;
+typedef short int int_least16_t;
+typedef int int_least32_t;
+
+typedef long int int_least64_t;
+
+
+
+
+
+
+typedef unsigned char uint_least8_t;
+typedef unsigned short int uint_least16_t;
+typedef unsigned int uint_least32_t;
+
+typedef unsigned long int uint_least64_t;
+# 90 "/usr/include/stdint.h" 3 4
+typedef signed char int_fast8_t;
+
+typedef long int int_fast16_t;
+typedef long int int_fast32_t;
+typedef long int int_fast64_t;
+# 103 "/usr/include/stdint.h" 3 4
+typedef unsigned char uint_fast8_t;
+
+typedef unsigned long int uint_fast16_t;
+typedef unsigned long int uint_fast32_t;
+typedef unsigned long int uint_fast64_t;
+# 119 "/usr/include/stdint.h" 3 4
+typedef long int intptr_t;
+
+
+typedef unsigned long int uintptr_t;
+# 134 "/usr/include/stdint.h" 3 4
+typedef long int intmax_t;
+typedef unsigned long int uintmax_t;
+# 10 "/usr/lib/gcc/x86_64-linux-gnu/5/include/stdint.h" 2 3 4
+# 16 "source/MainFiles/mailbox.h" 2
+# 1 "source/boot/peripherals.h" 1
+# 17 "source/MainFiles/mailbox.h" 2
+# 30 "source/MainFiles/mailbox.h"
+
+# 30 "source/MainFiles/mailbox.h"
+typedef enum {
+  END = 0,
+  GET_FIRMWARE_REVISION = 0x00000001,
+
+  SET_CURSOR_INFO = 0x00008010,
+  SET_CURSOR_STATE = 0x00008011,
+
+  GET_BOARD_MODEL = 0x00010001,
+  GET_BOARD_REVISION = 0x00010002,
+  GET_BOARD_MAC_ADDRESS = 0x00010003,
+  GET_BOARD_SERIAL = 0x00010004,
+  GET_ARM_MEMORY = 0x00010005,
+  GET_VC_MEMORY = 0x00010006,
+  GET_CLOCKS = 0x00010007,
+  GET_POWER_STATE = 0x00020001,
+  GET_TIMING = 0x00020002,
+  SET_POWER_STATE = 0x00028001,
+  GET_CLOCK_STATE = 0x00030001,
+  GET_CLOCK_RATE = 0x00030002,
+  GET_VOLTAGE = 0x00030003,
+  GET_MAX_CLOCK_RATE = 0x00030004,
+  GET_MAX_VOLTAGE = 0x00030005,
+  GET_TEMPERATURE = 0x00030006,
+  GET_MIN_CLOCK_RATE = 0x00030007,
+  GET_MIN_VOLTAGE = 0x00030008,
+  GET_TURBO = 0x00030009,
+  GET_MAX_TEMPERATURE = 0x0003000a,
+  GET_STC = 0x0003000b,
+  ALLOCATE_MEMORY = 0x0003000c,
+  LOCK_MEMORY = 0x0003000d,
+  UNLOCK_MEMORY = 0x0003000e,
+  RELEASE_MEMORY = 0x0003000f,
+  EXECUTE_CODE = 0x00030010,
+  EXECUTE_QPU = 0x00030011,
+  SET_ENABLE_QPU = 0x00030012,
+  GET_DISPMANX_RESOURCE_MEM_HANDLE = 0x00030014,
+  GET_EDID_BLOCK = 0x00030020,
+  GET_CUSTOMER_OTP = 0x00030021,
+  GET_DOMAIN_STATE = 0x00030030,
+  SET_CLOCK_STATE = 0x00038001,
+  SET_CLOCK_RATE = 0x00038002,
+  SET_VOLTAGE = 0x00038003,
+  SET_TURBO = 0x00038009,
+  SET_CUSTOMER_OTP = 0x00038021,
+  SET_DOMAIN_STATE = 0x00038030,
+  GET_GPIO_STATE = 0x00030041,
+  SET_GPIO_STATE = 0x00038041,
+  SET_SDHOST_CLOCK = 0x00038042,
+  GET_GPIO_CONFIG = 0x00030043,
+  SET_GPIO_CONFIG = 0x00038043,
+
+
+  ALLOCATE = 0x00040001,
+  BLANK_SCREEN = 0x00040002,
+  GET_PHYSICAL_WIDTH_HEIGHT = 0x00040003,
+  GET_VIRTUAL_WIDTH_HEIGHT = 0x00040004,
+  GET_DEPTH = 0x00040005,
+  GET_PIXEL_ORDER = 0x00040006,
+  GET_ALPHA_MODE = 0x00040007,
+  GET_PITCH = 0x00040008,
+  GET_VIRTUAL_OFFSET = 0x00040009,
+  GET_OVERSCAN = 0x0004000a,
+  GET_PALETTE = 0x0004000b,
+  GET_TOUCHBUF = 0x0004000f,
+  GET_GPIOVIRTBUF = 0x00040010,
+  RELEASE = 0x00048001,
+  TEST_PHYSICAL_WIDTH_HEIGHT = 0x00044003,
+  TEST_VIRTUAL_WIDTH_HEIGHT = 0x00044004,
+  TEST_DEPTH = 0x00044005,
+  TEST_PIXEL_ORDER = 0x00044006,
+  TEST_ALPHA_MODE = 0x00044007,
+  TEST_VIRTUAL_OFFSET = 0x00044009,
+  TEST_OVERSCAN = 0x0004400a,
+  TEST_PALETTE = 0x0004400b,
+  TEST_VSYNC = 0x0004400e,
+  SET_PHYSICAL_WIDTH_HEIGHT = 0x00048003,
+  SET_VIRTUAL_WIDTH_HEIGHT = 0x00048004,
+  SET_DEPTH = 0x00048005,
+  SET_PIXEL_ORDER = 0x00048006,
+  SET_ALPHA_MODE = 0x00048007,
+  SET_VIRTUAL_OFFSET = 0x00048009,
+  SET_OVERSCAN = 0x0004800a,
+  SET_PALETTE = 0x0004800b,
+  SET_TOUCHBUF = 0x0004801f,
+  SET_GPIOVIRTBUF = 0x00048020,
+  SET_VSYNC = 0x0004800e,
+  SET_BACKLIGHT = 0x0004800f,
+
+  VCHIQ_INIT = 0x00048010,
+
+  GET_COMMAND_LINE = 0x00050001,
+  GET_DMA_CHANNELS = 0x00060001,
+}Property_tag;
+
+
+typedef enum
+{
+  POWER_MANAGEMENT = 0,
+  FRAMEBUFFER,
+  VIRTUAL_UART,
+  VCHIQ,
+  LEDS,
+  BUTTONS,
+  TOUCH_SCREEN,
+  UNDEFINED,
+  PTAG_ARM_TO_VC,
+  PTAG_VC_TO_ARM
+
+}Channel;
+
+
+
+
+struct Mail_Message_LED
+{
+  uint32_t messageSize;
+  uint32_t request_response_code;
+  Property_tag tagID;
+  uint32_t bufferSize;
+  uint32_t requestSize;
+  uint32_t pinNum;
+  uint32_t on_off_switch;
+  uint32_t end;
+};
+
+
+
+
+struct Mail_Message_FB
+{
+  int messageSize;
+  int request_response_code;
+
+  int tagID;
+  int bufferSize;
+  int requestSize;
+
+  int response_request1;
+  int response_request2;
+
+  int end;
+};
+
+
+  extern "C"
+  {
+
+
+void write_to_mailbox(uint32_t message, uint32_t channel);
+uint32_t read_from_mailbox(Channel channel);
+
+void set_LED(int value);
+void init_display();
+void test();
+
+
+  }
+# 20 "source/MainFiles/mailbox.cpp" 2
+# 1 "source/Fonts/fonts.h" 1
+
+
+
+extern const char basic_font[128][8];
+# 21 "source/MainFiles/mailbox.cpp" 2
+# 30 "source/MainFiles/mailbox.cpp"
+volatile Mail_Message_LED led_message =
+{
+  .messageSize = sizeof(struct Mail_Message_LED),
+  .request_response_code =0,
+  .tagID = SET_GPIO_STATE,
+  .bufferSize = 8,
+  .requestSize = 0,
+  .pinNum = 130,
+  .on_off_switch = 1,
+  .end = 0,
+};
+# 57 "source/MainFiles/mailbox.cpp"
+void write_to_mailbox(uint32_t message, Channel channel)
+{
+  uint32_t status;
+
+  do
+    status = *(volatile uint32_t *)(0xB880 + 0x3F000000 + 0x18);
+  while((status & 0x80000000));
+
+  *(volatile uint32_t *)(0xB880 + 0x3F000000 + 0x20) = (((uint32_t)(message) & ~0xF) | (uint32_t)(channel));
+}
+# 77 "source/MainFiles/mailbox.cpp"
+uint32_t read_from_mailbox(Channel channel)
+{
+  uint32_t status;
+
+  do
+
+    status = *(volatile uint32_t *)(0xB880 + 0x3F000000 + 0x18);
+
+  while((status & 0x40000000));
+
+  uint32_t response;
+
+  do
+
+    response = (*(uint32_t *)(0xB880 + 0x3F000000));
+
+  while((response & 0xF) != channel);
+
+  return response & ~0xF;
+}
+
+
+
+
+
+
+
+void set_LED(int value)
+{
+
+  led_message.on_off_switch = (uint32_t) value;
+  led_message.request_response_code = 0;
+  led_message.requestSize = 0;
+  led_message.pinNum = 130;
+  led_message.end = END;
+
+  write_to_mailbox(((uint32_t) &led_message), PTAG_ARM_TO_VC);
+
+  read_from_mailbox(PTAG_ARM_TO_VC);
+}
+
+struct temp
+{
+  volatile uint32_t size;
+  volatile uint32_t request;
+
+  volatile uint32_t tag1;
+  volatile uint32_t buff_size1;
+  volatile uint32_t val_length1;
+  volatile uint32_t widthP;
+  volatile uint32_t heightP;
+
+  volatile uint32_t tag2;
+  volatile uint32_t buff_size2;
+  volatile uint32_t val_length2;
+  volatile uint32_t widthV;
+  volatile uint32_t heightV;
+
+  volatile uint32_t tag3;
+  volatile uint32_t buff_size3;
+  volatile uint32_t val_length3;
+  volatile uint32_t depth;
+
+  volatile uint32_t tag4;
+  volatile uint32_t buff_size4;
+  volatile uint32_t val_length4;
+  volatile uint32_t fb_ptr;
+  volatile uint32_t fb_size;
+
+  volatile uint32_t end;
+};
+
+volatile temp t __attribute__ ((aligned (16)))=
+{
+  .size = sizeof(temp),
+  .request = 0,
+
+  .tag1 = SET_PHYSICAL_WIDTH_HEIGHT,
+  .buff_size1 = 8,
+  .val_length1 = 8,
+  .widthP = 1024,
+  .heightP = 768,
+
+  .tag2 = SET_VIRTUAL_WIDTH_HEIGHT,
+  .buff_size2 = 8,
+  .val_length2 = 8,
+  .widthV = 1024,
+  .heightV = 768,
+
+  .tag3 = SET_DEPTH,
+  .buff_size3 = 4,
+  .val_length3 = 4,
+  .depth = 32,
+
+  .tag4 = ALLOCATE,
+  .buff_size4 = 8,
+  .val_length4 = 4,
+  .fb_ptr = 16,
+  .fb_size = 0,
+
+  .end = END,
+};
+
+void wait(uint32_t time)
+{
+  while (time > 0)
+    time--;
+}
+
+void blink()
+{
+  wait(0xF0000);
+
+  set_LED(1);
+
+  wait(0xF0000);
+
+  set_LED(0);
+}
+
+void init_display()
+{
+  write_to_mailbox((uint32_t) &t | 0xC0000000, (Channel)(PTAG_ARM_TO_VC));
+  read_from_mailbox(PTAG_ARM_TO_VC);
+
+  while(t.request == 0x80000001)
+  {
+
+  }
+
+  for(uint32_t i=0; i < t.fb_size; i+=t.depth/8)
+  {
+    *(volatile uint32_t *)((t.fb_ptr & ~0xC0000000) + i) = 0xFF00FFFF;
+  }
+}
+
+
+void drawChar(char* character, uint32_t x_pixel_dim, uint32_t y_pixel_dim, uint32_t* drawnChar)
+{
+  for(int i=0; i<8; i++)
+  {
+    uint32_t c = character[i];
+    for(int j=0; j<8; i++)
+    {
+      drawnChar[i*8+j] = c & (1 << 1);
+    }
+  }
+}

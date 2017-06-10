@@ -17,6 +17,7 @@
 //========================================================================================
 
 #include <mailbox.h>
+#include <fonts.h>
 
 //########################################################################################
 
@@ -193,36 +194,46 @@ void blink()
   set_LED(OFF);
 }
 
+#define BIT(val, bit) val & (1 << bit)
+void drawChar(const char* charMap, uint32_t x_pixel_dim, uint32_t y_pixel_dim, uint32_t* drawnChar)
+{
+  for(int i=0; i<8; i++)
+  {
+    uint32_t c = charMap[i];
+    for(int j=0; j<8; i++)
+    {
+      drawnChar[i*8+j] = (BIT(c, 0))*0xFFFFFFFF;
+      c = c >> 1;
+    }
+  }
+} 
+
 void init_display()
 {
-  write_to_mailbox((uint32_t) &t | 0xC0000000, (Channel)(PTAG_ARM_TO_VC));
+  write_to_mailbox((uint32_t) &t | BUS_MASK, (Channel)(PTAG_ARM_TO_VC));
   read_from_mailbox(PTAG_ARM_TO_VC);
 
-  while(t.request == 0x80000001)
+  while(t.request == RESPONSE_ERROR)
   {
    // blink();
   }
 
   for(uint32_t i=0; i < t.fb_size; i+=t.depth/8)
   {
-    *(volatile uint32_t *)((t.fb_ptr & ~0xC0000000) + i) = 0xFF00FFFF;
+    *(volatile uint32_t *)((t.fb_ptr & ~BUS_MASK) + i) = 0xFF0000FF;
   }
-}
+  
+  const char *test = basic_font[41];
+  uint32_t charTest[8*8];
+  drawChar(test, 0, 0, charTest);
 
-void test()
-{
-  volatile Mail_Message_FB message;
-
-  message.messageSize = sizeof(Mail_Message_FB);
-  message.request_response_code = 0;
-  message.tagID = BLANK_SCREEN;
-  message.bufferSize = 4;
-  message.requestSize = 4;
-  message.response_request1 = 1;
-  message.response_request2 = 0;
-  message.end = END;
-
-  write_to_mailbox((uint32_t) &message, PTAG_ARM_TO_VC);
-  read_from_mailbox(PTAG_ARM_TO_VC);
+  for(int i=0; i<8; i++)
+  {
+    for(int j=0; j<8; j++)
+    {
+      *(volatile uint32_t *)((t.fb_ptr & ~BUS_MASK) 
+        + i*(t.depth/8)*1024 +j) = 0xFFFFFFFF;
+    }
+  }
 }
 //########################################################################################

@@ -78,7 +78,7 @@ $(OBJECTS_ASS): $(OBJECT_DIR)%.o: $(SOURCE_DIR)%.S | $(OUTPUT_DIRS)
 
 # Link all .o object files into the final .elf binary
 $(KERNEL_ELF): $(OBJECTS)
-	$(CROSS_COMPILER)-ld $(OBJECTS) source/gpio.o source/uart.o -o $(KERNEL_ELF) -T $(LINKERS)
+	$(CROSS_COMPILER)-ld $(OBJECTS) -o $(KERNEL_ELF) -T $(LINKERS)
 
 # Extract the final kernel image
 $(KERNEL_IMAGE): $(KERNEL_ELF)
