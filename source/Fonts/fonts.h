@@ -1,6 +1,8 @@
 #ifndef FONTS_H
 #define FONTS_H
 
-extern const char basic_font[128][8];
+#define CHAR_BITS 8
+
+extern const char basic_font[128][CHAR_BITS];
 
 #endif

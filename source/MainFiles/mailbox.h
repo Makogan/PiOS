@@ -170,6 +170,17 @@ struct Mail_Message_FB
   int end;
 };
 
+struct Display_info
+{
+  uint32_t physical_width;
+  uint32_t physical_height;
+
+  uint32_t virtual_width;
+  uint32_t virtual_height;
+
+  uint32_t color_depth;
+};
+
 #ifdef __cplusplus
   extern "C"
   {

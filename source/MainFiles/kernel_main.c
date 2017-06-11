@@ -18,7 +18,7 @@
 
 #include <stdint.h>
 #include <mailbox.h>
-
+#include <peripherals.h>
 
 //########################################################################################
 
@@ -41,13 +41,24 @@ void wait(uint32_t time);
 /*
 * The main control loop for the kernel. We will never exit this function.
 */
+/*void blink()
+{
+  wait(0xF0000);
+
+  set_LED(ON);
+
+  wait(0xF0000);
+
+  set_LED(OFF);
+}*/
+
 void kernel_main(void)
 {
   init_display();
 
   while(1)
   {
-   
+   //blink();
   }
 
 }

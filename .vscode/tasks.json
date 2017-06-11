@@ -24,14 +24,21 @@
             "taskName": "transfer",
             "command": "file-transfer",
             "isShellCommand": true,
-            "args": ["kernel.img", "/media/camilo/GPMICROSD"],
+            "args": ["kernel.img", "/media/GPMICROSD"],
             "showOutput": "always"
         },
         {
             "taskName": "eject",
             "command": "ejectUSB",
             "isShellCommand": true,
-            "args": ["/media/camilo/GPMICROSD"],
+            "args": ["/media/GPMICROSD"],
+            "showOutput": "always"
+        },
+        {
+            "taskName": "mount-monitor",
+            "command": "devmon",
+            "isShellCommand": true,
+            "args": [],
             "showOutput": "always"
         }
     ]

@@ -16,7 +16,7 @@ CROSS_COMPILER = arm-none-eabi
 ARCH = -mcpu=cortex-a53 -mfloat-abi=hard -mfpu=vfpv4
 OPT_LEVEL = O0
 
-CFLAGS = -Wall -nostartfiles -c -o
+CFLAGS = -Wall -nostartfiles -c -o 
 
 # Find all directories under the current one
 
@@ -74,7 +74,7 @@ $(OBJECTS_CPP): $(OBJECT_DIR)%.o: $(SOURCE_DIR)%.cpp | $(OUTPUT_DIRS)
 
 # Create all .s object files
 $(OBJECTS_ASS): $(OBJECT_DIR)%.o: $(SOURCE_DIR)%.S | $(OUTPUT_DIRS)
-	$(CROSS_COMPILER)-$(CAS) $(ARCH) $< -c -o $@
+	$(CROSS_COMPILER)-$(CCPP) $(ARCH) $< -c -o $@
 
 # Link all .o object files into the final .elf binary
 $(KERNEL_ELF): $(OBJECTS)
@@ -84,14 +84,8 @@ $(KERNEL_ELF): $(OBJECTS)
 $(KERNEL_IMAGE): $(KERNEL_ELF)
 	$(CROSS_COMPILER)-objcopy $(KERNEL_ELF) -O binary $(KERNEL_IMAGE)
 
-# Dissassemble the kernel elf for debugging
-disassemble: $(KERNEL_ELF) | $(LOG_DIR)
-
 $(LOG_DIR)/kernel.list: $(KERNEL_ELF) | $(LOG_DIR)
 	$(CROSS_COMPILER)-objdump -D $(KERNEL_ELF) > $(LOG_DIR)/kernel.list
-
-diss:
-	$(CROSS_COMPILER)-objdump -D $(INSPECT)
 
 # remove all non source directories and files
 clean:
@@ -99,25 +93,6 @@ clean:
 	rm -rf $(BUILD_DIR)
 	rm -rf $(LOG_DIR)
 	if [ -f $(KERNEL_IMAGE) ]; then rm $(KERNEL_IMAGE); fi;
-
-# auto commit to git, remove once project is over
-git:
-	git add -A
-	git commit -m "$(USER) made minor changes on $(DATE) (this is an automatic message)"
-	git push
-
-transfer: copy eject
-
-copy:
-	if [ -f $(MICRO_SD)kernel.img ]; then rm $(MICRO_SD)kernel.img; fi;
-	cp $(KERNEL_IMAGE) $(MICRO_SD)
-
-eject:
-	umount $(MICRO_SD)
-#$(MICRO_SD)
-
-%.dump: %.o;
-	arm-none-eabi-objdump -D $^
 
 # Print variable values
 print-%: ; @echo $* = $($*)

@@ -18,7 +18,9 @@
 
 #include <mailbox.h>
 #include <fonts.h>
+#include <colors.h>
 
+#define BIT(val, bit) val & (1 << bit)
 //########################################################################################
 
 //========================================================================================
@@ -38,6 +40,9 @@ volatile Mail_Message_LED led_message =
   .on_off_switch = 1,
   .end = 0,
 };
+
+uint32_t mailbox_message[22] __attribute__ ((aligned (16)));
+uint32_t index;
 
 //########################################################################################
 
@@ -111,129 +116,121 @@ void set_LED(int value)
   led_message.end = END;
 
   write_to_mailbox(((uint32_t) &led_message), PTAG_ARM_TO_VC);
-
   read_from_mailbox(PTAG_ARM_TO_VC);
 }
-
-struct temp
-{
-  volatile uint32_t size;
-  volatile uint32_t request;
-
-  volatile uint32_t tag1;
-  volatile uint32_t buff_size1;
-  volatile uint32_t val_length1;
-  volatile uint32_t widthP;
-  volatile uint32_t heightP;
-
-  volatile uint32_t tag2;
-  volatile uint32_t buff_size2;
-  volatile uint32_t val_length2;
-  volatile uint32_t widthV;
-  volatile uint32_t heightV;
-
-  volatile uint32_t tag3;
-  volatile uint32_t buff_size3;
-  volatile uint32_t val_length3;
-  volatile uint32_t depth;
-
-  volatile uint32_t tag4;
-  volatile uint32_t buff_size4;
-  volatile uint32_t val_length4;   
-  volatile uint32_t fb_ptr;
-  volatile uint32_t fb_size;
- 
-  volatile uint32_t end;
-};
-
-volatile temp t __attribute__ ((aligned (16)))=
-{
-  .size = sizeof(temp),
-  .request = 0,
-
-  .tag1 = SET_PHYSICAL_WIDTH_HEIGHT,
-  .buff_size1 = 8,
-  .val_length1 = 8,
-  .widthP = 1024,
-  .heightP = 768,
-
-  .tag2 = SET_VIRTUAL_WIDTH_HEIGHT,
-  .buff_size2 = 8,
-  .val_length2 = 8,
-  .widthV = 1024,
-  .heightV = 768,
-
-  .tag3 = SET_DEPTH,
-  .buff_size3 = 4,
-  .val_length3 = 4,
-  .depth = 32,
-
-  .tag4 = ALLOCATE,
-  .buff_size4 = 8,
-  .val_length4 = 4,
-  .fb_ptr = 16,
-  .fb_size = 0,
-
-  .end = END,
-};
 
 void wait(uint32_t time)
 {
   while (time > 0)
     time--;
 }
-
 void blink()
 {
-  wait(0xF0000);
-
   set_LED(ON);
-
   wait(0xF0000);
 
   set_LED(OFF);
+  wait(0xF0000);
 }
 
-#define BIT(val, bit) val & (1 << bit)
-void drawChar(const char* charMap, uint32_t x_pixel_dim, uint32_t y_pixel_dim, uint32_t* drawnChar)
+void drawChar(/*const char* charMap, uint32_t size, uint32_t* drawnChar*/)
 {
-  for(int i=0; i<8; i++)
+  /*for(uint32_t i=0; i<CHAR_BITS*size; i++)
   {
-    uint32_t c = charMap[i];
-    for(int j=0; j<8; i++)
+    uint32_t line = charMap[i/size];
+    for(uint32_t j=0; j<CHAR_BITS*size; j++)
     {
-      drawnChar[i*8+j] = (BIT(c, 0))*0xFFFFFFFF;
-      c = c >> 1;
+      drawnChar[i*CHAR_BITS*size+j] = (BIT(line, 0))*WHITE_32;
+      if(j%size == 0 && j>0)
+        line = line >> 1;
     }
-  }
+  }*/
 } 
+
+void set_init_display_message(Display_info *disp)
+{
+  index = 0;
+  #define MESSAGE_SIZE 0
+  mailbox_message[index++] = 22*sizeof(uint32_t);
+  #define FB_RESPONSE 1
+  mailbox_message[index++] = 0;
+
+  mailbox_message[index++] = (uint32_t) SET_PHYSICAL_WIDTH_HEIGHT;
+  mailbox_message[index++] = 8;
+  mailbox_message[index++] = 8;
+  mailbox_message[index++] = disp->physical_width;
+  mailbox_message[index++] = disp->physical_height;
+
+  mailbox_message[index++] = (uint32_t) SET_VIRTUAL_WIDTH_HEIGHT;
+  mailbox_message[index++] = 8;
+  mailbox_message[index++] = 8;
+  #define FB_VIRTUAL_WIDTH 10
+  mailbox_message[index++] = disp->virtual_width;
+  #define FB_VIRTUAL_HEIGHT 11
+  mailbox_message[index++] = disp->virtual_height;
+
+  mailbox_message[index++] = (uint32_t) SET_DEPTH;
+  mailbox_message[index++] = 4;
+  mailbox_message[index++] = 4;
+  #define FB_DEPTH 15
+  mailbox_message[index++] = disp->color_depth;
+
+  mailbox_message[index++] = (uint32_t) ALLOCATE;
+  mailbox_message[index++] = 8;
+  mailbox_message[index++] = 8;
+  #define FB_PTR 19
+  mailbox_message[index++] = 16;
+  #define FB_SIZE 20
+  mailbox_message[index++] = 0;
+
+  mailbox_message[index++] = END;
+}
 
 void init_display()
 {
-  write_to_mailbox((uint32_t) &t | BUS_MASK, (Channel)(PTAG_ARM_TO_VC));
+  Display_info disp = {1360, 768, 1360, 768, 32};
+
+  set_init_display_message(&disp);
+
+  write_to_mailbox((uint32_t) &mailbox_message | BUS_MASK, (Channel)(PTAG_ARM_TO_VC));
   read_from_mailbox(PTAG_ARM_TO_VC);
 
-  while(t.request == RESPONSE_ERROR)
+  while(mailbox_message[FB_RESPONSE] == RESPONSE_ERROR)
   {
    // blink();
   }
 
-  for(uint32_t i=0; i < t.fb_size; i+=t.depth/8)
+  /*for(uint32_t i=0; i < mailbox_message[FB_SIZE]; i+=mailbox_message[FB_DEPTH]/CHAR_BITS)
   {
-    *(volatile uint32_t *)((t.fb_ptr & ~BUS_MASK) + i) = 0xFF0000FF;
-  }
-  
-  const char *test = basic_font[41];
-  uint32_t charTest[8*8];
-  drawChar(test, 0, 0, charTest);
+    *(volatile uint32_t *)((mailbox_message[FB_PTR] & ~BUS_MASK) + i) = BLUE_32;
+  }*/
 
-  for(int i=0; i<8; i++)
+  uint32_t size = 11;
+
+  size = 11;
+  for(uint32_t i=0; i<CHAR_BITS*size; i++)
   {
-    for(int j=0; j<8; j++)
+    for(uint32_t j=0; j<CHAR_BITS*size; j++)
     {
-      *(volatile uint32_t *)((t.fb_ptr & ~BUS_MASK) 
-        + i*(t.depth/8)*1024 +j) = 0xFFFFFFFF;
+      *(volatile uint32_t *)((mailbox_message[FB_PTR] & ~BUS_MASK) 
+        + (i*mailbox_message[FB_VIRTUAL_WIDTH] + j)*mailbox_message[FB_DEPTH]/CHAR_BITS) = WHITE_32;//charTest[i*CHAR_BITS*size+j];
+    }
+  }
+
+  const char *test = basic_font['A'];
+  uint32_t charTest[CHAR_BITS*CHAR_BITS*size*size];
+  drawChar(/*test, size, charTest*/);
+
+  size = 10;
+  for(uint32_t i=0; i<CHAR_BITS*size; i++)
+  {
+    for(uint32_t j=0; j<CHAR_BITS*size; j++)
+    {
+      *(volatile uint32_t *)((mailbox_message[FB_PTR] & ~BUS_MASK) 
+        + (i*mailbox_message[FB_VIRTUAL_WIDTH] + j)*mailbox_message[FB_DEPTH]/CHAR_BITS) = CYAN_32;//charTest[i*CHAR_BITS*size+j];
     }
   }
 }
+
+
 //########################################################################################
