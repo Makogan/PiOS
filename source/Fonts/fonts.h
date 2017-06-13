@@ -8,7 +8,7 @@
 * Associated files: font_info.c, basic_font.c
 */
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
+//TODO: documentation
 #ifndef FONTS_H
 #define FONTS_H
 

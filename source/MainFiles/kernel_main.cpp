@@ -5,7 +5,7 @@
 *
 * File type: C++
 *
-* This files contains the main loop for the PiOS kernel and some small
+* This file contains the main loop for the PiOS kernel and some small
 * helper functions
 */
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

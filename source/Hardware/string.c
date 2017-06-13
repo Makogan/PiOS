@@ -1,3 +1,17 @@
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/*
+* Authors: Camilo Talero
+*
+*
+* File type: C
+*
+* This file is the PiOS implementation of the print function, it has all the implemented
+* methods for string manipulation and basic I/O
+*/
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+//TODO: documentation
+
 #include <string.h>
 #include <fonts.h>
 

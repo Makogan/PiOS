@@ -1,3 +1,17 @@
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/*
+* Authors: Camilo Talero
+*
+*
+* File type: C
+*
+* This file contains all methods relevant for time keeping and time calculation for 
+* the PiOS
+*/
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+//TODO: documentation
+
 #include <time.h>
 #include <peripherals.h>
 

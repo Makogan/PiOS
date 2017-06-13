@@ -1,3 +1,15 @@
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/*
+* Authors: Daniel Hepper <daniel@hepper.net>
+*
+*
+* File type: C
+*
+* This file contains the global information of all fonts, such as size, slected font,
+* special fonts...
+*/
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 /** 
  * 8x8 monochrome bitmap fonts for rendering
  * Author: Daniel Hepper <daniel@hepper.net>
@@ -17,7 +29,7 @@
  * 
  * Fetched from: http://dimensionalrift.homelinux.net/combuster/mos3/?p=viewsource&file=/modules/gfx/font8_8.asm
  **/
-
+ //TODO: documentation
 #include <fonts.h>
 
 const char basic_font[128][8] = {
