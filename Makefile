@@ -16,7 +16,7 @@ CROSS_COMPILER = arm-none-eabi
 ARCH = -mcpu=cortex-a53 -mfloat-abi=hard -mfpu=vfpv4
 OPT_LEVEL = O0
 
-CFLAGS = -Wall -nostartfiles -c -o 
+CFLAGS = -Wall -nostdlib -nostartfiles -nodefaultlibs -static -c -o 
 
 # Find all directories under the current one
 
@@ -63,29 +63,37 @@ all: $(KERNEL_IMAGE) $(LOG_DIR)/kernel.list #copy
 
 # Create any missing output directories
 $(OUTPUT_DIRS):
-	$(foreach _dir,$@,mkdir -p $(_dir);)
+	@echo "Making dirs"
+	@$(foreach _dir,$@,mkdir -p $(_dir);)
 
 # Create all .c object files
 $(OBJECTS_C): $(OBJECT_DIR)%.o: $(SOURCE_DIR)%.c | $(OUTPUT_DIRS)
-	$(CROSS_COMPILER)-$(CC) -$(OPT_LEVEL) $(ARCH) $< $(CFLAGS) $@ $(I_DIRS)
+	@echo "Compiling .c files"
+	@$(CROSS_COMPILER)-$(CC) -$(OPT_LEVEL) $(ARCH) $< $(CFLAGS) $@ $(I_DIRS)
 
 $(OBJECTS_CPP): $(OBJECT_DIR)%.o: $(SOURCE_DIR)%.cpp | $(OUTPUT_DIRS)
-	$(CROSS_COMPILER)-$(CCPP) -$(OPT_LEVEL) $(ARCH) $< $(CFLAGS) $@ $(I_DIRS)
+	@echo "Compiling .cpp files"
+	@$(CROSS_COMPILER)-$(CCPP) -$(OPT_LEVEL) $(ARCH) $< $(CFLAGS) $@ $(I_DIRS)
 
 # Create all .s object files
 $(OBJECTS_ASS): $(OBJECT_DIR)%.o: $(SOURCE_DIR)%.S | $(OUTPUT_DIRS)
-	$(CROSS_COMPILER)-$(CCPP) $(ARCH) $< -c -o $@
+	@echo "Compiling .S files"
+	@$(CROSS_COMPILER)-$(CCPP) $(ARCH) $< -c -o $@
 
 # Link all .o object files into the final .elf binary
 $(KERNEL_ELF): $(OBJECTS)
-	$(CROSS_COMPILER)-ld $(OBJECTS) -o $(KERNEL_ELF) -T $(LINKERS)
+	@echo "Linking"
+	@echo "If \"undefined reference to \`__aeabi_unwind_cpp_pr1\'\" is an error, ignore."
+	@$(CROSS_COMPILER)-ld $(OBJECTS) --warn-unresolved-symbols --gc-sections -o $(KERNEL_ELF) -T $(LINKERS)
 
 # Extract the final kernel image
 $(KERNEL_IMAGE): $(KERNEL_ELF)
-	$(CROSS_COMPILER)-objcopy $(KERNEL_ELF) -O binary $(KERNEL_IMAGE)
+	@echo "Creating final image"
+	@$(CROSS_COMPILER)-objcopy $(KERNEL_ELF) -O binary $(KERNEL_IMAGE)
 
 $(LOG_DIR)/kernel.list: $(KERNEL_ELF) | $(LOG_DIR)
-	$(CROSS_COMPILER)-objdump -D $(KERNEL_ELF) > $(LOG_DIR)/kernel.list
+	@echo "Output log"
+	@$(CROSS_COMPILER)-objdump -D $(KERNEL_ELF) > $(LOG_DIR)/kernel.list
 
 # remove all non source directories and files
 clean:

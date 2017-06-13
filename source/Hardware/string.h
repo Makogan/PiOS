@@ -5,18 +5,25 @@
 *
 * File type: Header
 *
-* Associated files: font_info.c, basic_font.c
+* Associated files: string.c
 */
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#ifndef FONTS_H
-#define FONTS_H
+#ifndef STRING_H
+#define STRING_H
 
 #include <stdint.h>
+#include <mailbox.h>
 
-#define CHAR_BITS 8
+#ifdef __cplusplus
+    extern "C" {
+#endif
 
-extern uint32_t font_size;
-extern const char basic_font[128][CHAR_BITS];
+void print(char* string);
+
+#ifdef __cplusplus
+    }
+#endif
+
 
 #endif

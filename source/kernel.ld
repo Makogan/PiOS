@@ -2,7 +2,7 @@ SECTIONS
 {
   .vector_table 0x0 :
   {
-    *(.vector_table)
+    KEEP(*(.vector_table))
   } 
 
  .init 0x8000 : 
@@ -12,12 +12,12 @@ SECTIONS
 
   .text : 
   {
-    *(.text .text.* .gnu.linkonce.t.*)
+    KEEP(*(.text))
   }
 
   .data ALIGN(0x4) : 
   {
-    *(.data)
+    KEEP(*(.data))
   }
 
   .comment :
@@ -30,14 +30,13 @@ SECTIONS
     *(.ARM.attributes)
   }
 
+  .ARM.exidx :
+  {
+    *(.ARM.exidx)
+  }
+
   .bss :
     {
-        . = ALIGN(4);
-        __bss_start__ = .;
-        *(.bss .bss.* .gnu.linkonce.b.*)
-        *(.rela.bss .rela.bss.* .rela.gnu.linkonce.b.*)
-        *(COMMON)
-        . = ALIGN(4);
-        __bss_end__ = .;
+        KEEP(*(.bss))
    }
 }

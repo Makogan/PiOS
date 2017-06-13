@@ -14,17 +14,40 @@
 
 #include <stdint.h>
 #include <peripherals.h>
+#include <fonts.h>
+#include <colors.h>
+#include <time.h>
 
 #define ON 1     // ACT LED ON
-#define OFF 0    // ACT LED OFF
+#define OFF 0    // ACT LED OFF              
 
-#define MAIL_FULL 0x80000000  // 32 bit value, MSB is 1, used to check state of MSB
-                              // (full bit in the mailbox status register)
-#define MAIL_EMPTY 0x40000000 // 32 bit value, 31st is 1, used to check state of 31st
-                              // bit (empty bit in the mailbox status register)
+/*
+* This is the structure definition for a frame buffer message
+*/
 
-#define RESPONSE_OK     0x80000000
-#define RESPONSE_ERROR  0x80000001                     
+#ifdef __cplusplus
+struct Display_info
+#else
+typedef struct
+#endif
+{
+  uint32_t physical_width;
+  uint32_t physical_height;
+
+  uint32_t virtual_width;
+  uint32_t virtual_height;
+
+  uint32_t color_depth;
+
+  uint32_t fb_ptr;
+  uint32_t fb_size;
+}
+#ifndef __cplusplus
+Display_info
+#endif
+;
+
+extern Display_info main_monitor;
 
 //Taken from: https://github.com/raspberrypi/linux/blob/rpi-4.9.y/include/soc/bcm2835/raspberrypi-firmware.h
 typedef enum {
@@ -137,50 +160,6 @@ typedef enum
 
 }Channel;
 
-/*
-* This is the structure definition for a led message
-*/
-struct Mail_Message_LED
-{
-  uint32_t messageSize;
-  uint32_t request_response_code;
-  Property_tag tagID;
-  uint32_t bufferSize;
-  uint32_t requestSize;
-  uint32_t pinNum;
-  uint32_t on_off_switch;
-  uint32_t end;
-};
-
-/*
-* This is the structure definition for a frame buffer message
-*/
-struct Mail_Message_FB
-{
-  int messageSize;
-  int request_response_code;
-
-  int tagID;
-  int bufferSize;
-  int requestSize;
-
-  int response_request1;
-  int response_request2;
-
-  int end;
-};
-
-struct Display_info
-{
-  uint32_t physical_width;
-  uint32_t physical_height;
-
-  uint32_t virtual_width;
-  uint32_t virtual_height;
-
-  uint32_t color_depth;
-};
-
 #ifdef __cplusplus
   extern "C"
   {
@@ -191,7 +170,7 @@ uint32_t read_from_mailbox(Channel channel);
 
 void set_LED(int value);
 void init_display();
-void test();
+void blink();
 
 #ifdef __cplusplus
   }

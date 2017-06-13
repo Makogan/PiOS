@@ -3,7 +3,7 @@
 * Authors: Camilo Talero
 *
 *
-* File type: C
+* File type: C++
 *
 * This files contains the main loop for the PiOS kernel and some small
 * helper functions
@@ -19,6 +19,7 @@
 #include <stdint.h>
 #include <mailbox.h>
 #include <peripherals.h>
+#include <string.h>
 
 //########################################################################################
 
@@ -27,8 +28,6 @@
   Function Declarations:
 */
 //========================================================================================
-
-void wait(uint32_t time);
 
 //########################################################################################
 
@@ -41,39 +40,15 @@ void wait(uint32_t time);
 /*
 * The main control loop for the kernel. We will never exit this function.
 */
-/*void blink()
-{
-  wait(0xF0000);
-
-  set_LED(ON);
-
-  wait(0xF0000);
-
-  set_LED(OFF);
-}*/
-
-void kernel_main(void)
+extern "C" void kernel_main(void)
 {
   init_display();
+  print((char*)"Nobody knows how hard this \n!@#$\%^&*()_+ is!!!");
 
   while(1)
   {
-   //blink();
+   blink();
   }
 
 }
-
-#pragma GCC optimize ("O0")
-/*
-* A function to wait.
-*
-* Parameters:
-*   uint32_t time: the amount of time to wait.
-*/
-void wait(uint32_t time)
-{
-  while (time > 0)
-    time--;
-}
-#pragma GCC optimize ("02")
 //########################################################################################

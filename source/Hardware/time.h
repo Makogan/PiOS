@@ -5,18 +5,23 @@
 *
 * File type: Header
 *
-* Associated files: font_info.c, basic_font.c
+* Associated files: time.c
 */
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#ifndef FONTS_H
-#define FONTS_H
+#ifndef TIME_H
+#define TIME_H
 
 #include <stdint.h>
 
-#define CHAR_BITS 8
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+void wait(uint32_t time);
 
-extern uint32_t font_size;
-extern const char basic_font[128][CHAR_BITS];
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -17,10 +17,14 @@
 //========================================================================================
 
 #include <mailbox.h>
-#include <fonts.h>
-#include <colors.h>
 
-#define BIT(val, bit) val & (1 << bit)
+#define MAIL_FULL 0x80000000  // 32 bit value, MSB is 1, used to check state of MSB
+                              // (full bit in the mailbox status register)
+#define MAIL_EMPTY 0x40000000 // 32 bit value, 31st is 1, used to check state of 31st
+                              // bit (empty bit in the mailbox status register)
+
+#define RESPONSE_OK     0x80000000 // Same as MAIL_FULL define nonetheless for clarity
+#define RESPONSE_ERROR  0x80000001 // If this is teh response, the VC found an error
 //########################################################################################
 
 //========================================================================================
@@ -29,21 +33,10 @@
 */
 //========================================================================================
 
-volatile Mail_Message_LED led_message =
-{
-  .messageSize = sizeof(struct Mail_Message_LED),
-  .request_response_code =0,
-  .tagID = SET_GPIO_STATE,
-  .bufferSize = 8,
-  .requestSize = 0,
-  .pinNum = 130,
-  .on_off_switch = 1,
-  .end = 0,
-};
-
 uint32_t mailbox_message[22] __attribute__ ((aligned (16)));
 uint32_t index;
 
+Display_info main_monitor;
 //########################################################################################
 
 //========================================================================================
@@ -109,21 +102,21 @@ uint32_t read_from_mailbox(Channel channel)
 void set_LED(int value)
 {
   // Set the default message values
-  led_message.on_off_switch = (uint32_t) value;
-  led_message.request_response_code = 0;
-  led_message.requestSize = 0;
-  led_message.pinNum = 130;
-  led_message.end = END;
+  index = 1;
+  mailbox_message[index++] =0,
+  mailbox_message[index++] = (uint32_t) SET_GPIO_STATE,
+  mailbox_message[index++] = 8,
+  mailbox_message[index++] = 0,
+  mailbox_message[index++] = 130,
+  mailbox_message[index++] = value,
+  mailbox_message[index++] = 0,
 
-  write_to_mailbox(((uint32_t) &led_message), PTAG_ARM_TO_VC);
+  mailbox_message[0] = index*sizeof(uint32_t);
+
+  write_to_mailbox(((uint32_t) &mailbox_message), PTAG_ARM_TO_VC);
   read_from_mailbox(PTAG_ARM_TO_VC);
 }
 
-void wait(uint32_t time)
-{
-  while (time > 0)
-    time--;
-}
 void blink()
 {
   set_LED(ON);
@@ -133,25 +126,9 @@ void blink()
   wait(0xF0000);
 }
 
-void drawChar(/*const char* charMap, uint32_t size, uint32_t* drawnChar*/)
-{
-  /*for(uint32_t i=0; i<CHAR_BITS*size; i++)
-  {
-    uint32_t line = charMap[i/size];
-    for(uint32_t j=0; j<CHAR_BITS*size; j++)
-    {
-      drawnChar[i*CHAR_BITS*size+j] = (BIT(line, 0))*WHITE_32;
-      if(j%size == 0 && j>0)
-        line = line >> 1;
-    }
-  }*/
-} 
-
 void set_init_display_message(Display_info *disp)
 {
-  index = 0;
-  #define MESSAGE_SIZE 0
-  mailbox_message[index++] = 22*sizeof(uint32_t);
+  index = 1;
   #define FB_RESPONSE 1
   mailbox_message[index++] = 0;
 
@@ -184,53 +161,26 @@ void set_init_display_message(Display_info *disp)
   mailbox_message[index++] = 0;
 
   mailbox_message[index++] = END;
+
+  #define MESSAGE_SIZE 0
+  mailbox_message[0] = index*sizeof(uint32_t);
 }
 
 void init_display()
 {
-  Display_info disp = {1360, 768, 1360, 768, 32};
+  main_monitor = {1360, 768, 1360, 768, 32, 0, 0};
 
-  set_init_display_message(&disp);
+  set_init_display_message(&main_monitor);
 
   write_to_mailbox((uint32_t) &mailbox_message | BUS_MASK, (Channel)(PTAG_ARM_TO_VC));
   read_from_mailbox(PTAG_ARM_TO_VC);
 
   while(mailbox_message[FB_RESPONSE] == RESPONSE_ERROR)
   {
-   // blink();
+    blink();
   }
 
-  /*for(uint32_t i=0; i < mailbox_message[FB_SIZE]; i+=mailbox_message[FB_DEPTH]/CHAR_BITS)
-  {
-    *(volatile uint32_t *)((mailbox_message[FB_PTR] & ~BUS_MASK) + i) = BLUE_32;
-  }*/
-
-  uint32_t size = 11;
-
-  size = 11;
-  for(uint32_t i=0; i<CHAR_BITS*size; i++)
-  {
-    for(uint32_t j=0; j<CHAR_BITS*size; j++)
-    {
-      *(volatile uint32_t *)((mailbox_message[FB_PTR] & ~BUS_MASK) 
-        + (i*mailbox_message[FB_VIRTUAL_WIDTH] + j)*mailbox_message[FB_DEPTH]/CHAR_BITS) = WHITE_32;//charTest[i*CHAR_BITS*size+j];
-    }
-  }
-
-  const char *test = basic_font['A'];
-  uint32_t charTest[CHAR_BITS*CHAR_BITS*size*size];
-  drawChar(/*test, size, charTest*/);
-
-  size = 10;
-  for(uint32_t i=0; i<CHAR_BITS*size; i++)
-  {
-    for(uint32_t j=0; j<CHAR_BITS*size; j++)
-    {
-      *(volatile uint32_t *)((mailbox_message[FB_PTR] & ~BUS_MASK) 
-        + (i*mailbox_message[FB_VIRTUAL_WIDTH] + j)*mailbox_message[FB_DEPTH]/CHAR_BITS) = CYAN_32;//charTest[i*CHAR_BITS*size+j];
-    }
-  }
+  main_monitor.fb_ptr = mailbox_message[FB_PTR];
+  main_monitor.fb_size = mailbox_message[FB_SIZE];
 }
-
-
 //########################################################################################
