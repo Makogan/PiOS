@@ -1,5 +1,6 @@
 #include <stdint.h>
 
+//Taken from: http://www.valvers.com/open-software/raspberry-pi/step04-bare-metal-programming-in-c-pt4/
 #define RPI_INTERRUPT_CONTROLLER_BASE   (IO_BASE + 0xB200)
 
 struct rpi_irq_controller_t
@@ -23,7 +24,7 @@ void prefetch_abort_vector() __attribute__((interrupt("ABORT")));
 void interrupt_vector() __attribute__((interrupt("IRQ")));
 void fast_interrupt_vector(); //__attribute__((optimize("O0"))) __attribute__((interrupt("FIQ")));
 
-/*__asm__
+__asm__
 (
   ".section .text\n"
   ".global backup_table\n"
@@ -36,13 +37,13 @@ void fast_interrupt_vector(); //__attribute__((optimize("O0"))) __attribute__((i
   "b _reset_\n"
   "b interrupt_vector\n"
   "b fast_interrupt_vector\n"
-);*/
+);
 
 void _reset_()
 {
   __asm__ volatile
   (
-    "ldr r0, =_v_table\n"
+    "ldr r0, =b_table\n"
     "mov r1, #0x0\n"
     "ldmia r1!, {r2-r9}\n"
     "stmia r0!, {r2-r9}\n"

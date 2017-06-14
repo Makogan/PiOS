@@ -15,14 +15,9 @@
 
 _start:
         ldr     sp, =0x8000 // initialize stack pointer
-        //bl      enable_jtag // Enable JTAG
 
-
- /* CHANGES ADDED BY LdB */
-      /*  bl  RPi_CheckAndExitHypModeToSvcMode;   ;@ First check for HYP_MODE and if in it drop out to SRV_MODE
-
-       ldr sp, =0x8000               ;@ Reset the stack pointer for that mode
-
+/* CHANGES ADDED BY LdB */
+        //bl  RPi_CheckAndExitHypModeToSvcMode;   ;@ First check for HYP_MODE and if in it drop out to SRV_MODE
 
 @"================================================================"
 ;@ PI NSACR regsister setup for access to floating point unit
@@ -51,7 +46,7 @@ _start:
 /*==========================================================================}
 ;{           RASPBERRY PI LEVEL L1 CACHE CONSTANTS DEFINED                }
 ;{=========================================================================*/
-/*#define SCTLR_ENABLE_DATA_CACHE         0x4
+#define SCTLR_ENABLE_DATA_CACHE         0x4
 #define SCTLR_ENABLE_BRANCH_PREDICTION   0x800
 #define SCTLR_ENABLE_INSTRUCTION_CACHE  0x1000
 
@@ -61,22 +56,7 @@ _start:
     orr r0, #SCTLR_ENABLE_INSTRUCTION_CACHE
 
     mcr p15,0,r0,c1,c0,0               ;@ System Control Register = R0*/
-;@"================================================================"
-;@ Now Clear the .BSS segment as the C compiler expects us to do
-;@"================================================================"
-  /* ldr   r0, =__bss_start__
-   ldr   r1, =__bss_end__   
-   mov   r2, #0
-.clear_bss:
-    cmp   r0, r1
-    bge   .clear_bss_exit
-    str   r2, [r0]
-   add   r0, r0, #4
-    b .clear_bss
-.clear_bss_exit: */
-
  /* END OF CHANGES ADDED BY LdB */
-     
     
     
     b       _cstartup

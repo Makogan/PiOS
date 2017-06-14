@@ -52,7 +52,8 @@ Display_info
 extern Display_info main_monitor;
 
 //Taken from: https://github.com/raspberrypi/linux/blob/rpi-4.9.y/include/soc/bcm2835/raspberrypi-firmware.h
-typedef enum {
+typedef enum 
+{
   END =                                    0,
   GET_FIRMWARE_REVISION =                  0x00000001,
 

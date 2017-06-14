@@ -14,7 +14,7 @@ CROSS_COMPILER = arm-none-eabi
 
 # Compilation flags
 ARCH = -mcpu=cortex-a53 -mfloat-abi=hard -mfpu=vfpv4
-OPT_LEVEL = O3
+OPT_LEVEL = O2
 
 CFLAGS = -Wall -nostdlib -nostartfiles -nodefaultlibs -fno-exceptions -static -c -o 
 
