@@ -25,18 +25,12 @@ SECTIONS
     *(.comment)
   }
 
-  .ARM.attributes :
-  {
-    *(.ARM.attributes)
-  }
-
-  .ARM.exidx :
-  {
-    *(.ARM.exidx)
-  }
-
   .bss :
     {
+        . = ALIGN(4);
+        __bss_start__ = .;
         KEEP(*(.bss))
+        . = ALIGN(4);
+        __bss_end__ = .;
    }
 }

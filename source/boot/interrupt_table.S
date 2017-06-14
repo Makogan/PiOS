@@ -1,6 +1,7 @@
 .section .vector_table
 
 .global _v_table
+_v_table:
 b _reset_
 b undefined_instruction_vector
 b software_interrupt_vector

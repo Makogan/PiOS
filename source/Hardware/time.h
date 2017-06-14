@@ -20,7 +20,9 @@
 extern "C"
 {
 #endif
+
 void wait(uint32_t time);
+uint32_t get_time_cycle();
 
 #ifdef __cplusplus
 }

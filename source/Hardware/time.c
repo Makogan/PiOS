@@ -15,6 +15,11 @@
 #include <time.h>
 #include <peripherals.h>
 
+uint32_t get_time_cycle()
+{
+  return *(volatile uint32_t*)(IO_BASE + SYSTEM_TIMER + SYS_TIME_LOW);
+}
+
 #pragma GCC optimize ("-O0")
 /*
 * A function to wait.

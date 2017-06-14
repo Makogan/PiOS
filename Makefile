@@ -14,9 +14,9 @@ CROSS_COMPILER = arm-none-eabi
 
 # Compilation flags
 ARCH = -mcpu=cortex-a53 -mfloat-abi=hard -mfpu=vfpv4
-OPT_LEVEL = O0
+OPT_LEVEL = O3
 
-CFLAGS = -Wall -nostdlib -nostartfiles -nodefaultlibs -static -c -o 
+CFLAGS = -Wall -nostdlib -nostartfiles -nodefaultlibs -fno-exceptions -static -c -o 
 
 # Find all directories under the current one
 
@@ -68,23 +68,22 @@ $(OUTPUT_DIRS):
 
 # Create all .c object files
 $(OBJECTS_C): $(OBJECT_DIR)%.o: $(SOURCE_DIR)%.c | $(OUTPUT_DIRS)
-	@echo "Compiling .c files"
+	@echo "Compiling:" $<
 	@$(CROSS_COMPILER)-$(CC) -$(OPT_LEVEL) $(ARCH) $< $(CFLAGS) $@ $(I_DIRS)
 
 $(OBJECTS_CPP): $(OBJECT_DIR)%.o: $(SOURCE_DIR)%.cpp | $(OUTPUT_DIRS)
-	@echo "Compiling .cpp files"
+	@echo "Compiling:" $<
 	@$(CROSS_COMPILER)-$(CCPP) -$(OPT_LEVEL) $(ARCH) $< $(CFLAGS) $@ $(I_DIRS)
 
 # Create all .s object files
 $(OBJECTS_ASS): $(OBJECT_DIR)%.o: $(SOURCE_DIR)%.S | $(OUTPUT_DIRS)
-	@echo "Compiling .S files"
+	@echo "Compiling:" $<
 	@$(CROSS_COMPILER)-$(CCPP) $(ARCH) $< -c -o $@
 
 # Link all .o object files into the final .elf binary
 $(KERNEL_ELF): $(OBJECTS)
 	@echo "Linking"
-	@echo "If \"undefined reference to \`__aeabi_unwind_cpp_pr1\'\" is an error, ignore."
-	@$(CROSS_COMPILER)-ld $(OBJECTS) --warn-unresolved-symbols --gc-sections -o $(KERNEL_ELF) -T $(LINKERS)
+	@$(CROSS_COMPILER)-ld $(OBJECTS) --gc-sections -o $(KERNEL_ELF) -T $(LINKERS)
 
 # Extract the final kernel image
 $(KERNEL_IMAGE): $(KERNEL_ELF)

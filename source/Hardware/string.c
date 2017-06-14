@@ -53,6 +53,28 @@ void drawChar(uint32_t *characterImage, uint32_t size,
   }
 }
 
+void tempitos(uint32_t num, char* str)
+{
+  uint32_t original_num = num;
+  int digits = 0;
+  do
+  {
+    digits++;
+    num /= 10; 
+  }
+  while(num != 0);
+
+  num = original_num;
+  str[digits--] = 0;
+
+  while(digits>=0)
+  {
+    int digit = num % 10;
+    str[digits--] = digit + '0';
+    num /= 10;
+  }
+}
+
 void print(char* string)
 {
   uint32_t size = SIZE, x=0, y=0;

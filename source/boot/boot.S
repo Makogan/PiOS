@@ -79,7 +79,7 @@ _start:
      
     
     
-    b       kernel_main
+    b       _cstartup
 
 
  /* CODED ADDED BY LdB */

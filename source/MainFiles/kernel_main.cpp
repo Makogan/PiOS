@@ -20,6 +20,7 @@
 #include <mailbox.h>
 #include <peripherals.h>
 #include <string.h>
+#include <time.h>
 
 //########################################################################################
 
@@ -44,6 +45,17 @@ extern "C" void kernel_main(void)
 {
   init_display();
   print((char*)"Nobody knows how hard this \n!@#$\%^&*()_+ is!!!");
+
+  char test[32];
+  uint32_t fps =0;
+  uint32_t old_time_cycle = get_time_cycle();
+  while(1)
+  {
+    fps = (get_time_cycle() - old_time_cycle);
+    old_time_cycle = get_time_cycle();
+    tempitos(fps, test);
+    print(test);
+  }
 
   while(1)
   {

@@ -22,6 +22,7 @@
 #endif
 
 void print(char* string);
+void tempitos(uint32_t num, char *str);
 
 #ifdef __cplusplus
     }

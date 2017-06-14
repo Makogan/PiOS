@@ -16,11 +16,6 @@ struct rpi_irq_controller_t
     volatile uint32_t Disable_Basic_IRQs;
 };
 
-#ifdef __cplusplus
-  extern "C"
-  {
-#endif
-
 void _reset_() __attribute__((interrupt("RESET")));
 void undefined_instruction_vector() __attribute__((interrupt("UNDEF")));
 void software_interrupt_vector() __attribute__((interrupt("SWI")));
@@ -28,14 +23,31 @@ void prefetch_abort_vector() __attribute__((interrupt("ABORT")));
 void interrupt_vector() __attribute__((interrupt("IRQ")));
 void fast_interrupt_vector(); //__attribute__((optimize("O0"))) __attribute__((interrupt("FIQ")));
 
-#ifdef __cplusplus
-  }
-#endif
-
+/*__asm__
+(
+  ".section .text\n"
+  ".global backup_table\n"
+  "b_table:"
+  "b _reset_\n"
+  "b undefined_instruction_vector\n"
+  "b software_interrupt_vector\n"
+  "b prefetch_abort_vector\n"
+  "b _reset_\n"
+  "b _reset_\n"
+  "b interrupt_vector\n"
+  "b fast_interrupt_vector\n"
+);*/
 
 void _reset_()
 {
-
+  __asm__ volatile
+  (
+    "ldr r0, =_v_table\n"
+    "mov r1, #0x0\n"
+    "ldmia r1!, {r2-r9}\n"
+    "stmia r0!, {r2-r9}\n"
+    "b  _start"
+  );
 }
 
 void undefined_instruction_vector()
