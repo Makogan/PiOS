@@ -1,0 +1,200 @@
+
+Allocating common symbols
+Common symbol       size              file
+
+char_buffer         0x6400            ./objects/Core/Libraries/string.o
+font_size           0x4               ./objects/Fonts/font_info.o
+
+Discarded input sections
+
+ COMMON         0x0000000000000000        0x4 ./objects/Fonts/font_info.o
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+*default*        0x0000000000000000 0xffffffffffffffff
+
+Linker script and memory map
+
+LOAD ./objects/boot/interrupts.o
+LOAD ./objects/boot/cstartup.o
+LOAD ./objects/Core/Libraries/string.o
+LOAD ./objects/Hardware/time.o
+LOAD ./objects/Fonts/font_info.o
+LOAD ./objects/Fonts/basic_font.o
+LOAD ./objects/boot/meta-data.o
+LOAD ./objects/boot/interrupt_table.o
+LOAD ./objects/boot/boot.o
+LOAD ./objects/Core/kernel_main.o
+LOAD ./objects/Hardware/Memory/memory_management.o
+LOAD ./objects/Hardware/Graphics/mailbox.o
+
+.vector_table   0x0000000000000000       0x20
+ *(.vector_table)
+ .vector_table  0x0000000000000000       0x20 ./objects/boot/interrupt_table.o
+                0x0000000000000000                _v_table
+
+.init           0x0000000000008000       0x44
+ *(.init)
+ .init          0x0000000000008000       0x44 ./objects/boot/boot.o
+                0x0000000000008000                _start
+
+.text           0x0000000000008044      0x6d0
+ *(.text)
+ .text          0x0000000000008044       0x50 ./objects/boot/interrupts.o
+                0x0000000000008064                _reset_
+                0x000000000000807c                undefined_instruction_vector
+                0x0000000000008080                software_interrupt_vector
+                0x0000000000008084                prefetch_abort_vector
+                0x0000000000008088                interrupt_vector
+                0x000000000000808c                fast_interrupt_vector
+ .text          0x0000000000008094       0x6c ./objects/boot/cstartup.o
+                0x0000000000008094                _cstartup
+ .text          0x0000000000008100      0x1ec ./objects/Core/Libraries/string.o
+                0x0000000000008100                init_char_image
+                0x0000000000008178                drawChar
+                0x00000000000081ec                tempitos
+                0x0000000000008254                print
+ .text          0x00000000000082ec       0x68 ./objects/Hardware/time.o
+                0x00000000000082ec                get_time_cycle
+                0x00000000000082fc                wait
+ .text          0x0000000000008354        0x0 ./objects/Fonts/font_info.o
+ .text          0x0000000000008354        0x0 ./objects/Fonts/basic_font.o
+ .text          0x0000000000008354        0x0 ./objects/boot/meta-data.o
+ .text          0x0000000000008354        0x0 ./objects/boot/interrupt_table.o
+ .text          0x0000000000008354        0x0 ./objects/boot/boot.o
+ .text          0x0000000000008354       0x38 ./objects/Core/kernel_main.o
+                0x0000000000008354                kernel_main
+ .text          0x000000000000838c      0x124 ./objects/Hardware/Memory/memory_management.o
+                0x000000000000838c                init_memory_manager
+                0x00000000000083d4                increment_heap(unsigned long)
+                0x00000000000083fc                memory_alloc
+                0x00000000000084a4                memory_free
+ .text          0x00000000000084b0      0x264 ./objects/Hardware/Graphics/mailbox.o
+                0x00000000000084b0                write_to_mailbox(unsigned long, Channel)
+                0x00000000000084d4                read_from_mailbox
+                0x0000000000008500                set_LED
+                0x0000000000008590                blink
+                0x00000000000085b8                set_init_display_message(Display_info*)
+                0x0000000000008670                init_display
+
+.rodata         0x0000000000008714      0x41c
+ .rodata        0x0000000000008714      0x400 ./objects/Fonts/basic_font.o
+                0x0000000000008714                basic_font
+ .rodata        0x0000000000008b14       0x1c ./objects/Hardware/Graphics/mailbox.o
+
+.rodata.str1.4  0x0000000000008b30       0x30
+ .rodata.str1.4
+                0x0000000000008b30       0x30 ./objects/Core/kernel_main.o
+                                         0x2f (size before relaxing)
+
+.glue_7         0x0000000000008b60        0x0
+ .glue_7        0x0000000000008b60        0x0 linker stubs
+
+.glue_7t        0x0000000000008b60        0x0
+ .glue_7t       0x0000000000008b60        0x0 linker stubs
+
+.vfp11_veneer   0x0000000000008b60        0x0
+ .vfp11_veneer  0x0000000000008b60        0x0 linker stubs
+
+.v4_bx          0x0000000000008b60        0x0
+ .v4_bx         0x0000000000008b60        0x0 linker stubs
+
+.iplt           0x0000000000008b60        0x0
+ .iplt          0x0000000000008b60        0x0 ./objects/boot/interrupts.o
+
+.rel.dyn        0x0000000000008b60        0x0
+ .rel.iplt      0x0000000000008b60        0x0 ./objects/boot/interrupts.o
+
+.data           0x0000000000008b60        0x0
+ *(.data)
+ .data          0x0000000000008b60        0x0 ./objects/boot/interrupts.o
+ .data          0x0000000000008b60        0x0 ./objects/boot/cstartup.o
+ .data          0x0000000000008b60        0x0 ./objects/Core/Libraries/string.o
+ .data          0x0000000000008b60        0x0 ./objects/Hardware/time.o
+ .data          0x0000000000008b60        0x0 ./objects/Fonts/font_info.o
+ .data          0x0000000000008b60        0x0 ./objects/Fonts/basic_font.o
+ .data          0x0000000000008b60        0x0 ./objects/boot/meta-data.o
+ .data          0x0000000000008b60        0x0 ./objects/boot/interrupt_table.o
+ .data          0x0000000000008b60        0x0 ./objects/boot/boot.o
+ .data          0x0000000000008b60        0x0 ./objects/Core/kernel_main.o
+ .data          0x0000000000008b60        0x0 ./objects/Hardware/Memory/memory_management.o
+ .data          0x0000000000008b60        0x0 ./objects/Hardware/Graphics/mailbox.o
+
+.igot.plt       0x0000000000008b60        0x0
+ .igot.plt      0x0000000000008b60        0x0 ./objects/boot/interrupts.o
+
+.bss            0x0000000000008b60     0x6498
+                0x0000000000008b60                . = ALIGN (0x4)
+                0x0000000000008b60                __bss_start__ = .
+ *(.bss)
+ .bss           0x0000000000008b60        0x0 ./objects/boot/interrupts.o
+ .bss           0x0000000000008b60        0x0 ./objects/boot/cstartup.o
+ .bss           0x0000000000008b60        0x0 ./objects/Core/Libraries/string.o
+ .bss           0x0000000000008b60        0x0 ./objects/Hardware/time.o
+ .bss           0x0000000000008b60        0x0 ./objects/Fonts/font_info.o
+ .bss           0x0000000000008b60        0x0 ./objects/Fonts/basic_font.o
+ .bss           0x0000000000008b60        0x0 ./objects/boot/meta-data.o
+ .bss           0x0000000000008b60        0x0 ./objects/boot/interrupt_table.o
+ .bss           0x0000000000008b60        0x0 ./objects/boot/boot.o
+ .bss           0x0000000000008b60        0x0 ./objects/Core/kernel_main.o
+ .bss           0x0000000000008b60       0x14 ./objects/Hardware/Memory/memory_management.o
+                0x0000000000008b60                heap_start
+                0x0000000000008b64                heap_end
+                0x0000000000008b68                stack_start
+                0x0000000000008b6c                stack_end
+                0x0000000000008b70                first_block
+ *fill*         0x0000000000008b74        0xc 
+ .bss           0x0000000000008b80       0x78 ./objects/Hardware/Graphics/mailbox.o
+                0x0000000000008b80                mailbox_message
+                0x0000000000008bd8                index
+                0x0000000000008bdc                main_monitor
+                0x0000000000008bf8                . = ALIGN (0x4)
+                0x0000000000008bf8                __bss_end__ = .
+ COMMON         0x0000000000008bf8     0x6400 ./objects/Core/Libraries/string.o
+                0x0000000000008bf8                char_buffer
+
+.kernel_end     0x000000000000eff8        0x4
+ *(.kernel_end)
+ .kernel_end    0x000000000000eff8        0x4 ./objects/boot/meta-data.o
+                0x000000000000eff8                Kernel_End
+OUTPUT(build/kernel.elf elf32-littlearm)
+
+.comment        0x0000000000000000       0x7f
+ .comment       0x0000000000000000       0x7f ./objects/boot/interrupts.o
+                                         0x80 (size before relaxing)
+ .comment       0x000000000000007f       0x80 ./objects/boot/cstartup.o
+ .comment       0x000000000000007f       0x80 ./objects/Core/Libraries/string.o
+ .comment       0x000000000000007f       0x80 ./objects/Hardware/time.o
+ .comment       0x000000000000007f       0x80 ./objects/Fonts/font_info.o
+ .comment       0x000000000000007f       0x80 ./objects/Fonts/basic_font.o
+ .comment       0x000000000000007f       0x80 ./objects/Core/kernel_main.o
+ .comment       0x000000000000007f       0x80 ./objects/Hardware/Memory/memory_management.o
+ .comment       0x000000000000007f       0x80 ./objects/Hardware/Graphics/mailbox.o
+
+.ARM.attributes
+                0x0000000000000000       0x3e
+ .ARM.attributes
+                0x0000000000000000       0x40 ./objects/boot/interrupts.o
+ .ARM.attributes
+                0x0000000000000040       0x40 ./objects/boot/cstartup.o
+ .ARM.attributes
+                0x0000000000000080       0x40 ./objects/Core/Libraries/string.o
+ .ARM.attributes
+                0x00000000000000c0       0x40 ./objects/Hardware/time.o
+ .ARM.attributes
+                0x0000000000000100       0x40 ./objects/Fonts/font_info.o
+ .ARM.attributes
+                0x0000000000000140       0x40 ./objects/Fonts/basic_font.o
+ .ARM.attributes
+                0x0000000000000180       0x2c ./objects/boot/meta-data.o
+ .ARM.attributes
+                0x00000000000001ac       0x2c ./objects/boot/interrupt_table.o
+ .ARM.attributes
+                0x00000000000001d8       0x2c ./objects/boot/boot.o
+ .ARM.attributes
+                0x0000000000000204       0x40 ./objects/Core/kernel_main.o
+ .ARM.attributes
+                0x0000000000000244       0x40 ./objects/Hardware/Memory/memory_management.o
+ .ARM.attributes
+                0x0000000000000284       0x40 ./objects/Hardware/Graphics/mailbox.o

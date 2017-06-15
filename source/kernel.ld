@@ -20,11 +20,6 @@ SECTIONS
     KEEP(*(.data))
   }
 
-  .comment :
-  {
-    *(.comment)
-  }
-
   .bss :
     {
         . = ALIGN(4);
@@ -33,4 +28,9 @@ SECTIONS
         . = ALIGN(4);
         __bss_end__ = .;
    }
+  
+  .kernel_end :
+  {
+    KEEP(*(.kernel_end))
+  }
 }

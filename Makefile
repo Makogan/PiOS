@@ -1,8 +1,5 @@
 # The following makefile was made by Camilo Talero
 
-MICRO_SD ?= /media/camilo/GPMICROSD
-#$(shell find /media/camilo -name "GPMICROSD")
-
 DATE := $(shell date +'%y.%m.%d %H:%M:%S')
 USER ?= $(shell -u -n)
 
@@ -13,11 +10,11 @@ CAS = gcc
 CROSS_COMPILER = arm-none-eabi
 
 # Compilation flags
-ARCH = -mcpu=cortex-a53 -mfloat-abi=hard -mfpu=vfpv4
+ARCH = -mcpu=cortex-a53 -mfloat-abi=hard -mfpu=crypto-neon-fp-armv8
 OPT_LEVEL = O2
 
 CFLAGS = -Wall -nostdlib -nostartfiles -nodefaultlibs -fno-exceptions -static -c -o 
-
+LINKER_FLAGS = --gc-sections --print-gc-sections -M
 # Find all directories under the current one
 
 PERMA_DIRS := ./Documentation $(source)
@@ -83,7 +80,7 @@ $(OBJECTS_ASS): $(OBJECT_DIR)%.o: $(SOURCE_DIR)%.S | $(OUTPUT_DIRS)
 # Link all .o object files into the final .elf binary
 $(KERNEL_ELF): $(OBJECTS)
 	@echo "Linking"
-	@$(CROSS_COMPILER)-ld $(OBJECTS) --gc-sections -o $(KERNEL_ELF) -T $(LINKERS)
+	@$(CROSS_COMPILER)-ld $(OBJECTS) $(LINKER_FLAGS) -o $(KERNEL_ELF) -T $(LINKERS) > $(LOG_DIR)/map.log
 
 # Extract the final kernel image
 $(KERNEL_IMAGE): $(KERNEL_ELF)

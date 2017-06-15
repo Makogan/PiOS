@@ -6,5 +6,8 @@
 typedef uint32_t size_t;
 
 extern "C" void* memory_alloc(size_t size);
+extern "C" void* memory_re_alloc(size_t size);
+extern "C" void* memory_calloc(size_t size);
+extern "C" void memory_free(void* location);
 
 #endif

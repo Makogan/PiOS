@@ -22,7 +22,7 @@ void undefined_instruction_vector() __attribute__((interrupt("UNDEF")));
 void software_interrupt_vector() __attribute__((interrupt("SWI")));
 void prefetch_abort_vector() __attribute__((interrupt("ABORT")));
 void interrupt_vector() __attribute__((interrupt("IRQ")));
-void fast_interrupt_vector(); //__attribute__((optimize("O0"))) __attribute__((interrupt("FIQ")));
+void fast_interrupt_vector() __attribute__((interrupt("FIQ")));
 
 __asm__
 (
@@ -38,6 +38,65 @@ __asm__
   "b interrupt_vector\n"
   "b fast_interrupt_vector\n"
 );
+
+inline void interrupt_enable_IF()
+{
+  __asm__ volatile
+  (
+    "cpsie if\n"
+  );
+}
+
+inline void interrupt_enable_I()
+{
+  __asm__ volatile
+  (
+    "cpsie i\n"
+  );
+}
+
+inline void interrupt_enable_F()
+{
+  __asm__ volatile
+  (
+    "cpsie f\n"
+  );
+}
+
+inline uint32_t interrupt_disable_IF()
+{
+  __asm__ volatile
+  (
+    "mrs r0, cpsr\n"
+    "cpsid if\n"
+  );
+}
+
+inline uint32_t interrupt_disable_I()
+{
+  __asm__ volatile
+  (
+    "mrs r0, cpsr\n"
+    "cpsid i\n"
+  );
+}
+
+inline uint32_t interrupt_disable_F()
+{
+  __asm__ volatile
+  (
+    "mrs r0, cpsr\n"
+    "cpsid f\n"
+  );
+}
+
+inline void restore()
+{
+  __asm__ volatile
+  (
+    "msr cpsr_c, r0\n"
+  );
+}
 
 void _reset_()
 {
