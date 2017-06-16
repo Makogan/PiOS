@@ -13,13 +13,16 @@
 //TODO: documentation
 
 #include <string.h>
-#include <fonts.h>
 
 #define BIT(val, bit) val & (1 << bit)
 
-#define SIZE 10
-#define CHAR_IMAGE_SIZE CHAR_BITS*CHAR_BITS*SIZE*SIZE
-uint32_t char_buffer[CHAR_IMAGE_SIZE];
+Cursor main_cursor;
+
+void init_print(uint32_t f_size)
+{
+  font_size = f_size;
+  selected_font = &basic_font[0];
+}
 
 void init_char_image(const char* charMap, uint32_t size, uint32_t* drawnChar)
 {
@@ -53,7 +56,7 @@ void drawChar(uint32_t *characterImage, uint32_t size,
   }
 }
 
-void tempitos(uint32_t num, char* str)
+char* itos(uint32_t num)
 {
   uint32_t original_num = num;
   int digits = 0;
@@ -65,6 +68,7 @@ void tempitos(uint32_t num, char* str)
   while(num != 0);
 
   num = original_num;
+  char* str = (char*)memory_alloc(sizeof(char)*(digits+1));
   str[digits--] = 0;
 
   while(digits>=0)
@@ -73,12 +77,28 @@ void tempitos(uint32_t num, char* str)
     str[digits--] = digit + '0';
     num /= 10;
   }
+
+  return str;
+}
+
+void print(uint32_t num)
+{
+  char* str = itos(num);
+  print(str);
+  memory_free(str);
+}
+
+void print(const char* string)
+{
+  print((char*)string);
 }
 
 void print(char* string)
 {
-  uint32_t size = SIZE, x=0, y=0;
+  uint32_t x = main_cursor.x;
+  uint32_t y = main_cursor.y; 
 
+  uint32_t size = font_size;
   for(uint32_t i=0; string[i] != '\0'; i++)
   { 
     if(x >= main_monitor.virtual_width/(size*CHAR_BITS))
@@ -95,10 +115,15 @@ void print(char* string)
     
     else
     {
-      const char *currentChar = basic_font[(uint32_t)string[i]];
+      uint32_t tempBuffer[font_size*font_size*CHAR_BITS*CHAR_BITS];
+      const char *currentChar = (selected_font[(uint32_t)string[i]]);
+      init_char_image(currentChar, size, tempBuffer);
       init_char_image(currentChar, size, char_buffer);
-      drawChar(char_buffer, size, x, y);
+      drawChar(tempBuffer, size, x, y);
       x++;
     }
   }
+
+  main_cursor.x = x;
+  main_cursor.y = (y)%(main_monitor.virtual_height/(size*CHAR_BITS));
 } 

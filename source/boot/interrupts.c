@@ -17,13 +17,15 @@ struct rpi_irq_controller_t
     volatile uint32_t Disable_Basic_IRQs;
 };
 
+extern "C" {
+
 void _reset_() __attribute__((interrupt("RESET")));
 void undefined_instruction_vector() __attribute__((interrupt("UNDEF")));
 void software_interrupt_vector() __attribute__((interrupt("SWI")));
 void prefetch_abort_vector() __attribute__((interrupt("ABORT")));
 void interrupt_vector() __attribute__((interrupt("IRQ")));
 void fast_interrupt_vector() __attribute__((interrupt("FIQ")));
-
+}
 __asm__
 (
   ".section .text\n"

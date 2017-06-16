@@ -4,9 +4,9 @@ DATE := $(shell date +'%y.%m.%d %H:%M:%S')
 USER ?= $(shell -u -n)
 
 # Compilers
-CC = gcc
+CC = g++
 CCPP = g++
-CAS = gcc
+CAS = g++
 CROSS_COMPILER = arm-none-eabi
 
 # Compilation flags

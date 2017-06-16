@@ -1,17 +1,18 @@
 #include <stdint.h>
 
-extern int __bss_start__;
-extern int __bss_end__;
+extern uint32_t __bss_start__;
+extern uint32_t __bss_end__;
 extern uint32_t Kernel_End;
 
-extern void kernel_main();
-extern void init_memory_manager();
+extern "C" void kernel_main();
+extern "C" void init_memory_manager();
+extern "C" void init_main_cursor();
 
-void _cstartup()  __attribute__((optimize("-O0")));
+extern "C" void _cstartup()  __attribute__((optimize("-O0")));
 void _cstartup()
 {
-    volatile int* current_address = &__bss_end__;
-    int* end = &__bss_end__;
+    volatile uint32_t* current_address = &__bss_start__;
+    uint32_t* end = &__bss_end__;
     while(current_address < end)
     {
         *current_address = 0;
@@ -20,6 +21,7 @@ void _cstartup()
 
     Kernel_End = 0xFFFFFFFF;
 
+    //init_main_cursor();
     init_memory_manager();
 
     kernel_main();

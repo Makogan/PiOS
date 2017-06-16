@@ -17,6 +17,7 @@
 #define CHAR_BITS 8
 
 extern uint32_t font_size;
+extern const char (*selected_font)[CHAR_BITS];
 extern const char basic_font[128][CHAR_BITS];
 
 #endif

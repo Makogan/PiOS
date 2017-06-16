@@ -16,17 +16,21 @@
 
 #include <stdint.h>
 #include <mailbox.h>
+#include <fonts.h>
+#include <memory_management.h>
 
-#ifdef __cplusplus
-    extern "C" {
-#endif
+typedef struct
+{
+  uint32_t x;
+  uint32_t y;
+}Cursor;
 
+extern Cursor main_cursor;
+
+void init_print(uint32_t f_size);
+void print(uint32_t num);
 void print(char* string);
-void tempitos(uint32_t num, char *str);
-
-#ifdef __cplusplus
-    }
-#endif
-
+void print(const char* string);
+char* itos(uint32_t num);
 
 #endif

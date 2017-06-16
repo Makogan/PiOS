@@ -13,3 +13,4 @@
 #include <fonts.h>
 
 uint32_t font_size;
+const char (*selected_font)[CHAR_BITS];

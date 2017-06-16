@@ -1,4 +1,5 @@
 #include <memory_management.h>
+#include <string.h>
 
 #define LAST_ADDRESS 0x30000000
 #define NULL nullptr
@@ -29,18 +30,18 @@ Memory_Block* first_block;
 extern "C" void init_memory_manager()
 {
     heap_start = (void*)LAST_ADDRESS;
-    heap_end = (void*)LAST_ADDRESS;
+    heap_end = (void*)(LAST_ADDRESS - sizeof(Memory_Block));
 
     stack_start = 0x0;
     stack_end = &Kernel_End;
 
     first_block = 
         (Memory_Block*)
-        (LAST_ADDRESS-sizeof(Memory_Block)+sizeof(uint32_t));
+        ((char*)(LAST_ADDRESS-sizeof(Memory_Block)-sizeof(uint32_t)));
     
     first_block->next_block = nullptr;
     first_block->size = 0;
-    first_block->state = FREE;
+    first_block->state = LOCKED;
 }
 
 void increment_heap(size_t size)
@@ -71,13 +72,13 @@ extern "C" void* memory_alloc(size_t size)
         else if((char*)current_block - (size + sizeof(Memory_Block)) < heap_end)
         {
             increment_heap((size + sizeof(Memory_Block))-
-                ((uint32_t)current_block)-(uint32_t)heap_end);
+                ((uint32_t)current_block-(uint32_t)heap_end));
             
             Memory_Block *newBlock = (Memory_Block*)heap_end;
 
             newBlock->next_block = nullptr;
             newBlock->size = size;
-            newBlock->state=LOCKED;
+            newBlock->state = LOCKED;
 
             current_block->next_block = newBlock;
 
@@ -93,15 +94,30 @@ extern "C" void* memory_alloc(size_t size)
     return nullptr;
 }
 
-/*extern "C" void* memory_re_alloc(size_t size)
+extern "C" void* memory_re_alloc(void* ptr, size_t size)
 {
+    Memory_Block *block = (Memory_Block*)((char*)ptr - sizeof(Memory_Block));
 
+    if(block->size >= size)
+        return ptr;
+    
+    block->state = FREE;
+
+    return memory_alloc(size);
 }
 
 extern "C" void* memory_calloc(size_t size)
 {
+    size = WORD_ALIGN(size);
+    void* ptr = memory_alloc(size);
 
-}*/
+    for(uint32_t i=0; i<size; i++)
+    {
+        *((uint32_t*)ptr + i) = 0x0;
+    }
+
+    return ptr;
+}
 
 extern "C" void memory_free(void* location)
 {
