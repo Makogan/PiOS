@@ -12,12 +12,20 @@ SECTIONS
 
   .text : 
   {
-    KEEP(*(.text))
+    . = ALIGN(4);
+    __text_start__ = .;              /* Just a label to get text section start addr if you need */
+    *(.text .text.* .gnu.linkonce.t.*)
+    . = ALIGN(4);
+    __text_end__ = .;               /* Just a label to get text section end addr if you need */
   }
 
-  .data ALIGN(0x4) : 
+  .data : 
   {
-    KEEP(*(.data))
+    . = ALIGN(4);
+    __data_start__ = .;            /* Just a label to get data section start addr if you need */
+    *(.data .data.* .gnu.linkonce.d.*)
+    . = ALIGN(4);
+    __data_end__ = .;             /* Just a label to get data section end addr if you need */
   }
 
   .bss :

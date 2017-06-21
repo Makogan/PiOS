@@ -80,12 +80,12 @@ _reset_:
 ;@"================================================================"
 ;@ Now setup stack pointers for the different CPU operation modes.
 ;@"================================================================"
-   msr CPSR_c, #0xD1                  ;@ Switch to FIQ_MODE
+   /*msr CPSR_c, #0xD1                  ;@ Switch to FIQ_MODE
     ldr sp, =__fiq_stack               ;@ Set the stack pointer for that mode
    msr CPSR_c, #0xD2                  ;@ Switch to IRQ_MODE
     ldr sp, =__irq_stack               ;@ Set the stack pointer for that mode
    msr CPSR_c, #0xD3                  ;@ Switch back to SRV_MODE
-    ldr sp, =__svc_stack               ;@ Set the stack pointer for that mode
+    ldr sp, =__svc_stack               ;@ Set the stack pointer for that mode*/
  /* END OF CHANGES ADDED BY LdB */
     
     
