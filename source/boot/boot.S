@@ -1,6 +1,6 @@
 //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 /*
-* Authors: Camilo Talero
+* Authors: Camilo Talero, LDB
 *
 *
 * File type: ARM Assembly
@@ -16,10 +16,30 @@
 _start:
         ldr     sp, =0x8000 // initialize stack pointer
 
+ _v_table:
+        b _reset_
+        b undefined_instruction_vector
+        b software_interrupt_vector
+        b prefetch_abort_vector
+        b _reset_
+        b _reset_
+        b interrupt_vector
+        b fast_interrupt_vector
+
+
+_reset_:
+        ldr r0, =_v_table
+        mov r1, #0x0
+        ldmia r1!, {r2-r9}
+        stmia r0!, {r2-r9}
+        //b  _start
+        //bl      EnableJTAG
 /* CHANGES ADDED BY LdB */
+        //ldr sp, =__usrsys_stack               ;@ This is just a safety if all hell breaks loose
+
         //bl  RPi_CheckAndExitHypModeToSvcMode;   ;@ First check for HYP_MODE and if in it drop out to SRV_MODE
 
-@"================================================================"
+/*@"================================================================"
 ;@ PI NSACR regsister setup for access to floating point unit
 ;@ Cortex A-7 => Section 4.3.34. Non-Secure Access Control Register
 ;@ Cortex A-53 => Section 4.5.32. Non-Secure Access Control Register
@@ -46,7 +66,7 @@ _start:
 /*==========================================================================}
 ;{           RASPBERRY PI LEVEL L1 CACHE CONSTANTS DEFINED                }
 ;{=========================================================================*/
-#define SCTLR_ENABLE_DATA_CACHE         0x4
+/*#define SCTLR_ENABLE_DATA_CACHE         0x4
 #define SCTLR_ENABLE_BRANCH_PREDICTION   0x800
 #define SCTLR_ENABLE_INSTRUCTION_CACHE  0x1000
 
@@ -56,6 +76,16 @@ _start:
     orr r0, #SCTLR_ENABLE_INSTRUCTION_CACHE
 
     mcr p15,0,r0,c1,c0,0               ;@ System Control Register = R0*/
+
+;@"================================================================"
+;@ Now setup stack pointers for the different CPU operation modes.
+;@"================================================================"
+ /*  msr CPSR_c, #0xD1                  ;@ Switch to FIQ_MODE
+    ldr sp, =__fiq_stack               ;@ Set the stack pointer for that mode
+   msr CPSR_c, #0xD2                  ;@ Switch to IRQ_MODE
+    ldr sp, =__irq_stack               ;@ Set the stack pointer for that mode
+   msr CPSR_c, #0xD3                  ;@ Switch back to SRV_MODE
+    ldr sp, =__svc_stack               ;@ Set the stack pointer for that mode*/
  /* END OF CHANGES ADDED BY LdB */
     
     
@@ -64,7 +94,7 @@ _start:
 
  /* CODED ADDED BY LdB */
 /* "PROVIDE C FUNCTION: bool RPi_CheckAndExitHypModeToSvcMode (void);" */
-/*.section .text.RPi_CheckAndExitHypModeToSvcMode, "ax", %progbits
+.section .text.RPi_CheckAndExitHypModeToSvcMode, "ax", %progbits
 .balign   4
 .type RPi_CheckAndExitHypModeToSvcMode, %function
 .syntax unified
@@ -89,11 +119,12 @@ RPi_CheckAndExitHypModeToSvcMode:
    orr r0, r0, #0x100                  ;@ Set data abort mask    
    msr spsr_cxsf, r0                  ;@ Load our request into return status register
    mov r0, #1;                        ;@ return true
+   bx lr
    /* I borrowed this trick from Ultibo because ARM6 code running on an ARM7/8 needs this opcode  */
    /* The ARM6 compiler does not know these instructions so it is a way to get needed opcode here */
     /* So our ARM6 code can drop an arm7 or arm8 out of HYP mode and run on an ARM7/8.             */
     /* Native ARM7/8 compilers already understand the OPCODE but do not mind it this way either      */        
-   /*.long 0xE12EF30E                  ;@ "msr ELR_hyp, lr"
+   .long 0xE12EF30E                  ;@ "msr ELR_hyp, lr"
    .long 0xE160006E                  ;@ "eret"   
 ;@ No ltorg data required for this function 
-.size   RPi_CheckAndExitHypModeToSvcMode, .-RPi_CheckAndExitHypModeToSvcMode*/
+.size   RPi_CheckAndExitHypModeToSvcMode, .-RPi_CheckAndExitHypModeToSvcMode

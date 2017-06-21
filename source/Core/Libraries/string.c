@@ -118,7 +118,6 @@ void print(char* string)
       uint32_t tempBuffer[font_size*font_size*CHAR_BITS*CHAR_BITS];
       const char *currentChar = (selected_font[(uint32_t)string[i]]);
       init_char_image(currentChar, size, tempBuffer);
-      init_char_image(currentChar, size, char_buffer);
       drawChar(tempBuffer, size, x, y);
       x++;
     }

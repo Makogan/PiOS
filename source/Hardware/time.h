@@ -15,6 +15,7 @@
 #define TIME_H
 
 #include <stdint.h>
+#include <peripherals.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -22,6 +23,8 @@ extern "C"
 #endif
 
 void wait(uint32_t time);
+void set_time_irq(uint32_t time);
+void clear_time_irq();
 uint32_t get_time_cycle();
 
 #ifdef __cplusplus

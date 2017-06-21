@@ -1,9 +1,9 @@
 SECTIONS 
 {
-  .vector_table 0x0 :
+  /*.vector_table 0x0 :
   {
     KEEP(*(.vector_table))
-  } 
+  } */
 
  .init 0x8000 : 
   {
@@ -21,13 +21,37 @@ SECTIONS
   }
 
   .bss :
-    {
-        . = ALIGN(4);
-        __bss_start__ = .;
-        KEEP(*(.bss))
-        . = ALIGN(4);
-        __bss_end__ = .;
-   }
+  {
+      . = ALIGN(4);
+      __bss_start__ = .;
+      KEEP(*(.bss))
+      . = ALIGN(4);
+      __bss_end__ = .;
+  }
+
+  /* Made by LDB */
+  .stack :
+  {
+      . = ALIGN(8);  /* Stack must always be aligned to 8 byte boundary AAPCS call standard */
+      __stack_start__ = .;
+      . = . + 512;    /* fiq stack size */
+      __fiq_stack = .;
+      . = . + 16384;   /* usr & sys stack size (common) */
+      __usrsys_stack = .;
+      . = . + 16384;  /* svc stack size (start-up) */
+      __svc_stack = .;
+      . = . + 4096;   /* irq stack size */
+      __irq_stack = .;
+      . = . + 512;    /* mon stack size */
+      __mon_stack = .;
+      . = . + 512;    /* hyp stack size */
+      __hyp_stack = .;
+      . = . + 512;    /* und stack size */
+      __und_stack = .;
+      . = ALIGN(8);
+      __stack_end__ = .;      
+  }
+/* end of LDB contribution */
   
   .kernel_end :
   {

@@ -13,11 +13,33 @@
 //TODO: documentation
 
 #include <time.h>
-#include <peripherals.h>
+
+typedef struct
+{
+  uint32_t control_status;
+  uint32_t counter_low;
+  uint32_t counter_high;
+  uint32_t compare_0;
+  uint32_t compare_1;
+  uint32_t compare_2;
+  uint32_t compare_3;
+}system_timer_t;
+
+volatile system_timer_t *system_timer = (volatile system_timer_t*)(IO_BASE+SYSTEM_TIMER);
+
+void set_time_irq(uint32_t time)
+{
+  system_timer->compare_1 = system_timer->counter_low + time;
+}
+
+void clear_time_irq()
+{
+    system_timer->control_status = (1 << 1);
+}
 
 uint32_t get_time_cycle()
 {
-  return *(volatile uint32_t*)(IO_BASE + SYSTEM_TIMER + SYS_TIME_LOW);
+  return system_timer->counter_low;
 }
 
 /*
@@ -29,9 +51,7 @@ uint32_t get_time_cycle()
 void wait(uint32_t time) __attribute__((optimize("-O0")));
 void wait(uint32_t time)
 {
-  volatile uint32_t *s_timer = 
-    (volatile uint32_t*)(IO_BASE + SYSTEM_TIMER + SYS_TIME_LOW);
-  uint32_t end = *s_timer + time;
+  uint32_t end = system_timer->counter_low + time;
 
-  while (*s_timer < end){}
+  while (system_timer->counter_low < end){}
 }

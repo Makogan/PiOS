@@ -24,7 +24,7 @@
                               // bit (empty bit in the mailbox status register)
 
 #define RESPONSE_OK     0x80000000 // Same as MAIL_FULL define nonetheless for clarity
-#define RESPONSE_ERROR  0x80000001 // If this is teh response, the VC found an error
+#define RESPONSE_ERROR  0x80000001 // If this is the response, the VC found an error
 //########################################################################################
 
 //========================================================================================
