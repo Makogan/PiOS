@@ -62,8 +62,8 @@ SECTIONS
 /* end of LDB contribution */
   
   .Heap :
-    {
-     . = ALIGN(4);
-     kernel_end = .;     /* Just a label to get HEAP section start addr if you need */; 
-    }
+  {
+    . = ALIGN(4);
+    Kernel_End = .;     /* Just a label to get HEAP section start addr if you need */; 
+  }
 }

@@ -15,27 +15,18 @@
 
 _start:
         ldr     sp, =0x8000 // initialize stack pointer
-
- _v_table:
-        b _reset_
-        b undefined_instruction_vector
-        b software_interrupt_vector
-        b prefetch_abort_vector
-        b _reset_
-        b _reset_
-        b interrupt_vector
-        b fast_interrupt_vector
-
-
-_reset_:
-        ldr r0, =_v_table
-        mov r1, #0x0
-        ldmia r1!, {r2-r9}
-        stmia r0!, {r2-r9}
-        //b  _start
-        //bl      EnableJTAG
 /* CHANGES ADDED BY LdB */
         //ldr sp, =__usrsys_stack               ;@ This is just a safety if all hell breaks loose
+
+;@"================================================================"
+;@ Now setup stack pointers for the different CPU operation modes.
+;@"================================================================"
+        msr CPSR_c, #0xD1                  ;@ Switch to FIQ_MODE
+        ldr sp, =__fiq_stack               ;@ Set the stack pointer for that mode
+        msr CPSR_c, #0xD2                  ;@ Switch to IRQ_MODE
+        ldr sp, =__irq_stack               ;@ Set the stack pointer for that mode
+        msr CPSR_c, #0xD3                  ;@ Switch back to SRV_MODE
+        ldr sp, =__svc_stack               ;@ Set the stack pointer for that mode
 
         bl  RPi_CheckAndExitHypModeToSvcMode;   ;@ First check for HYP_MODE and if in it drop out to SRV_MODE
 
@@ -77,19 +68,38 @@ _reset_:
 
     mcr p15,0,r0,c1,c0,0               ;@ System Control Register = R0
 
-;@"================================================================"
-;@ Now setup stack pointers for the different CPU operation modes.
-;@"================================================================"
-   /*msr CPSR_c, #0xD1                  ;@ Switch to FIQ_MODE
-    ldr sp, =__fiq_stack               ;@ Set the stack pointer for that mode
-   msr CPSR_c, #0xD2                  ;@ Switch to IRQ_MODE
-    ldr sp, =__irq_stack               ;@ Set the stack pointer for that mode
-   msr CPSR_c, #0xD3                  ;@ Switch back to SRV_MODE
-    ldr sp, =__svc_stack               ;@ Set the stack pointer for that mode*/
  /* END OF CHANGES ADDED BY LdB */
-    
+
+_reset_:
+        ldr     r0, =_v_table
+        mov     r1, #0x0000
+        ldmia   r0!,{r2, r3, r4, r5, r6, r7, r8, r9}
+        stmia   r1!,{r2, r3, r4, r5, r6, r7, r8, r9}
+        ldmia   r0!,{r2, r3, r4, r5, r6, r7, r8, r9}
+        stmia   r1!,{r2, r3, r4, r5, r6, r7, r8, r9}
     
     b       _cstartup
+
+
+ _v_table:
+        ldr     pc, _reset_h
+        ldr     pc, _undefined_instruction_vector_h
+        ldr     pc, _software_interrupt_vector_h
+        ldr     pc, _prefetch_abort_vector_h
+        ldr     pc, _data_abort_vector_h
+        ldr     pc, _unused_handler_h
+        ldr     pc, _interrupt_vector_h
+        ldr     pc, _fast_interrupt_vector_h
+
+_reset_h:                           .word   _reset_
+_undefined_instruction_vector_h:    .word   undefined_instruction_vector
+_software_interrupt_vector_h:       .word   software_interrupt_vector
+_prefetch_abort_vector_h:           .word   prefetch_abort_vector
+_data_abort_vector_h:               .word   _reset_
+_unused_handler_h:                  .word   _reset_
+_interrupt_vector_h:                .word   interrupt_vector
+_fast_interrupt_vector_h:           .word   fast_interrupt_vector
+
 
 
  /* CODED ADDED BY LdB */
