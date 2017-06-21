@@ -10,7 +10,7 @@ CAS = g++
 CROSS_COMPILER = arm-none-eabi
 
 # Compilation flags
-ARCH = -mcpu=cortex-a7 -mfloat-abi=hard #-mfpu=crypto-neon-fp-armv8
+ARCH = -mcpu=cortex-a53 -mfloat-abi=hard -mfpu=crypto-neon-fp-armv8
 OPT_LEVEL = O2
 
 CFLAGS = -Wall -nostdlib -nostartfiles -nodefaultlibs -fno-exceptions -static -c -o 

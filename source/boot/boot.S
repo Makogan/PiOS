@@ -37,9 +37,9 @@ _reset_:
 /* CHANGES ADDED BY LdB */
         //ldr sp, =__usrsys_stack               ;@ This is just a safety if all hell breaks loose
 
-        //bl  RPi_CheckAndExitHypModeToSvcMode;   ;@ First check for HYP_MODE and if in it drop out to SRV_MODE
+        bl  RPi_CheckAndExitHypModeToSvcMode;   ;@ First check for HYP_MODE and if in it drop out to SRV_MODE
 
-/*@"================================================================"
+@"================================================================"
 ;@ PI NSACR regsister setup for access to floating point unit
 ;@ Cortex A-7 => Section 4.3.34. Non-Secure Access Control Register
 ;@ Cortex A-53 => Section 4.5.32. Non-Secure Access Control Register
@@ -66,7 +66,7 @@ _reset_:
 /*==========================================================================}
 ;{           RASPBERRY PI LEVEL L1 CACHE CONSTANTS DEFINED                }
 ;{=========================================================================*/
-/*#define SCTLR_ENABLE_DATA_CACHE         0x4
+#define SCTLR_ENABLE_DATA_CACHE         0x4
 #define SCTLR_ENABLE_BRANCH_PREDICTION   0x800
 #define SCTLR_ENABLE_INSTRUCTION_CACHE  0x1000
 
@@ -75,17 +75,17 @@ _reset_:
     orr r0, #SCTLR_ENABLE_DATA_CACHE
     orr r0, #SCTLR_ENABLE_INSTRUCTION_CACHE
 
-    mcr p15,0,r0,c1,c0,0               ;@ System Control Register = R0*/
+    mcr p15,0,r0,c1,c0,0               ;@ System Control Register = R0
 
 ;@"================================================================"
 ;@ Now setup stack pointers for the different CPU operation modes.
 ;@"================================================================"
- /*  msr CPSR_c, #0xD1                  ;@ Switch to FIQ_MODE
+   msr CPSR_c, #0xD1                  ;@ Switch to FIQ_MODE
     ldr sp, =__fiq_stack               ;@ Set the stack pointer for that mode
    msr CPSR_c, #0xD2                  ;@ Switch to IRQ_MODE
     ldr sp, =__irq_stack               ;@ Set the stack pointer for that mode
    msr CPSR_c, #0xD3                  ;@ Switch back to SRV_MODE
-    ldr sp, =__svc_stack               ;@ Set the stack pointer for that mode*/
+    ldr sp, =__svc_stack               ;@ Set the stack pointer for that mode
  /* END OF CHANGES ADDED BY LdB */
     
     

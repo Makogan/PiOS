@@ -53,8 +53,8 @@ extern "C" void kernel_main(void)
   init_display();
   init_print(10);
 
- /* interrupt_enable_I();
-  enable_select_irq(32+1);*/
+  interrupt_enable_I();
+  enable_select_irq(32+1);
 
   set_time_irq(10000000);
 

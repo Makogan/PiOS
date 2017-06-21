@@ -178,7 +178,7 @@ void interrupt_vector()
   interrupt_disable_IF();
   void clear_time_irq();
 
-  set_LED(ON);
+  blink();
   //if(irq_controller->IRQ_basic_pending & 0x1)
   {
     print("OMG it works!");

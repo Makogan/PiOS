@@ -1,9 +1,4 @@
 
-Discarded input sections
-
- .text.RPi_CheckAndExitHypModeToSvcMode
-                0x0000000000000000       0x40 ./objects/boot/boot.o
-
 Memory Configuration
 
 Name             Origin             Length             Attributes
@@ -24,178 +19,182 @@ LOAD ./objects/Core/kernel_main.o
 LOAD ./objects/Hardware/Memory/memory_management.o
 LOAD ./objects/Hardware/Graphics/mailbox.o
 
-.init           0x0000000000008000       0x3c
+.init           0x0000000000008000       0xa0
  *(.init)
- .init          0x0000000000008000       0x3c ./objects/boot/boot.o
+ .init          0x0000000000008000       0xa0 ./objects/boot/boot.o
                 0x0000000000008000                _start
 
-.text           0x000000000000803c      0xa6c
+.text           0x00000000000080a0      0xa60
  *(.text)
- .text          0x000000000000803c      0x1b8 ./objects/boot/interrupts.o
-                0x000000000000803c                enable_select_irq(unsigned char)
-                0x00000000000080a0                disable_select_irq(unsigned char)
-                0x0000000000008104                interrupt_enable_IF()
-                0x000000000000810c                interrupt_enable_I()
-                0x0000000000008114                interrupt_enable_F()
-                0x000000000000811c                interrupt_disable_IF()
-                0x000000000000812c                interrupt_disable_I()
-                0x000000000000813c                interrupt_disable_F()
-                0x000000000000814c                restore()
-                0x0000000000008154                undefined_instruction_vector
-                0x0000000000008168                software_interrupt_vector
-                0x000000000000817c                prefetch_abort_vector
-                0x0000000000008194                interrupt_vector
-                0x00000000000081dc                fast_interrupt_vector
- .text          0x00000000000081f4       0x6c ./objects/boot/cstartup.o
-                0x00000000000081f4                _cstartup
- .text          0x0000000000008260      0x2bc ./objects/Core/Libraries/string.o
-                0x0000000000008260                init_print(unsigned long)
-                0x0000000000008284                init_char_image(char const*, unsigned long, unsigned long*)
-                0x00000000000082fc                drawChar(unsigned long*, unsigned long, unsigned long, unsigned long)
-                0x0000000000008370                itos(unsigned long)
-                0x00000000000083e4                print(char*)
-                0x00000000000084fc                print(unsigned long)
-                0x0000000000008518                print(char const*)
- .text          0x000000000000851c       0xb4 ./objects/Hardware/time.o
-                0x000000000000851c                set_time_irq
-                0x0000000000008538                clear_time_irq
-                0x0000000000008550                get_time_cycle
-                0x0000000000008564                wait
- .text          0x00000000000085d0        0x0 ./objects/Fonts/font_info.o
- .text          0x00000000000085d0        0x0 ./objects/Fonts/basic_font.o
- .text          0x00000000000085d0        0x0 ./objects/boot/meta-data.o
- .text          0x00000000000085d0        0x0 ./objects/boot/boot.o
- .text          0x00000000000085d0       0x8c ./objects/jtag.o
-                0x00000000000085d0                EnableJTAG
- .text          0x000000000000865c       0x68 ./objects/Core/kernel_main.o
-                0x000000000000865c                kernel_main
- .text          0x00000000000086c4      0x180 ./objects/Hardware/Memory/memory_management.o
-                0x00000000000086c4                init_memory_manager
-                0x000000000000870c                increment_heap(unsigned long)
-                0x0000000000008734                memory_alloc
-                0x00000000000087e0                memory_re_alloc
-                0x0000000000008800                memory_calloc
-                0x0000000000008838                memory_free
- .text          0x0000000000008844      0x264 ./objects/Hardware/Graphics/mailbox.o
-                0x0000000000008844                write_to_mailbox(unsigned long, Channel)
-                0x0000000000008868                read_from_mailbox
-                0x0000000000008894                set_LED
-                0x0000000000008924                blink
-                0x000000000000894c                set_init_display_message(Display_info*)
-                0x0000000000008a04                init_display
+ .text          0x00000000000080a0      0x194 ./objects/boot/interrupts.o
+                0x00000000000080a0                enable_select_irq(unsigned char)
+                0x00000000000080f4                disable_select_irq(unsigned char)
+                0x0000000000008148                interrupt_enable_IF()
+                0x0000000000008150                interrupt_enable_I()
+                0x0000000000008158                interrupt_enable_F()
+                0x0000000000008160                interrupt_disable_IF()
+                0x0000000000008170                interrupt_disable_I()
+                0x0000000000008180                interrupt_disable_F()
+                0x0000000000008190                restore()
+                0x0000000000008198                undefined_instruction_vector
+                0x00000000000081ac                software_interrupt_vector
+                0x00000000000081c0                prefetch_abort_vector
+                0x00000000000081d8                interrupt_vector
+                0x000000000000821c                fast_interrupt_vector
+ .text          0x0000000000008234       0x6c ./objects/boot/cstartup.o
+                0x0000000000008234                _cstartup
+ .text          0x00000000000082a0      0x2c0 ./objects/Core/Libraries/string.o
+                0x00000000000082a0                init_print(unsigned long)
+                0x00000000000082c4                init_char_image(char const*, unsigned long, unsigned long*)
+                0x000000000000833c                drawChar(unsigned long*, unsigned long, unsigned long, unsigned long)
+                0x00000000000083b0                itos(unsigned long)
+                0x0000000000008424                print(char*)
+                0x0000000000008540                print(unsigned long)
+                0x000000000000855c                print(char const*)
+ .text          0x0000000000008560       0xb4 ./objects/Hardware/time.o
+                0x0000000000008560                set_time_irq
+                0x000000000000857c                clear_time_irq
+                0x0000000000008594                get_time_cycle
+                0x00000000000085a8                wait
+ .text          0x0000000000008614        0x0 ./objects/Fonts/font_info.o
+ .text          0x0000000000008614        0x0 ./objects/Fonts/basic_font.o
+ .text          0x0000000000008614        0x0 ./objects/boot/meta-data.o
+ .text          0x0000000000008614        0x0 ./objects/boot/boot.o
+ .text          0x0000000000008614       0x8c ./objects/jtag.o
+                0x0000000000008614                EnableJTAG
+ .text          0x00000000000086a0       0x74 ./objects/Core/kernel_main.o
+                0x00000000000086a0                kernel_main
+ .text          0x0000000000008714      0x188 ./objects/Hardware/Memory/memory_management.o
+                0x0000000000008714                init_memory_manager
+                0x0000000000008764                increment_heap(unsigned long)
+                0x000000000000878c                memory_alloc
+                0x0000000000008838                memory_re_alloc
+                0x0000000000008858                memory_calloc
+                0x0000000000008890                memory_free
+ .text          0x000000000000889c      0x264 ./objects/Hardware/Graphics/mailbox.o
+                0x000000000000889c                write_to_mailbox(unsigned long, Channel)
+                0x00000000000088c0                read_from_mailbox
+                0x00000000000088ec                set_LED
+                0x000000000000897c                blink
+                0x00000000000089a4                set_init_display_message(Display_info*)
+                0x0000000000008a5c                init_display
 
-.rodata.str1.4  0x0000000000008aa8       0x50
+.rodata.str1.4  0x0000000000008b00       0x50
  .rodata.str1.4
-                0x0000000000008aa8        0xe ./objects/boot/interrupts.o
- *fill*         0x0000000000008ab6        0x2 
+                0x0000000000008b00        0xe ./objects/boot/interrupts.o
+ *fill*         0x0000000000008b0e        0x2 
  .rodata.str1.4
-                0x0000000000008ab8       0x40 ./objects/Core/kernel_main.o
+                0x0000000000008b10       0x40 ./objects/Core/kernel_main.o
 
-.rodata         0x0000000000008af8      0x41c
- .rodata        0x0000000000008af8      0x400 ./objects/Fonts/basic_font.o
-                0x0000000000008af8                basic_font
- .rodata        0x0000000000008ef8       0x1c ./objects/Hardware/Graphics/mailbox.o
+.rodata         0x0000000000008b50      0x41c
+ .rodata        0x0000000000008b50      0x400 ./objects/Fonts/basic_font.o
+                0x0000000000008b50                basic_font
+ .rodata        0x0000000000008f50       0x1c ./objects/Hardware/Graphics/mailbox.o
 
-.glue_7         0x0000000000008f14        0x0
- .glue_7        0x0000000000008f14        0x0 linker stubs
+.glue_7         0x0000000000008f6c        0x0
+ .glue_7        0x0000000000008f6c        0x0 linker stubs
 
-.glue_7t        0x0000000000008f14        0x0
- .glue_7t       0x0000000000008f14        0x0 linker stubs
+.glue_7t        0x0000000000008f6c        0x0
+ .glue_7t       0x0000000000008f6c        0x0 linker stubs
 
-.vfp11_veneer   0x0000000000008f14        0x0
- .vfp11_veneer  0x0000000000008f14        0x0 linker stubs
+.vfp11_veneer   0x0000000000008f6c        0x0
+ .vfp11_veneer  0x0000000000008f6c        0x0 linker stubs
 
-.v4_bx          0x0000000000008f14        0x0
- .v4_bx         0x0000000000008f14        0x0 linker stubs
+.v4_bx          0x0000000000008f6c        0x0
+ .v4_bx         0x0000000000008f6c        0x0 linker stubs
 
-.iplt           0x0000000000008f14        0x0
- .iplt          0x0000000000008f14        0x0 ./objects/boot/interrupts.o
+.iplt           0x0000000000008f6c        0x0
+ .iplt          0x0000000000008f6c        0x0 ./objects/boot/interrupts.o
 
-.rel.dyn        0x0000000000008f14        0x0
- .rel.iplt      0x0000000000008f14        0x0 ./objects/boot/interrupts.o
+.text.RPi_CheckAndExitHypModeToSvcMode
+                0x0000000000008f6c       0x40
+ .text.RPi_CheckAndExitHypModeToSvcMode
+                0x0000000000008f6c       0x40 ./objects/boot/boot.o
 
-.data           0x0000000000008f14        0x8
+.rel.dyn        0x0000000000008fac        0x0
+ .rel.iplt      0x0000000000008fac        0x0 ./objects/boot/interrupts.o
+
+.data           0x0000000000008fac        0x8
  *(.data)
- .data          0x0000000000008f14        0x4 ./objects/boot/interrupts.o
-                0x0000000000008f14                irq_controller
- .data          0x0000000000008f18        0x0 ./objects/boot/cstartup.o
- .data          0x0000000000008f18        0x0 ./objects/Core/Libraries/string.o
- .data          0x0000000000008f18        0x4 ./objects/Hardware/time.o
-                0x0000000000008f18                system_timer
- .data          0x0000000000008f1c        0x0 ./objects/Fonts/font_info.o
- .data          0x0000000000008f1c        0x0 ./objects/Fonts/basic_font.o
- .data          0x0000000000008f1c        0x0 ./objects/boot/meta-data.o
- .data          0x0000000000008f1c        0x0 ./objects/boot/boot.o
- .data          0x0000000000008f1c        0x0 ./objects/jtag.o
- .data          0x0000000000008f1c        0x0 ./objects/Core/kernel_main.o
- .data          0x0000000000008f1c        0x0 ./objects/Hardware/Memory/memory_management.o
- .data          0x0000000000008f1c        0x0 ./objects/Hardware/Graphics/mailbox.o
+ .data          0x0000000000008fac        0x4 ./objects/boot/interrupts.o
+                0x0000000000008fac                irq_controller
+ .data          0x0000000000008fb0        0x0 ./objects/boot/cstartup.o
+ .data          0x0000000000008fb0        0x0 ./objects/Core/Libraries/string.o
+ .data          0x0000000000008fb0        0x4 ./objects/Hardware/time.o
+                0x0000000000008fb0                system_timer
+ .data          0x0000000000008fb4        0x0 ./objects/Fonts/font_info.o
+ .data          0x0000000000008fb4        0x0 ./objects/Fonts/basic_font.o
+ .data          0x0000000000008fb4        0x0 ./objects/boot/meta-data.o
+ .data          0x0000000000008fb4        0x0 ./objects/boot/boot.o
+ .data          0x0000000000008fb4        0x0 ./objects/jtag.o
+ .data          0x0000000000008fb4        0x0 ./objects/Core/kernel_main.o
+ .data          0x0000000000008fb4        0x0 ./objects/Hardware/Memory/memory_management.o
+ .data          0x0000000000008fb4        0x0 ./objects/Hardware/Graphics/mailbox.o
 
-.igot.plt       0x0000000000008f1c        0x0
- .igot.plt      0x0000000000008f1c        0x0 ./objects/boot/interrupts.o
+.igot.plt       0x0000000000008fb4        0x0
+ .igot.plt      0x0000000000008fb4        0x0 ./objects/boot/interrupts.o
 
-.bss            0x0000000000008f20       0xa8
-                0x0000000000008f20                . = ALIGN (0x4)
-                0x0000000000008f20                __bss_start__ = .
+.bss            0x0000000000008fc0       0xa8
+                0x0000000000008fc0                . = ALIGN (0x4)
+                0x0000000000008fc0                __bss_start__ = .
  *(.bss)
- .bss           0x0000000000008f20        0x0 ./objects/boot/interrupts.o
- .bss           0x0000000000008f20        0x0 ./objects/boot/cstartup.o
- .bss           0x0000000000008f20        0x8 ./objects/Core/Libraries/string.o
-                0x0000000000008f20                main_cursor
- .bss           0x0000000000008f28        0x0 ./objects/Hardware/time.o
- .bss           0x0000000000008f28        0x8 ./objects/Fonts/font_info.o
-                0x0000000000008f28                selected_font
-                0x0000000000008f2c                font_size
- .bss           0x0000000000008f30        0x0 ./objects/Fonts/basic_font.o
- .bss           0x0000000000008f30        0x0 ./objects/boot/meta-data.o
- .bss           0x0000000000008f30        0x0 ./objects/boot/boot.o
- .bss           0x0000000000008f30        0x0 ./objects/jtag.o
- .bss           0x0000000000008f30        0x0 ./objects/Core/kernel_main.o
- .bss           0x0000000000008f30       0x14 ./objects/Hardware/Memory/memory_management.o
-                0x0000000000008f30                heap_start
-                0x0000000000008f34                heap_end
-                0x0000000000008f38                stack_start
-                0x0000000000008f3c                stack_end
-                0x0000000000008f40                first_block
- *fill*         0x0000000000008f44        0xc 
- .bss           0x0000000000008f50       0x78 ./objects/Hardware/Graphics/mailbox.o
-                0x0000000000008f50                mailbox_message
-                0x0000000000008fa8                index
-                0x0000000000008fac                main_monitor
-                0x0000000000008fc8                . = ALIGN (0x4)
-                0x0000000000008fc8                __bss_end__ = .
+ .bss           0x0000000000008fc0        0x0 ./objects/boot/interrupts.o
+ .bss           0x0000000000008fc0        0x0 ./objects/boot/cstartup.o
+ .bss           0x0000000000008fc0        0x8 ./objects/Core/Libraries/string.o
+                0x0000000000008fc0                main_cursor
+ .bss           0x0000000000008fc8        0x0 ./objects/Hardware/time.o
+ .bss           0x0000000000008fc8        0x8 ./objects/Fonts/font_info.o
+                0x0000000000008fc8                selected_font
+                0x0000000000008fcc                font_size
+ .bss           0x0000000000008fd0        0x0 ./objects/Fonts/basic_font.o
+ .bss           0x0000000000008fd0        0x0 ./objects/boot/meta-data.o
+ .bss           0x0000000000008fd0        0x0 ./objects/boot/boot.o
+ .bss           0x0000000000008fd0        0x0 ./objects/jtag.o
+ .bss           0x0000000000008fd0        0x0 ./objects/Core/kernel_main.o
+ .bss           0x0000000000008fd0       0x14 ./objects/Hardware/Memory/memory_management.o
+                0x0000000000008fd0                heap_start
+                0x0000000000008fd4                heap_end
+                0x0000000000008fd8                stack_start
+                0x0000000000008fdc                stack_end
+                0x0000000000008fe0                first_block
+ *fill*         0x0000000000008fe4        0xc 
+ .bss           0x0000000000008ff0       0x78 ./objects/Hardware/Graphics/mailbox.o
+                0x0000000000008ff0                mailbox_message
+                0x0000000000009048                index
+                0x000000000000904c                main_monitor
+                0x0000000000009068                . = ALIGN (0x4)
+                0x0000000000009068                __bss_end__ = .
 
-.stack          0x0000000000008fc8     0x9800
-                0x0000000000008fc8                . = ALIGN (0x8)
-                0x0000000000008fc8                __stack_start__ = .
-                0x00000000000091c8                . = (. + 0x200)
- *fill*         0x0000000000008fc8      0x200 
-                0x00000000000091c8                __fiq_stack = .
-                0x000000000000d1c8                . = (. + 0x4000)
- *fill*         0x00000000000091c8     0x4000 
-                0x000000000000d1c8                __usrsys_stack = .
-                0x00000000000111c8                . = (. + 0x4000)
- *fill*         0x000000000000d1c8     0x4000 
-                0x00000000000111c8                __svc_stack = .
-                0x00000000000121c8                . = (. + 0x1000)
- *fill*         0x00000000000111c8     0x1000 
-                0x00000000000121c8                __irq_stack = .
-                0x00000000000123c8                . = (. + 0x200)
- *fill*         0x00000000000121c8      0x200 
-                0x00000000000123c8                __mon_stack = .
-                0x00000000000125c8                . = (. + 0x200)
- *fill*         0x00000000000123c8      0x200 
-                0x00000000000125c8                __hyp_stack = .
-                0x00000000000127c8                . = (. + 0x200)
- *fill*         0x00000000000125c8      0x200 
-                0x00000000000127c8                __und_stack = .
-                0x00000000000127c8                . = ALIGN (0x8)
-                0x00000000000127c8                __stack_end__ = .
+.stack          0x0000000000009068     0x9800
+                0x0000000000009068                . = ALIGN (0x8)
+                0x0000000000009068                __stack_start__ = .
+                0x0000000000009268                . = (. + 0x200)
+ *fill*         0x0000000000009068      0x200 
+                0x0000000000009268                __fiq_stack = .
+                0x000000000000d268                . = (. + 0x4000)
+ *fill*         0x0000000000009268     0x4000 
+                0x000000000000d268                __usrsys_stack = .
+                0x0000000000011268                . = (. + 0x4000)
+ *fill*         0x000000000000d268     0x4000 
+                0x0000000000011268                __svc_stack = .
+                0x0000000000012268                . = (. + 0x1000)
+ *fill*         0x0000000000011268     0x1000 
+                0x0000000000012268                __irq_stack = .
+                0x0000000000012468                . = (. + 0x200)
+ *fill*         0x0000000000012268      0x200 
+                0x0000000000012468                __mon_stack = .
+                0x0000000000012668                . = (. + 0x200)
+ *fill*         0x0000000000012468      0x200 
+                0x0000000000012668                __hyp_stack = .
+                0x0000000000012868                . = (. + 0x200)
+ *fill*         0x0000000000012668      0x200 
+                0x0000000000012868                __und_stack = .
+                0x0000000000012868                . = ALIGN (0x8)
+                0x0000000000012868                __stack_end__ = .
 
-.kernel_end     0x00000000000127c8        0x4
- *(.kernel_end)
- .kernel_end    0x00000000000127c8        0x4 ./objects/boot/meta-data.o
-                0x00000000000127c8                Kernel_End
+.Heap           0x0000000000012868        0x0
+                0x0000000000012868                . = ALIGN (0x4)
+                0x0000000000012868                kernel_end = .
 OUTPUT(build/kernel.elf elf32-littlearm)
 
 .comment        0x0000000000000000       0x7f
@@ -211,28 +210,32 @@ OUTPUT(build/kernel.elf elf32-littlearm)
  .comment       0x000000000000007f       0x80 ./objects/Hardware/Graphics/mailbox.o
 
 .ARM.attributes
-                0x0000000000000000       0x3d
+                0x0000000000000000       0x3e
  .ARM.attributes
-                0x0000000000000000       0x3f ./objects/boot/interrupts.o
+                0x0000000000000000       0x40 ./objects/boot/interrupts.o
  .ARM.attributes
-                0x000000000000003f       0x3f ./objects/boot/cstartup.o
+                0x0000000000000040       0x40 ./objects/boot/cstartup.o
  .ARM.attributes
-                0x000000000000007e       0x3f ./objects/Core/Libraries/string.o
+                0x0000000000000080       0x40 ./objects/Core/Libraries/string.o
  .ARM.attributes
-                0x00000000000000bd       0x3f ./objects/Hardware/time.o
+                0x00000000000000c0       0x40 ./objects/Hardware/time.o
  .ARM.attributes
-                0x00000000000000fc       0x3d ./objects/Fonts/font_info.o
+                0x0000000000000100       0x40 ./objects/Fonts/font_info.o
  .ARM.attributes
-                0x0000000000000139       0x3d ./objects/Fonts/basic_font.o
+                0x0000000000000140       0x40 ./objects/Fonts/basic_font.o
  .ARM.attributes
-                0x0000000000000176       0x29 ./objects/boot/meta-data.o
+                0x0000000000000180       0x2c ./objects/boot/meta-data.o
  .ARM.attributes
-                0x000000000000019f       0x29 ./objects/boot/boot.o
+                0x00000000000001ac       0x2c ./objects/boot/boot.o
  .ARM.attributes
-                0x00000000000001c8       0x29 ./objects/jtag.o
+                0x00000000000001d8       0x2c ./objects/jtag.o
  .ARM.attributes
-                0x00000000000001f1       0x3f ./objects/Core/kernel_main.o
+                0x0000000000000204       0x40 ./objects/Core/kernel_main.o
  .ARM.attributes
-                0x0000000000000230       0x3f ./objects/Hardware/Memory/memory_management.o
+                0x0000000000000244       0x40 ./objects/Hardware/Memory/memory_management.o
  .ARM.attributes
-                0x000000000000026f       0x3f ./objects/Hardware/Graphics/mailbox.o
+                0x0000000000000284       0x40 ./objects/Hardware/Graphics/mailbox.o
+
+.kernel_end     0x0000000000000000        0x4
+ .kernel_end    0x0000000000000000        0x4 ./objects/boot/meta-data.o
+                0x0000000000000000                Kernel_End
