@@ -53,16 +53,17 @@ extern "C" void kernel_main(void)
   init_display();
   init_print(10);
 
-  interrupt_enable_I();
+  /*interrupt_enable_I();
   enable_select_irq(32+1);
 
-  set_time_irq(10000000);
+  set_time_irq(10000000);*/
 
   print("Nobody knows how hard this \n!@#$\%^&*()_+ is!!!\n");
 
   print(main_monitor.fb_ptr & ~BUS_MASK);
   print("\n");
-  print((uint32_t) *(uint32_t*)0x20);
+ /* wait(15000000);
+  print((uint32_t) *(uint32_t*)0x20);*/
   print("\nWell, duck");
 
   while(1)

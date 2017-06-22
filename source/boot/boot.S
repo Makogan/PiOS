@@ -14,50 +14,67 @@
 .global _start
 
 _start:
-        ldr     sp, =0x8000 // initialize stack pointer
+// Based on the valvers tutorial
+_reset_:
+        ldr     r0, =_v_table
+        mov     r1, #0x0000
+        ldmia   r0!,{r2, r3, r4, r5, r6, r7, r8, r9}
+        stmia   r1!,{r2, r3, r4, r5, r6, r7, r8, r9}
+        ldmia   r0!,{r2, r3, r4, r5, r6, r7, r8, r9}
+        stmia   r1!,{r2, r3, r4, r5, r6, r7, r8, r9}
+
 /* CHANGES ADDED BY LdB */
         //ldr sp, =__usrsys_stack               ;@ This is just a safety if all hell breaks loose
+
+
+       // bl  RPi_CheckAndExitHypModeToSvcMode;   ;@ First check for HYP_MODE and if in it drop out to SRV_MODE
 
 ;@"================================================================"
 ;@ Now setup stack pointers for the different CPU operation modes.
 ;@"================================================================"
-        msr CPSR_c, #0xD1                  ;@ Switch to FIQ_MODE
-        ldr sp, =__fiq_stack               ;@ Set the stack pointer for that mode
-        msr CPSR_c, #0xD2                  ;@ Switch to IRQ_MODE
-        ldr sp, =__irq_stack               ;@ Set the stack pointer for that mode
-        msr CPSR_c, #0xD3                  ;@ Switch back to SRV_MODE
-        ldr sp, =__svc_stack               ;@ Set the stack pointer for that mode
+        ldr     sp, =0x8000 // initialize stack pointer
+        mov     r0, #1
+        bl      set_LED
 
-        bl  RPi_CheckAndExitHypModeToSvcMode;   ;@ First check for HYP_MODE and if in it drop out to SRV_MODE
+        msr CPSR_c, #0xD1                  ;@ Switch to FIQ_MODE
+        mov sp, #0x7000               ;@ Set the stack pointer for that mode to 0x7000
+        msr CPSR_c, #0xD2                  ;@ Switch to IRQ_MODE
+        mov sp, #0x6000               ;@ Set the stack pointer for that mode to 0x6000
+        msr CPSR_c, #0xD3                  ;@ Switch back to SRV_MODE
+        mov sp, #0x5000               ;@ Set the stack pointer for that mode to 0x5000
+       // ldr sp, =0x8000
+
+        mov r0, #0
+        bl set_LED 
 
 @"================================================================"
 ;@ PI NSACR regsister setup for access to floating point unit
 ;@ Cortex A-7 => Section 4.3.34. Non-Secure Access Control Register
 ;@ Cortex A-53 => Section 4.5.32. Non-Secure Access Control Register
 ;@"================================================================"
-   mrc p15, 0, r0, c1, c1, 2            ;@ Read NSACR into R0
+ /*  mrc p15, 0, r0, c1, c1, 2            ;@ Read NSACR into R0
    cmp r0, #0x00000C00                  ;@ Access turned on or in AARCH32 mode and can not touch register or EL3 fault
    beq .free_to_enable_fpu
    orr r0, r0, #0x3<<10               ;@ Set access to both secure and non secure modes
-   mcr p15, 0, r0, c1, c1, 2            ;@ Write NSACR
+   mcr p15, 0, r0, c1, c1, 2            ;@ Write NSACR*/
 ;@"================================================================"
 ;@ Bring fpu online
 ;@"================================================================"
-.free_to_enable_fpu:
+/*.free_to_enable_fpu:
    mrc p15, 0, r0, c1, c0, #2            ;@ R0 = Access Control Register
    orr r0, #(0x300000 + 0xC00000)         ;@ Enable Single & Double Precision
    mcr p15,0,r0,c1,c0, #2               ;@ Access Control Register = R0
    mov r0, #0x40000000                  ;@ R0 = Enable VFP
-   vmsr fpexc, r0                     ;@ FPEXC = R0
+   vmsr fpexc, r0                     ;@ FPEXC = R0*/
  ;@"================================================================"
 ;@ Enable L1 cache
 ;@"================================================================"
-    mrc p15,0,r0,c1,c0,0               ;@ R0 = System Control Register
+    //mrc p15,0,r0,c1,c0,0               ;@ R0 = System Control Register
 
 /*==========================================================================}
 ;{           RASPBERRY PI LEVEL L1 CACHE CONSTANTS DEFINED                }
 ;{=========================================================================*/
-#define SCTLR_ENABLE_DATA_CACHE         0x4
+/*#define SCTLR_ENABLE_DATA_CACHE         0x4
 #define SCTLR_ENABLE_BRANCH_PREDICTION   0x800
 #define SCTLR_ENABLE_INSTRUCTION_CACHE  0x1000
 
@@ -66,21 +83,13 @@ _start:
     orr r0, #SCTLR_ENABLE_DATA_CACHE
     orr r0, #SCTLR_ENABLE_INSTRUCTION_CACHE
 
-    mcr p15,0,r0,c1,c0,0               ;@ System Control Register = R0
+    mcr p15,0,r0,c1,c0,0               ;@ System Control Register = R0*/
 
  /* END OF CHANGES ADDED BY LdB */
-
-_reset_:
-        ldr     r0, =_v_table
-        mov     r1, #0x0000
-        ldmia   r0!,{r2, r3, r4, r5, r6, r7, r8, r9}
-        stmia   r1!,{r2, r3, r4, r5, r6, r7, r8, r9}
-        ldmia   r0!,{r2, r3, r4, r5, r6, r7, r8, r9}
-        stmia   r1!,{r2, r3, r4, r5, r6, r7, r8, r9}
     
     b       _cstartup
 
-
+//Based on the valvers tutorial
  _v_table:
         ldr     pc, _reset_h
         ldr     pc, _undefined_instruction_vector_h

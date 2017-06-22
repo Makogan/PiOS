@@ -17,11 +17,13 @@
 #define BIT(val, bit) val & (1 << bit)
 
 Cursor main_cursor;
+      uint32_t *tempBuffer;//[10*10*CHAR_BITS*CHAR_BITS];
 
 void init_print(uint32_t f_size)
 {
   font_size = f_size;
   selected_font = &basic_font[0];
+  tempBuffer = (uint32_t*) memory_alloc(font_size*font_size*CHAR_BITS*CHAR_BITS);
 }
 
 void init_char_image(const char* charMap, uint32_t size, uint32_t* drawnChar)
@@ -115,7 +117,6 @@ void print(char* string)
     
     else
     {
-      uint32_t tempBuffer[font_size*font_size*CHAR_BITS*CHAR_BITS];
       const char *currentChar = (selected_font[(uint32_t)string[i]]);
       init_char_image(currentChar, size, tempBuffer);
       drawChar(tempBuffer, size, x, y);

@@ -113,7 +113,7 @@ void set_LED(int value)
 
   mailbox_message[0] = index*sizeof(uint32_t);
 
-  write_to_mailbox(((uint32_t) &mailbox_message), PTAG_ARM_TO_VC);
+  write_to_mailbox(((uint32_t) &mailbox_message | BUS_MASK), PTAG_ARM_TO_VC);
   read_from_mailbox(PTAG_ARM_TO_VC);
 }
 
