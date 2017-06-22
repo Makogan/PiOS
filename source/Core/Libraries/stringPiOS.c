@@ -12,7 +12,7 @@
 
 //TODO: documentation
 
-#include <string.h>
+#include <stringPiOS.h>
 
 #define BIT(val, bit) val & (1 << bit)
 

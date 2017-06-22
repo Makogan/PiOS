@@ -3,7 +3,7 @@
 
 #include "mailbox.h"
 #include "stdint.h"
-#include "string.h"
+#include "stringPiOS.h"
 
 #ifdef __cpluplus
     extern "C"{

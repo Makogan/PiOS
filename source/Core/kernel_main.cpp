@@ -19,7 +19,7 @@
 #include <stdint.h>
 #include "mailbox.h"
 #include "peripherals.h"
-#include "string.h"
+#include "stringPiOS.h"
 #include "timePiOS.h"
 #include "memory_management.h"
 #include "interrupts.h"

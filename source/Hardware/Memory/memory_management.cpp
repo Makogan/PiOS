@@ -1,5 +1,4 @@
 #include <memory_management.h>
-#include <string.h>
 
 #define LAST_ADDRESS 0x30000000
 #define NULL nullptr

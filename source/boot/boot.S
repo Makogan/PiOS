@@ -52,29 +52,29 @@ _reset_:
 ;@ Cortex A-7 => Section 4.3.34. Non-Secure Access Control Register
 ;@ Cortex A-53 => Section 4.5.32. Non-Secure Access Control Register
 ;@"================================================================"
- /*  mrc p15, 0, r0, c1, c1, 2            ;@ Read NSACR into R0
+   mrc p15, 0, r0, c1, c1, 2            ;@ Read NSACR into R0
    cmp r0, #0x00000C00                  ;@ Access turned on or in AARCH32 mode and can not touch register or EL3 fault
    beq .free_to_enable_fpu
    orr r0, r0, #0x3<<10               ;@ Set access to both secure and non secure modes
-   mcr p15, 0, r0, c1, c1, 2            ;@ Write NSACR*/
+   mcr p15, 0, r0, c1, c1, 2            ;@ Write NSACR
 ;@"================================================================"
 ;@ Bring fpu online
 ;@"================================================================"
-/*.free_to_enable_fpu:
+.free_to_enable_fpu:
    mrc p15, 0, r0, c1, c0, #2            ;@ R0 = Access Control Register
    orr r0, #(0x300000 + 0xC00000)         ;@ Enable Single & Double Precision
    mcr p15,0,r0,c1,c0, #2               ;@ Access Control Register = R0
    mov r0, #0x40000000                  ;@ R0 = Enable VFP
-   vmsr fpexc, r0                     ;@ FPEXC = R0*/
+   vmsr fpexc, r0                     ;@ FPEXC = R0
  ;@"================================================================"
 ;@ Enable L1 cache
 ;@"================================================================"
-    //mrc p15,0,r0,c1,c0,0               ;@ R0 = System Control Register
+    mrc p15,0,r0,c1,c0,0               ;@ R0 = System Control Register
 
 /*==========================================================================}
 ;{           RASPBERRY PI LEVEL L1 CACHE CONSTANTS DEFINED                }
 ;{=========================================================================*/
-/*#define SCTLR_ENABLE_DATA_CACHE         0x4
+#define SCTLR_ENABLE_DATA_CACHE         0x4
 #define SCTLR_ENABLE_BRANCH_PREDICTION   0x800
 #define SCTLR_ENABLE_INSTRUCTION_CACHE  0x1000
 
@@ -83,7 +83,7 @@ _reset_:
     orr r0, #SCTLR_ENABLE_DATA_CACHE
     orr r0, #SCTLR_ENABLE_INSTRUCTION_CACHE
 
-    mcr p15,0,r0,c1,c0,0               ;@ System Control Register = R0*/
+    mcr p15,0,r0,c1,c0,0               ;@ System Control Register = R0
 
  /* END OF CHANGES ADDED BY LdB */
     
