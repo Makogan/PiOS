@@ -51,6 +51,8 @@ extern char *char_buffer;
 extern "C" void kernel_main(void)
 {
   init_display();
+
+  while(1){}
   init_print(10);
 
   /*interrupt_enable_I();

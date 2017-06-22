@@ -114,9 +114,10 @@ SECTIONS
         *(.shstrtab .shstrtab.*)
 
         /* remove any standard library hang over bits */
-      /*  libc.a ( * )*/
-       /* libm.a ( * )*/
-        /*libgcc.a ( * )*/
+        /*ihaveneverexisted.a
+        libc.a ( * )
+        libm.a ( * )
+        libgcc.a ( * )*/
         *(.note.GNU-stack)
         *(.gnu_debuglink) 
         *(.gnu.lto_*)

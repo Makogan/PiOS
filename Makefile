@@ -13,7 +13,7 @@ CROSS_COMPILER = arm-none-eabi
 ARCH = -mcpu=cortex-a53 -mfloat-abi=hard -mfpu=crypto-neon-fp-armv8
 OPT_LEVEL = O2
 
-CFLAGS = -Wall -nostdlib -nostartfiles -nodefaultlibs -fno-exceptions -static -c -o 
+CFLAGS = -Wall -nostdlib -nostartfiles -nodefaultlibs -lm -lc -fno-exceptions -L/usr/arm-none-eabi/lib/hard/libc.a -static -c -o 
 LINKER_FLAGS = --gc-sections --print-gc-sections -M
 # Find all directories under the current one
 

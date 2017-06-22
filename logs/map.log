@@ -53,7 +53,7 @@ LOAD ./objects/Core/kernel_main.o
 LOAD ./objects/Hardware/Memory/memory_management.o
 LOAD ./objects/Hardware/Graphics/mailbox.o
 
-.text           0x0000000000008000      0xaa0
+.text           0x0000000000008000      0xa5c
                 0x0000000000008000                . = ALIGN (0x4)
                 0x0000000000008000                __text_start__ = .
                 0x0000000000008000                _start = .
@@ -92,137 +92,135 @@ LOAD ./objects/Hardware/Graphics/mailbox.o
                 0x00000000000085b8                wait
  .text.RPi_CheckAndExitHypModeToSvcMode
                 0x0000000000008624       0x40 ./objects/boot/boot.o
- .text          0x0000000000008664       0x50 ./objects/Core/kernel_main.o
+ .text          0x0000000000008664        0xc ./objects/Core/kernel_main.o
                 0x0000000000008664                kernel_main
- .text          0x00000000000086b4      0x188 ./objects/Hardware/Memory/memory_management.o
-                0x00000000000086b4                init_memory_manager
-                0x0000000000008704                increment_heap(unsigned long)
-                0x000000000000872c                memory_alloc
-                0x00000000000087d8                memory_re_alloc
-                0x00000000000087f8                memory_calloc
-                0x0000000000008830                memory_free
- .text          0x000000000000883c      0x264 ./objects/Hardware/Graphics/mailbox.o
-                0x000000000000883c                write_to_mailbox(unsigned long, Channel)
-                0x0000000000008860                read_from_mailbox
-                0x000000000000888c                set_LED
-                0x000000000000891c                blink
-                0x0000000000008944                set_init_display_message(Display_info*)
-                0x00000000000089fc                init_display
+ .text          0x0000000000008670      0x188 ./objects/Hardware/Memory/memory_management.o
+                0x0000000000008670                init_memory_manager
+                0x00000000000086c0                increment_heap(unsigned long)
+                0x00000000000086e8                memory_alloc
+                0x0000000000008794                memory_re_alloc
+                0x00000000000087b4                memory_calloc
+                0x00000000000087ec                memory_free
+ .text          0x00000000000087f8      0x264 ./objects/Hardware/Graphics/mailbox.o
+                0x00000000000087f8                write_to_mailbox(unsigned long, Channel)
+                0x000000000000881c                read_from_mailbox
+                0x0000000000008848                set_LED
+                0x00000000000088d8                blink
+                0x0000000000008900                set_init_display_message(Display_info*)
+                0x00000000000089b8                init_display
  *(.rel.text .rel.text.* .rel.gnu.linkonce.t.*)
  *(.init .init.*)
-                0x0000000000008aa0                . = ALIGN (0x4)
-                0x0000000000008aa0                __text_end__ = .
+                0x0000000000008a5c                . = ALIGN (0x4)
+                0x0000000000008a5c                __text_end__ = .
 
-.glue_7         0x0000000000008aa0        0x0
- .glue_7        0x0000000000008aa0        0x0 linker stubs
+.glue_7         0x0000000000008a5c        0x0
+ .glue_7        0x0000000000008a5c        0x0 linker stubs
 
-.glue_7t        0x0000000000008aa0        0x0
- .glue_7t       0x0000000000008aa0        0x0 linker stubs
+.glue_7t        0x0000000000008a5c        0x0
+ .glue_7t       0x0000000000008a5c        0x0 linker stubs
 
-.vfp11_veneer   0x0000000000008aa0        0x0
- .vfp11_veneer  0x0000000000008aa0        0x0 linker stubs
+.vfp11_veneer   0x0000000000008a5c        0x0
+ .vfp11_veneer  0x0000000000008a5c        0x0 linker stubs
 
-.v4_bx          0x0000000000008aa0        0x0
- .v4_bx         0x0000000000008aa0        0x0 linker stubs
+.v4_bx          0x0000000000008a5c        0x0
+ .v4_bx         0x0000000000008a5c        0x0 linker stubs
 
-.iplt           0x0000000000008aa0        0x0
- .iplt          0x0000000000008aa0        0x0 ./objects/boot/interrupts.o
+.iplt           0x0000000000008a5c        0x0
+ .iplt          0x0000000000008a5c        0x0 ./objects/boot/interrupts.o
 
-.bss            0x0000000000008aa0       0xa8
-                0x0000000000008aa0                . = ALIGN (0x4)
-                0x0000000000008aa0                __bss_start__ = .
+.bss            0x0000000000008a60       0xa8
+                0x0000000000008a60                . = ALIGN (0x4)
+                0x0000000000008a60                __bss_start__ = .
  *(.bss .bss.* .gnu.linkonce.b.*)
- .bss           0x0000000000008aa0        0xc ./objects/Core/Libraries/stringPiOS.o
-                0x0000000000008aa0                tempBuffer
-                0x0000000000008aa4                main_cursor
- .bss           0x0000000000008aac        0x8 ./objects/Fonts/font_info.o
-                0x0000000000008aac                selected_font
-                0x0000000000008ab0                font_size
- .bss           0x0000000000008ab4       0x14 ./objects/Hardware/Memory/memory_management.o
-                0x0000000000008ab4                heap_start
-                0x0000000000008ab8                heap_end
-                0x0000000000008abc                stack_start
-                0x0000000000008ac0                stack_end
-                0x0000000000008ac4                first_block
- *fill*         0x0000000000008ac8        0x8 
- .bss           0x0000000000008ad0       0x78 ./objects/Hardware/Graphics/mailbox.o
-                0x0000000000008ad0                mailbox_message
-                0x0000000000008b28                index
-                0x0000000000008b2c                main_monitor
+ .bss           0x0000000000008a60        0xc ./objects/Core/Libraries/stringPiOS.o
+                0x0000000000008a60                tempBuffer
+                0x0000000000008a64                main_cursor
+ .bss           0x0000000000008a6c        0x8 ./objects/Fonts/font_info.o
+                0x0000000000008a6c                selected_font
+                0x0000000000008a70                font_size
+ .bss           0x0000000000008a74       0x14 ./objects/Hardware/Memory/memory_management.o
+                0x0000000000008a74                heap_start
+                0x0000000000008a78                heap_end
+                0x0000000000008a7c                stack_start
+                0x0000000000008a80                stack_end
+                0x0000000000008a84                first_block
+ *fill*         0x0000000000008a88        0x8 
+ .bss           0x0000000000008a90       0x78 ./objects/Hardware/Graphics/mailbox.o
+                0x0000000000008a90                mailbox_message
+                0x0000000000008ae8                index
+                0x0000000000008aec                main_monitor
  *(.rela.bss .rela.bss.* .rela.gnu.linkonce.b.*)
  *(COMMON)
-                0x0000000000008b48                . = ALIGN (0x4)
-                0x0000000000008b48                __bss_end__ = .
+                0x0000000000008b08                . = ALIGN (0x4)
+                0x0000000000008b08                __bss_end__ = .
 
-.rodata         0x0000000000008b48      0x46c
-                0x0000000000008b48                . = ALIGN (0x4)
-                0x0000000000008b48                __rodata_start__ = .
+.rodata         0x0000000000008b08      0x42c
+                0x0000000000008b08                . = ALIGN (0x4)
+                0x0000000000008b08                __rodata_start__ = .
  *(.rodata .rodata.*)
  .rodata.str1.4
-                0x0000000000008b48        0xe ./objects/boot/interrupts.o
- *fill*         0x0000000000008b56        0x2 
- .rodata        0x0000000000008b58      0x400 ./objects/Fonts/basic_font.o
-                0x0000000000008b58                basic_font
- .rodata.str1.4
-                0x0000000000008f58       0x40 ./objects/Core/kernel_main.o
- .rodata        0x0000000000008f98       0x1c ./objects/Hardware/Graphics/mailbox.o
+                0x0000000000008b08       0x10 ./objects/boot/interrupts.o
+                                          0xe (size before relaxing)
+ .rodata        0x0000000000008b18      0x400 ./objects/Fonts/basic_font.o
+                0x0000000000008b18                basic_font
+ .rodata        0x0000000000008f18       0x1c ./objects/Hardware/Graphics/mailbox.o
  *(.rel.rodata .rel.rodata.* .rel.gnu.linkonce.r.*)
-                0x0000000000008fb4                . = ALIGN (0x4)
-                0x0000000000008fb4                __rodata_end__ = .
+                0x0000000000008f34                . = ALIGN (0x4)
+                0x0000000000008f34                __rodata_end__ = .
 
-.rel.dyn        0x0000000000008fb4        0x0
- .rel.iplt      0x0000000000008fb4        0x0 ./objects/boot/interrupts.o
+.rel.dyn        0x0000000000008f34        0x0
+ .rel.iplt      0x0000000000008f34        0x0 ./objects/boot/interrupts.o
 
-.data           0x0000000000008fb4        0x8
-                0x0000000000008fb4                . = ALIGN (0x4)
-                0x0000000000008fb4                __data_start__ = .
+.data           0x0000000000008f34        0x8
+                0x0000000000008f34                . = ALIGN (0x4)
+                0x0000000000008f34                __data_start__ = .
  *(.data .data.* .gnu.linkonce.d.*)
- .data          0x0000000000008fb4        0x4 ./objects/boot/interrupts.o
-                0x0000000000008fb4                irq_controller
- .data          0x0000000000008fb8        0x4 ./objects/Hardware/timePiOS.o
-                0x0000000000008fb8                system_timer
+ .data          0x0000000000008f34        0x4 ./objects/boot/interrupts.o
+                0x0000000000008f34                irq_controller
+ .data          0x0000000000008f38        0x4 ./objects/Hardware/timePiOS.o
+                0x0000000000008f38                system_timer
  *(.rel.data .rel.data.* .rel.gnu.linkonce.d.*)
-                0x0000000000008fbc                . = ALIGN (0x4)
-                0x0000000000008fbc                __data_end__ = .
+                0x0000000000008f3c                . = ALIGN (0x4)
+                0x0000000000008f3c                __data_end__ = .
 
-.igot.plt       0x0000000000008fbc        0x0
- .igot.plt      0x0000000000008fbc        0x0 ./objects/boot/interrupts.o
+.igot.plt       0x0000000000008f3c        0x0
+ .igot.plt      0x0000000000008f3c        0x0 ./objects/boot/interrupts.o
 
-.data1          0x0000000000008fbc        0x4
-                0x0000000000008fc0                . = ALIGN (0x10)
- *fill*         0x0000000000008fbc        0x4 
-                0x0000000000008fc0                __data1_start__ = .
+.data1          0x0000000000008f3c        0x4
+                0x0000000000008f40                . = ALIGN (0x10)
+ *fill*         0x0000000000008f3c        0x4 
+                0x0000000000008f40                __data1_start__ = .
  *(.data1 .data1.*)
  *(.rel.data1 .rel.data1.*)
-                0x0000000000008fc0                . = ALIGN (0x10)
-                0x0000000000008fc0                __data1_end__ = .
+                0x0000000000008f40                . = ALIGN (0x10)
+                0x0000000000008f40                __data1_end__ = .
 
-.stack          0x0000000000008fc0     0x9800
-                0x0000000000008fc0                . = ALIGN (0x8)
-                0x0000000000008fc0                __stack_start__ = .
-                0x00000000000091c0                . = (. + 0x200)
- *fill*         0x0000000000008fc0      0x200 
-                0x00000000000091c0                __fiq_stack = .
-                0x000000000000d1c0                . = (. + 0x4000)
- *fill*         0x00000000000091c0     0x4000 
-                0x000000000000d1c0                __usrsys_stack = .
-                0x00000000000111c0                . = (. + 0x4000)
- *fill*         0x000000000000d1c0     0x4000 
-                0x00000000000111c0                __svc_stack = .
-                0x00000000000121c0                . = (. + 0x1000)
- *fill*         0x00000000000111c0     0x1000 
-                0x00000000000121c0                __irq_stack = .
-                0x00000000000123c0                . = (. + 0x200)
- *fill*         0x00000000000121c0      0x200 
-                0x00000000000123c0                __mon_stack = .
-                0x00000000000125c0                . = (. + 0x200)
- *fill*         0x00000000000123c0      0x200 
-                0x00000000000125c0                __hyp_stack = .
-                0x00000000000127c0                . = (. + 0x200)
- *fill*         0x00000000000125c0      0x200 
-                0x00000000000127c0                __und_stack = .
-                0x00000000000127c0                . = ALIGN (0x8)
-                0x00000000000127c0                __stack_end__ = .
+.stack          0x0000000000008f40     0x9800
+                0x0000000000008f40                . = ALIGN (0x8)
+                0x0000000000008f40                __stack_start__ = .
+                0x0000000000009140                . = (. + 0x200)
+ *fill*         0x0000000000008f40      0x200 
+                0x0000000000009140                __fiq_stack = .
+                0x000000000000d140                . = (. + 0x4000)
+ *fill*         0x0000000000009140     0x4000 
+                0x000000000000d140                __usrsys_stack = .
+                0x0000000000011140                . = (. + 0x4000)
+ *fill*         0x000000000000d140     0x4000 
+                0x0000000000011140                __svc_stack = .
+                0x0000000000012140                . = (. + 0x1000)
+ *fill*         0x0000000000011140     0x1000 
+                0x0000000000012140                __irq_stack = .
+                0x0000000000012340                . = (. + 0x200)
+ *fill*         0x0000000000012140      0x200 
+                0x0000000000012340                __mon_stack = .
+                0x0000000000012540                . = (. + 0x200)
+ *fill*         0x0000000000012340      0x200 
+                0x0000000000012540                __hyp_stack = .
+                0x0000000000012740                . = (. + 0x200)
+ *fill*         0x0000000000012540      0x200 
+                0x0000000000012740                __und_stack = .
+                0x0000000000012740                . = ALIGN (0x8)
+                0x0000000000012740                __stack_end__ = .
 
 .ARM.attributes
                 0x0000000000000000       0x3e
@@ -248,9 +246,9 @@ LOAD ./objects/Hardware/Graphics/mailbox.o
  .ARM.attributes
                 0x000000000000022c       0x40 ./objects/Hardware/Graphics/mailbox.o
 
-.Heap           0x00000000000127c0        0x0
-                0x00000000000127c0                . = ALIGN (0x4)
-                0x00000000000127c0                Kernel_End = .
+.Heap           0x0000000000012740        0x0
+                0x0000000000012740                . = ALIGN (0x4)
+                0x0000000000012740                Kernel_End = .
                 [!provide]                        PROVIDE (end, .)
 
 /DISCARD/
