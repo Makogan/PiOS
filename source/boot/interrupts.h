@@ -1,9 +1,9 @@
 #ifndef INTERRUPTS_H
 #define INTERRUPTS_H
 
-#include <mailbox.h>
-#include <stdint.h>
-#include <string.h>
+#include "mailbox.h"
+#include "stdint.h"
+#include "string.h"
 
 #ifdef __cpluplus
     extern "C"{

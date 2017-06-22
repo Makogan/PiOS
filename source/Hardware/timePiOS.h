@@ -15,7 +15,7 @@
 #define TIME_H
 
 #include <stdint.h>
-#include <peripherals.h>
+#include "peripherals.h"
 
 #ifdef __cplusplus
 extern "C"

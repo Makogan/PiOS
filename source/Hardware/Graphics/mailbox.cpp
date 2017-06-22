@@ -16,7 +16,7 @@
 */
 //========================================================================================
 
-#include <mailbox.h>
+#include "mailbox.h"
 
 #define MAIL_FULL 0x80000000  // 32 bit value, MSB is 1, used to check state of MSB
                               // (full bit in the mailbox status register)

@@ -15,9 +15,9 @@
 #define STRING_H
 
 #include <stdint.h>
-#include <mailbox.h>
-#include <fonts.h>
-#include <memory_management.h>
+#include "mailbox.h"
+#include "fonts.h"
+#include "memory_management.h"
 
 typedef struct
 {

@@ -12,7 +12,7 @@
 
 //TODO: documentation
 
-#include <time.h>
+#include "timePiOS.h"
 
 typedef struct
 {
