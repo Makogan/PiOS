@@ -90,7 +90,7 @@ SECTIONS
 .Heap :
     {
      . = ALIGN(4);
-     _end = .; PROVIDE (end = .); /* Any memory from here is free to use so this is end of code and start of heap */
+     Kernel_End = .; PROVIDE (end = .); /* Any memory from here is free to use so this is end of code and start of heap */
     } > RAM
 
     /* Remove information from the standard libraries */
@@ -114,9 +114,9 @@ SECTIONS
         *(.shstrtab .shstrtab.*)
 
         /* remove any standard library hang over bits */
-        libc.a ( * )
-        libm.a ( * )
-        libgcc.a ( * )
+      /*  libc.a ( * )*/
+       /* libm.a ( * )*/
+        /*libgcc.a ( * )*/
         *(.note.GNU-stack)
         *(.gnu_debuglink) 
         *(.gnu.lto_*)
