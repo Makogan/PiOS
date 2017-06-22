@@ -14,38 +14,18 @@
 .global _start
 
 _start:
-// Based on the valvers tutorial
-_reset_:
-        ldr     r0, =_v_table
-        mov     r1, #0x0000
-        ldmia   r0!,{r2, r3, r4, r5, r6, r7, r8, r9}
-        stmia   r1!,{r2, r3, r4, r5, r6, r7, r8, r9}
-        ldmia   r0!,{r2, r3, r4, r5, r6, r7, r8, r9}
-        stmia   r1!,{r2, r3, r4, r5, r6, r7, r8, r9}
-
-/* CHANGES ADDED BY LdB */
-        //ldr sp, =__usrsys_stack               ;@ This is just a safety if all hell breaks loose
-
-
-       // bl  RPi_CheckAndExitHypModeToSvcMode;   ;@ First check for HYP_MODE and if in it drop out to SRV_MODE
+        mov     sp, #0x8000 // initialize stack pointer
+        bl  RPi_CheckAndExitHypModeToSvcMode;   ;@ First check for HYP_MODE and if in it drop out to SRV_MODE
 
 ;@"================================================================"
 ;@ Now setup stack pointers for the different CPU operation modes.
 ;@"================================================================"
-        ldr     sp, =0x8000 // initialize stack pointer
-        mov     r0, #1
-        bl      set_LED
-
         msr CPSR_c, #0xD1                  ;@ Switch to FIQ_MODE
-        mov sp, #0x7000               ;@ Set the stack pointer for that mode to 0x7000
+        mov sp, #0x7000               ;@ Set the stack pointer for that mode
         msr CPSR_c, #0xD2                  ;@ Switch to IRQ_MODE
-        mov sp, #0x6000               ;@ Set the stack pointer for that mode to 0x6000
+        mov sp, #0x6000               ;@ Set the stack pointer for that mode
         msr CPSR_c, #0xD3                  ;@ Switch back to SRV_MODE
-        mov sp, #0x5000               ;@ Set the stack pointer for that mode to 0x5000
-       // ldr sp, =0x8000
-
-        mov r0, #0
-        bl set_LED 
+        mov sp, #0x5000               ;@ Set the stack pointer for that mode
 
 @"================================================================"
 ;@ PI NSACR regsister setup for access to floating point unit
@@ -85,11 +65,36 @@ _reset_:
 
     mcr p15,0,r0,c1,c0,0               ;@ System Control Register = R0
 
+
  /* END OF CHANGES ADDED BY LdB */
-    
+ ;@"================================================================"
+;@  We are getting close to handing over to C so we need to copy the 
+;@  ISR table to position 0x0000 so interrupts can be used if wanted 
+;@"================================================================"
+_reset_:
+        ldr     r0, =_v_table
+        mov     r1, #0x0000
+        ldmia   r0!,{r2, r3, r4, r5, r6, r7, r8, r9}
+        stmia   r1!,{r2, r3, r4, r5, r6, r7, r8, r9}
+        ldmia   r0!,{r2, r3, r4, r5, r6, r7, r8, r9}
+        stmia   r1!,{r2, r3, r4, r5, r6, r7, r8, r9}
+ ;@"================================================================"
+;@ Now Clear the .BSS segment as the C compiler expects us to do
+;@"================================================================"
+   ldr   r0, =__bss_start__
+   ldr   r1, =__bss_end__   
+   mov   r2, #0
+.clear_bss:
+    cmp   r0, r1
+    bge   .clear_bss_exit
+    str   r2, [r0]
+   add   r0, r0, #4
+    b .clear_bss
+.clear_bss_exit:  
+
     b       _cstartup
 
-//Based on the valvers tutorial
+
  _v_table:
         ldr     pc, _reset_h
         ldr     pc, _undefined_instruction_vector_h
