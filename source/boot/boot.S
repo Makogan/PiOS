@@ -10,7 +10,11 @@
 */
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.section .init
+.section ".text.startup", "ax", %progbits
+.balign   4
+.globl _start
+.syntax unified
+.arm
 .global _start
 
 _start:
@@ -93,7 +97,8 @@ _reset_:
 .clear_bss_exit:  
 
     b       _cstartup
-
+.balign   4
+.ltorg                           ;@ Tell assembler ltorg data for this code can go here
 
  _v_table:
         ldr     pc, _reset_h
