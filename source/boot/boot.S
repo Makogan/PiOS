@@ -24,10 +24,8 @@ _reset_:
         stmia   r1!,{r2, r3, r4, r5, r6, r7, r8, r9}
 
 /* CHANGES ADDED BY LdB */
-        //ldr sp, =__usrsys_stack               ;@ This is just a safety if all hell breaks loose
 
-
-       // bl  RPi_CheckAndExitHypModeToSvcMode;   ;@ First check for HYP_MODE and if in it drop out to SRV_MODE
+        bl  RPi_CheckAndExitHypModeToSvcMode;   ;@ First check for HYP_MODE and if in it drop out to SRV_MODE
 
 ;@"================================================================"
 ;@ Now setup stack pointers for the different CPU operation modes.
@@ -37,12 +35,11 @@ _reset_:
         bl      set_LED
 
         msr CPSR_c, #0xD1                  ;@ Switch to FIQ_MODE
-        mov sp, #0x7000               ;@ Set the stack pointer for that mode to 0x7000
+        ldr sp, =__fiq_stack               ;@ Set the stack pointer for that mode to 0x7000
         msr CPSR_c, #0xD2                  ;@ Switch to IRQ_MODE
-        mov sp, #0x6000               ;@ Set the stack pointer for that mode to 0x6000
+        ldr sp, =__irq_stack               ;@ Set the stack pointer for that mode to 0x6000
         msr CPSR_c, #0xD3                  ;@ Switch back to SRV_MODE
-        mov sp, #0x5000               ;@ Set the stack pointer for that mode to 0x5000
-       // ldr sp, =0x8000
+        ldr sp, =__svc_stack               ;@ Set the stack pointer for that mode to 0x5000
 
         mov r0, #0
         bl set_LED 
@@ -138,7 +135,6 @@ RPi_CheckAndExitHypModeToSvcMode:
    orr r0, r0, #0x100                  ;@ Set data abort mask    
    msr spsr_cxsf, r0                  ;@ Load our request into return status register
    mov r0, #1;                        ;@ return true
-   bx lr
    /* I borrowed this trick from Ultibo because ARM6 code running on an ARM7/8 needs this opcode  */
    /* The ARM6 compiler does not know these instructions so it is a way to get needed opcode here */
     /* So our ARM6 code can drop an arm7 or arm8 out of HYP mode and run on an ARM7/8.             */
