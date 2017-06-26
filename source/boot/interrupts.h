@@ -4,6 +4,7 @@
 #include <mailbox.h>
 #include <stdint.h>
 #include <string.h>
+#include <time.h>
 
 #ifdef __cpluplus
     extern "C"{

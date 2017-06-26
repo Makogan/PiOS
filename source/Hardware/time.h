@@ -17,6 +17,19 @@
 #include <stdint.h>
 #include <peripherals.h>
 
+typedef struct
+{
+  uint32_t control_status;
+  uint32_t counter_low;
+  uint32_t counter_high;
+  uint32_t compare_0;
+  uint32_t compare_1;
+  uint32_t compare_2;
+  uint32_t compare_3;
+}system_timer_t;
+
+extern volatile system_timer_t *system_timer;
+
 #ifdef __cplusplus
 extern "C"
 {

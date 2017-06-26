@@ -103,7 +103,7 @@ void print(char* string)
   uint32_t size = font_size;
   for(uint32_t i=0; string[i] != '\0'; i++)
   { 
-    if(x >= main_monitor.virtual_width/(size*CHAR_BITS))
+    if((x) >= (main_monitor.virtual_width/(size*CHAR_BITS)))
     {
       x = 0;
       y++;
@@ -122,8 +122,11 @@ void print(char* string)
       drawChar(tempBuffer, size, x, y);
       x++;
     }
+
+    if(y >= main_monitor.virtual_height/(size*CHAR_BITS))
+      y = 0;
   }
 
   main_cursor.x = x;
-  main_cursor.y = (y)%(main_monitor.virtual_height/(size*CHAR_BITS));
+  main_cursor.y = y;
 } 
