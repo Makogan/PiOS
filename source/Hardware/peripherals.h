@@ -5,11 +5,9 @@
 *
 * File type: Header
 *
-* Associated files: None
+* Associated files: Multiple
 */
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-//TODO: documentation
 
 #ifndef PERIPHERALS_H
 #define PERIPHERALS_H

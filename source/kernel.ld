@@ -59,6 +59,6 @@ SECTIONS
   .Heap :
   {
     . = ALIGN(4);
-    Kernel_End = .;     /* Just a label to get HEAP section start addr if you need */; 
+    Kernel_End = .;     /* Label to mark end of kernel code*/; 
   }
 }

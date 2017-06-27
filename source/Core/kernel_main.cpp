@@ -37,12 +37,14 @@
 */
 extern "C" void kernel_main(void)
 {
+  //Enable interrupts
   interrupt_enable_I();
+  //Enable system timer irq
   enable_select_irq(32+1);
-
+  //Set the timer irq to 10 seconds
   set_time_irq(10000000);
 
-  print("Nobody knows how hard this \n!@#$\%^&*()_+ is!!!\n");
+  print("Pi OS: This message exists to showsome behaviour ofthe PiOS\n");
 
   while(1)
   {

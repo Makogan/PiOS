@@ -25,11 +25,12 @@
 
 #define RESPONSE_OK     0x80000000 // Same as MAIL_FULL define nonetheless for clarity
 #define RESPONSE_ERROR  0x80000001 // If this is the response, the VC found an error
+
 //########################################################################################
 
 //========================================================================================
 /*
-* Globals:
+* Global symbols:
 */
 //========================================================================================
 
@@ -103,20 +104,23 @@ void set_LED(int value)
 {
   // Set the default message values
   index = 1;
-  mailbox_message[index++] =0,
-  mailbox_message[index++] = (uint32_t) SET_GPIO_STATE,
-  mailbox_message[index++] = 8,
-  mailbox_message[index++] = 0,
-  mailbox_message[index++] = 130,
-  mailbox_message[index++] = value,
-  mailbox_message[index++] = 0,
+  mailbox_message[index++] =0, //request
+  mailbox_message[index++] = (uint32_t) SET_GPIO_STATE, //tag
+  mailbox_message[index++] = 8, //request size
+  mailbox_message[index++] = 0, // response size
+  mailbox_message[index++] = 130, //pin num
+  mailbox_message[index++] = value, //state ON or OFF
+  mailbox_message[index++] = 0, //end tag
 
-  mailbox_message[0] = index*sizeof(uint32_t);
+  mailbox_message[0] = index*sizeof(uint32_t); //Total message size
 
   write_to_mailbox(((uint32_t) &mailbox_message | BUS_MASK), PTAG_ARM_TO_VC);
   read_from_mailbox(PTAG_ARM_TO_VC);
 }
 
+/*
+* FUnction to blink the ACT LED
+*/
 void blink()
 {
   set_LED(ON);
@@ -126,60 +130,75 @@ void blink()
   wait(0xF0000);
 }
 
+/*
+* Function to create a proper frame buffer initialization message
+*
+* Parameters:
+*   Display_info *disp: a pointer to a Display_info structure that stores the desired
+*                      information with which to initialize the frambuffer.
+*/
 void set_init_display_message(Display_info *disp)
 {
   index = 1;
   #define FB_RESPONSE 1
-  mailbox_message[index++] = 0;
+  mailbox_message[index++] = 0;//request code
 
-  mailbox_message[index++] = (uint32_t) SET_PHYSICAL_WIDTH_HEIGHT;
-  mailbox_message[index++] = 8;
-  mailbox_message[index++] = 8;
-  mailbox_message[index++] = disp->physical_width;
-  mailbox_message[index++] = disp->physical_height;
+  mailbox_message[index++] = (uint32_t) SET_PHYSICAL_WIDTH_HEIGHT; //tag
+  mailbox_message[index++] = 8;//request size
+  mailbox_message[index++] = 8;//response size
+  mailbox_message[index++] = disp->physical_width;//horizontal resolution of the monitor
+  mailbox_message[index++] = disp->physical_height;//vertical resolution of the monitor
 
-  mailbox_message[index++] = (uint32_t) SET_VIRTUAL_WIDTH_HEIGHT;
-  mailbox_message[index++] = 8;
-  mailbox_message[index++] = 8;
+  mailbox_message[index++] = (uint32_t) SET_VIRTUAL_WIDTH_HEIGHT;//tag
+  mailbox_message[index++] = 8;//rquest size
+  mailbox_message[index++] = 8;// response size
   #define FB_VIRTUAL_WIDTH 10
-  mailbox_message[index++] = disp->virtual_width;
+  mailbox_message[index++] = disp->virtual_width;//horizontal resolution of virtual screen
   #define FB_VIRTUAL_HEIGHT 11
-  mailbox_message[index++] = disp->virtual_height;
+  mailbox_message[index++] = disp->virtual_height;//vertical resolution of virtual screen
 
-  mailbox_message[index++] = (uint32_t) SET_DEPTH;
-  mailbox_message[index++] = 4;
-  mailbox_message[index++] = 4;
+  mailbox_message[index++] = (uint32_t) SET_DEPTH;//tag
+  mailbox_message[index++] = 4;//request size
+  mailbox_message[index++] = 4;//response size
   #define FB_DEPTH 15
-  mailbox_message[index++] = disp->color_depth;
+  mailbox_message[index++] = disp->color_depth;//color depth of the frame buffer
 
-  mailbox_message[index++] = (uint32_t) ALLOCATE;
-  mailbox_message[index++] = 8;
-  mailbox_message[index++] = 8;
+  mailbox_message[index++] = (uint32_t) ALLOCATE;//tag
+  mailbox_message[index++] = 8;//request size
+  mailbox_message[index++] = 8;//response size
   #define FB_PTR 19
-  mailbox_message[index++] = 16;
+  mailbox_message[index++] = 16;//alignment fb ptr returned here
   #define FB_SIZE 20
-  mailbox_message[index++] = 0;
+  mailbox_message[index++] = 0;//fb size returned here
 
-  mailbox_message[index++] = END;
+  mailbox_message[index++] = END;//end tag
 
   #define MESSAGE_SIZE 0
-  mailbox_message[0] = index*sizeof(uint32_t);
+  mailbox_message[0] = index*sizeof(uint32_t);//size of message
 }
 
+/*
+* Function to initialize the virtual screen for displaying information
+*/
 void init_display()
 {
+  //set global main_monitor values
   main_monitor = {1360, 768, 1360, 768, 32, 0, 0};
 
+  //create an appropriate FB initialization message for the VC
   set_init_display_message(&main_monitor);
 
+  // Send the message
   write_to_mailbox((uint32_t) &mailbox_message | BUS_MASK, (Channel)(PTAG_ARM_TO_VC));
   read_from_mailbox(PTAG_ARM_TO_VC);
 
+  //if there was an error stop here
   while(mailbox_message[FB_RESPONSE] == RESPONSE_ERROR)
   {
     blink();
   }
 
+  // update the main monitor info
   main_monitor.fb_ptr = mailbox_message[FB_PTR];
   main_monitor.fb_size = mailbox_message[FB_SIZE];
 }

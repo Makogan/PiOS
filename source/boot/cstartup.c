@@ -73,8 +73,7 @@ void _cstartup()
     // Go to the main loop
     kernel_main();
 
-    // We should never return from main, if we do stop here to prevent memory
-    // corruption
+    // We should never return from main, if we do stop here to prevent further errors
     while(1){}
 }
 

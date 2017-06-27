@@ -1,11 +1,24 @@
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/*
+* Authors: Camilo Talero
+*
+*
+* File type: Header
+*
+* Associated files: interrupts.cpp
+*/
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 #ifndef INTERRUPTS_H
 #define INTERRUPTS_H
 
+// Used libraries
 #include <mailbox.h>
 #include <stdint.h>
 #include <string.h>
 #include <time.h>
 
+// Expose these functions to other files
 #ifdef __cpluplus
     extern "C"{
 #endif

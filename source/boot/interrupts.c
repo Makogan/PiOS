@@ -145,6 +145,12 @@ void disable_select_irq(unsigned char irq)
   }
 }
 
+
+/*
+* The following functions simply enable or disable a type of interrupt.
+* For more information about the cps instruction, see the ARM official
+* documentation. (Warning untested)
+*/
 void interrupt_enable_IF()
 {
   __asm__ volatile
@@ -211,14 +217,21 @@ uint32_t interrupt_disable_F()
   return state;
 }
 
-void restore()
+/*
+* Function to restore the prvious cpu state (Warning untested)
+*/
+void restore(uint32_t prev_state)
 {
   __asm__ volatile
   (
-    "msr cpsr_c, r0\n"
+    "msr cpsr_c, %0\n"
+    :"=r" (prev_state)
   );
 }
 
+/*
+* Undefined instruction exception stub
+*/
 void undefined_instruction_vector()
 {
     __asm__
@@ -229,6 +242,9 @@ void undefined_instruction_vector()
   while(1){}
 }
 
+/*
+* Software interrupt exception stub
+*/
 void software_interrupt_vector()
 {
     __asm__
@@ -239,6 +255,9 @@ void software_interrupt_vector()
   while(1){}
 }
 
+/*
+* abort exception stub
+*/
 void prefetch_abort_vector()
 {
     __asm__
@@ -249,25 +268,46 @@ void prefetch_abort_vector()
   while(1){}
 }
 
-//interrupts get cleared after disabling them
+// This exists only for illustration purposes
+static uint32_t example = 0;
+
+/*
+* The interrupt handler
+*/
 void interrupt_vector()
 {
+  /* 
+  * IRQ_pending_1 gets cleared after disabling interrupts so we need to 
+  * store it's value.
+  */
   uint32_t pending_1_status = irq_controller->IRQ_pending_1;
+  // Disable all interrupt sources with pending interrupts
   irq_controller->Disable_IRQs_1 = irq_controller->IRQ_pending_1;
+
+  // Check if interrupt source is the system timer
   if(pending_1_status & 0x2)
   {
+    // Check if the system timer compare 1 register is less than the current time
     if(system_timer->compare_1 <= system_timer->counter_low)
     {
+      /*
+      * To clear this irq we must write a 1 to the bit in the control status register
+      * that has the same index as the system compare register (see docuemntation)
+      */
       system_timer->control_status = 0b10;
-      print("\ntimer c1:");
-      print(pending_1_status);
+      // Show interrupts are getting called
+      print("\nIrq's called:"); 
+      print(example++);
+      // Schedule an interrupt in 3 seconds
       system_timer->compare_1 = system_timer->counter_low + 3000000;
     }
 
+    // Re-enable the system timer interrupt
     irq_controller->Enable_IRQs_1 = 0x2;
   }
 }
 
+// FIQ stub
 void fast_interrupt_vector(void)
 {
     __asm__

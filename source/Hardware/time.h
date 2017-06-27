@@ -9,14 +9,14 @@
 */
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-//TODO: documentation
-
 #ifndef TIME_H
 #define TIME_H
 
 #include <stdint.h>
 #include <peripherals.h>
 
+
+//System timer struct, each field is a register in the system counter peripheral
 typedef struct
 {
   uint32_t control_status;
@@ -30,6 +30,7 @@ typedef struct
 
 extern volatile system_timer_t *system_timer;
 
+//Expose these functions to other files
 #ifdef __cplusplus
 extern "C"
 {

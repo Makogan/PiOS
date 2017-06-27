@@ -9,8 +9,6 @@
 */
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-//TODO: documentation
-
 #ifndef STRING_H
 #define STRING_H
 
@@ -19,6 +17,9 @@
 #include <fonts.h>
 #include <memory_management.h>
 
+/*
+* Global struct to keep track of the terminal cursor
+*/
 typedef struct
 {
   uint32_t x;
@@ -27,6 +28,7 @@ typedef struct
 
 extern Cursor main_cursor;
 
+// Expose these functions to other files
 void init_print(uint32_t f_size);
 void print(uint32_t num);
 void print(char* string);
