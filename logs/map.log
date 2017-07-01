@@ -9,8 +9,6 @@ Discarded input sections
  .data          0x0000000000000000        0x0 ./objects/Fonts/basic_font.o
  .text          0x0000000000000000        0x0 ./objects/boot/boot.o
  .data          0x0000000000000000        0x0 ./objects/boot/boot.o
- .text          0x0000000000000000       0x8c ./objects/jtag.o
- .data          0x0000000000000000        0x0 ./objects/jtag.o
  .data          0x0000000000000000        0x0 ./objects/Core/kernel_main.o
  .data          0x0000000000000000        0x0 ./objects/Hardware/Memory/memory_management.o
  .data          0x0000000000000000        0x0 ./objects/Hardware/Graphics/mailbox.o
@@ -29,7 +27,6 @@ LOAD ./objects/Hardware/time.o
 LOAD ./objects/Fonts/font_info.o
 LOAD ./objects/Fonts/basic_font.o
 LOAD ./objects/boot/boot.o
-LOAD ./objects/jtag.o
 LOAD ./objects/Core/kernel_main.o
 LOAD ./objects/Hardware/Memory/memory_management.o
 LOAD ./objects/Hardware/Graphics/mailbox.o
@@ -153,7 +150,6 @@ LOAD ./objects/Hardware/Graphics/mailbox.o
                 0x0000000000008f14                font_size
  .bss           0x0000000000008f18        0x0 ./objects/Fonts/basic_font.o
  .bss           0x0000000000008f18        0x0 ./objects/boot/boot.o
- .bss           0x0000000000008f18        0x0 ./objects/jtag.o
  .bss           0x0000000000008f18        0x0 ./objects/Core/kernel_main.o
  .bss           0x0000000000008f18       0x14 ./objects/Hardware/Memory/memory_management.o
                 0x0000000000008f18                heap_start
@@ -230,10 +226,8 @@ OUTPUT(build/kernel.elf elf32-littlearm)
  .ARM.attributes
                 0x0000000000000180       0x2c ./objects/boot/boot.o
  .ARM.attributes
-                0x00000000000001ac       0x2c ./objects/jtag.o
+                0x00000000000001ac       0x40 ./objects/Core/kernel_main.o
  .ARM.attributes
-                0x00000000000001d8       0x40 ./objects/Core/kernel_main.o
+                0x00000000000001ec       0x40 ./objects/Hardware/Memory/memory_management.o
  .ARM.attributes
-                0x0000000000000218       0x40 ./objects/Hardware/Memory/memory_management.o
- .ARM.attributes
-                0x0000000000000258       0x40 ./objects/Hardware/Graphics/mailbox.o
+                0x000000000000022c       0x40 ./objects/Hardware/Graphics/mailbox.o

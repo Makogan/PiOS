@@ -1,0 +1,134 @@
+\lstset{
+	frame=lines,
+	rulecolor=\color{deepblue},
+	framesep = 5pt,
+	language=C,
+	aboveskip=3mm,
+	belowskip=3mm,
+	showstringspaces=false,
+	columns=flexible,
+	basicstyle={\small\ttfamily\color{cyan}},
+	numbers=none,
+	%numberstyle=\small\color{green},
+	keywordstyle=\color{orange},
+	commentstyle=\color{grey},
+	stringstyle=\color{magenta},
+	breaklines=true,
+	breakatwhitespace=true,
+	backgroundcolor=\color{deepblue},
+	tabsize=3,
+	morekeywords={uint32_t},
+	keywordsprefix=#
+}
+
+\lstdefinestyle{C-small}
+{
+	language=C,
+	morekeywords={uint32_t},
+	basicstyle={\fontsize{12}{12}\ttfamily\color{cyan}},
+	commentstyle=\color{grey},
+	keywordstyle=\color{orange},
+}
+
+\lstdefinestyle{C}
+{
+	language=C,
+	morekeywords={uint32_t},
+	keywordstyle=\color{orange},
+}
+
+\lstdefinestyle{bash}{
+	language=GCC,
+	basicstyle=\small\ttfamily\color{green},
+	numbers=none,
+	numberstyle=\tiny,
+	numbersep=3pt,
+	frame=tb,
+	keepspaces,
+	columns=fullflexible,
+	backgroundcolor=\color{black},
+	aboveskip=6mm,
+	belowskip=6mm,
+}
+
+\lstdefinestyle{disassembly}{
+	language=GCC,
+	basicstyle=\fontsize{10}{11}\ttfamily\color{green},
+	numbers=none,
+	numberstyle=\tiny,
+	numbersep=3pt,
+	frame=tb,
+	keepspaces,
+	columns=fullflexible,
+	backgroundcolor=\color{black},
+	aboveskip=6mm,
+	belowskip=6mm,
+}
+
+\lstdefinelanguage{GCC}{
+	emph=
+	{
+		arm-none-eabi-gcc
+	},
+	emphstyle={\color{blue}\bfseries},
+	sensitive=false, % keywords are not case-sensitive
+	morecomment=[l]{//}, % l is for line comment
+	morecomment=[s]{/*}{*/}, % s is for start and end delimiter
+	morestring=[b]",
+}
+
+\lstdefinelanguage{Linker}{
+	emph=
+	{
+		SECTIONS,
+	},
+	emphstyle={\color{cyan}\bfseries},
+	sensitive=false, % keywords are not case-sensitive
+	morecomment=[l]{//}, % l is for line comment
+	morecomment=[s]{/*}{*/}, % s is for start and end delimiter
+	morestring=[b]",
+	keywordsprefix=.
+}
+
+\lstdefinelanguage{ASM}{
+	emph=
+	{
+		b, ble, blt, bne, beq, bx,
+		ldr, str, ldmia, strmia,
+		sp, pc, lr,
+		section, global,
+		or, orr,
+		mov, cmp, and, bic, 
+		mcr, msr, mrs, mrc, vmsr, mcrr,
+	},
+	emphstyle={\color{orange}\bfseries},
+	sensitive=false, % keywords are not case-sensitive
+	morecomment=[l]{//}, % l is for line comment
+	morecomment=[l]{;}, % l is for line comment
+	morecomment=[s]{/*}{*/}, % s is for start and end delimiter
+	morestring=[b]",
+	morekeywords=
+	{
+		CPSR_c, 		
+		p15, 
+		fpexc,
+		c0, c1, cr14,
+		r0,	r1, r2, r3, r4, r5, r6, r7, rr8, r9, r10, r11, r12,
+	},
+	keywordstyle=\color{dkgreen}
+} % 
+
+\lstdefinestyle{ASM}{
+	language=ASM,
+	basicstyle=\small\ttfamily\color{cyan},
+	morekeywords={.word},
+	numbers=none,
+	numberstyle=\tiny,
+	numbersep=3pt,
+	frame=tb,
+	columns=fullflexible,
+	backgroundcolor=\color{deepblue},
+	aboveskip=6mm,
+	belowskip=6mm,
+	keywordstyle=\ttb\color{orange},
+}

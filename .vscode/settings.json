@@ -1,0 +1,12 @@
+{
+    "files.associations": {
+        "kernel_main.cpp": "c",
+        "mailbox.cpp": "c",
+        "peripherals.h": "c",
+        "string.h": "c",
+        "mailbox.h": "c",
+        "stdint.h": "c",
+        "time.h": "c",
+        "cstartup.c": "cpp"
+    }
+}

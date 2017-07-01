@@ -1,0 +1,91 @@
+\documentclass{book}
+
+\usepackage{listings}
+\usepackage{color}
+
+\lstset{
+	frame=tlbr,
+	rulecolor=\color{deepblue},
+	framesep = 5pt,
+	language=C,
+	aboveskip=3mm,
+	belowskip=3mm,
+	showstringspaces=false,
+	columns=flexible,
+	basicstyle={\small\ttfamily\linespread{1}\footnotesize\color{cyan}},
+	numbers=none,
+	numberstyle=\small\color{green},
+	keywordstyle=\color{orange},
+	commentstyle=\color{grey},
+	stringstyle=\color{mauve},
+	breaklines=true,
+	breakatwhitespace=true,
+	backgroundcolor=\color{deepblue},
+	tabsize=3,
+	morekeywords={uint32_t},
+	keywordsprefix=#
+}
+
+\lstdefinestyle{C-small}
+{
+	language=C,
+	morekeywords={uint32_t},
+	basicstyle={\fontsize{12}{12}\ttfamily\color{cyan}},
+	commentstyle=\color{grey},
+	keywordstyle=\color{orange},
+}
+
+\lstdefinestyle{C}
+{
+	language=C,
+	morekeywords={uint32_t},
+	keywordstyle=\color{orange},
+}
+
+\definecolor{orange}{rgb}{1,0.5,0}
+\definecolor{deepblue}{rgb}{0, 0, 0.15}
+\definecolor{grey}{rgb}{0.5,0.5,0.5}
+
+\usepackage{tcolorbox}
+\tcbuselibrary{listings}
+
+\begin{document}
+	
+\begin{lstlisting}[style =C]
+	uint32_t mailbox_message[22] __attribute__ ((aligned (16)));
+	uint32_t index;
+	
+	void set_init_display_message()
+	{
+		index = 1;
+		mailbox_message[index++] = 0;//request code
+		
+		mailbox_message[index++] = (uint32_t) SET_PHYSICAL_WIDTH_HEIGHT; //tag
+		mailbox_message[index++] = 8;	//request size
+		mailbox_message[index++] = 8;	//response size
+		mailbox_message[index++] = physical_width;	//horizontal resolution of the monitor
+		mailbox_message[index++] = physical_height;	//vertical resolution of the monitor
+		
+		mailbox_message[index++] = (uint32_t) SET_VIRTUAL_WIDTH_HEIGHT;	//tag
+		mailbox_message[index++] = 8;	//rquest size
+		mailbox_message[index++] = 8;	// response size
+		mailbox_message[index++] = virtual_width;	//horizontal resolution of virtual screen
+		mailbox_message[index++] = virtual_height;	//vertical resolution of virtual screen
+		
+		mailbox_message[index++] = (uint32_t) SET_DEPTH;	//tag
+		mailbox_message[index++] = 4;	//request size
+		mailbox_message[index++] = 4;	//response size
+		mailbox_message[index++] = color_depth;	//color depth of the frame buffer
+		
+		mailbox_message[index++] = (uint32_t) ALLOCATE;	//tag
+		mailbox_message[index++] = 8;	//request size
+		mailbox_message[index++] = 8;	//response size
+		mailbox_message[index++] = 16;	//alignment fb ptr returned here
+		mailbox_message[index++] = 0;	//fb size returned here
+		
+		mailbox_message[index++] = END;//end tag
+		
+		mailbox_message[0] = index*sizeof(uint32_t);	//size of message
+	}
+\end{lstlisting}
+\end{document}

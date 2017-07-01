@@ -22,7 +22,6 @@
 
 #define BIT(bit) (1 << bit)
 
-//Taken from: http://www.valvers.com/open-software/raspberry-pi/step04-bare-metal-programming-in-c-pt4/
 #define RPI_INTERRUPT_CONTROLLER_BASE   (IO_BASE + 0xB200)
 
 //########################################################################################
@@ -38,7 +37,8 @@
 * registers indicate the source of an interrupt. The following three after FIQ control 
 * are used to enable a specific interrupt source. The final three are used to disable a 
 * specific interupt source. For details about the function of each bit please see the 
-* attached pdf manual.
+* attached pdf manual. 
+* Taken from: http://www.valvers.com/open-software/raspberry-pi/step04-bare-metal-programming-in-c-pt4/
 */
 struct rpi_irq_controller_t
 {
